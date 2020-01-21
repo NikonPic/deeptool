@@ -10,8 +10,8 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: core
-      url: /core
+      title: demo
+      url: /demo
     output: web
     title: deeptool
   output: web
