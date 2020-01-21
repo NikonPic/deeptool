@@ -1,6 +1,6 @@
 {
   "deeptool": {
     "Overview": "/",
-    "Test": "/core"
+    "core": "/core"
   }
 }
