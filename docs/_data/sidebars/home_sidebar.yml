@@ -10,8 +10,8 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: demo
-      url: /demo
+      title: Dataloader
+      url: /dataload
     - output: web,pdf
       title: Architecture
       url: /arch

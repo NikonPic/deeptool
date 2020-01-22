@@ -1,7 +1,7 @@
 {
   "deeptool": {
     "Overview": "/",
-    "demo": "/demo",
+    "Dataloader": "/dataload",
     "Architecture": "/arch"
   }
 }
