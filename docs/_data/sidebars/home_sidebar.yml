@@ -11,10 +11,25 @@ entries:
       url: /
     - output: web,pdf
       title: Dataloader
-      url: /dataload
+      url: /dataloader
     - output: web,pdf
       title: Architecture
-      url: /arch
+      url: /architecture
+    - output: web,pdf
+      title: Utils
+      url: /utils
+    - output: web,pdf
+      title: Diagnosis
+      url: /diagnosis
+    - output: web,pdf
+      title: DCGAN
+      url: /dcgan
+    - output: web,pdf
+      title: Intro VAE
+      url: /introvae
+    - output: web,pdf
+      title: VQVAE (2)
+      url: /vqvae
     output: web
     title: deeptool
   output: web

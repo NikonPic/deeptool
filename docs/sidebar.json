@@ -1,7 +1,12 @@
 {
   "deeptool": {
     "Overview": "/",
-    "Dataloader": "/dataload",
-    "Architecture": "/arch"
+    "Dataloader": "/dataloader",
+    "Architecture": "/architecture",
+    "Utils": "/utils",
+    "Diagnosis": "/diagnosis",
+    "DCGAN": "/dcgan",
+    "Intro VAE": "/introvae",
+    "VQVAE (2)": "/vqvae"
   }
 }

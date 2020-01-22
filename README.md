@@ -1,13 +1,32 @@
 # deeptool
-> Summary description here.
+> Tool for applying several deep learning methods on the MRNet dataset.
 
 
-This file will become your README and also the index of your documentation.
+Current implementations:
 
-## Install
+* DIAGNOSIS (MRNet based)
+
+* DCGAN
+* VQVAE - VQVAE2
+* INTROVAE
+
+
+
+## Install - not yet available
+
+Later this will simply be:
 
 `pip install deeptool`
 
+For now the source code needs to be downloaded.
+Then navigation to the downloaded folder is required and the package can be installed with:
+
+`pip install -e .`
+
 ## How to use
 
-Fill me in please! Don't forget code examples:
+```python
+from deeptool import *
+
+# add some nice functionality here ;)
+```
