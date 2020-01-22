@@ -5,9 +5,21 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"test": "00_demo.ipynb",
          "test2": "00_demo.ipynb",
          "test3": "00_demo.ipynb",
-         "SayTest": "00_demo.ipynb"}
+         "SayTest": "00_demo.ipynb",
+         "weights_init": "01_arch.ipynb",
+         "BlurPool3d": "01_arch.ipynb",
+         "Quantize": "01_arch.ipynb",
+         "ResNetBlock": "01_arch.ipynb",
+         "ConvBn": "01_arch.ipynb",
+         "ConvTpBn": "01_arch.ipynb",
+         "LinearSigmoid": "01_arch.ipynb",
+         "DownUpConv": "01_arch.ipynb",
+         "Encoder": "01_arch.ipynb",
+         "Decoder": "01_arch.ipynb",
+         "Discriminator": "01_arch.ipynb"}
 
-modules = ["demo.py"]
+modules = ["demo.py",
+           "arch.py"]
 
 doc_url = "https://NikonPic.github.io/deeptool/"
 

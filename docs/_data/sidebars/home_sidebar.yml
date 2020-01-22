@@ -12,6 +12,9 @@ entries:
     - output: web,pdf
       title: demo
       url: /demo
+    - output: web,pdf
+      title: Title
+      url: /arch
     output: web
     title: deeptool
   output: web
