@@ -13,7 +13,7 @@ entries:
       title: demo
       url: /demo
     - output: web,pdf
-      title: Title
+      title: Architecture
       url: /arch
     output: web
     title: deeptool
