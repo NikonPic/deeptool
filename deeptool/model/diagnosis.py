@@ -75,6 +75,7 @@ class Classify_RNN(nn.Module):
 
 # Cell
 
+
 class TripleMRNet(nn.Module):
     """
     adapted from https://github.com/yashbhalgat/MRNet-Competition
@@ -96,7 +97,7 @@ class TripleMRNet(nn.Module):
             self.weights = {}
             self.weights['abn'] = [0.81, 0.19]
             self.weights['acl'] = [0.23, 0.77]
-            self.weights['abn'] = [0.43, 0.57]
+            self.weights['men'] = [0.43, 0.57]
         else:
             self.weights = train_data.weights
 
@@ -315,4 +316,4 @@ class TripleMRNet(nn.Module):
         else:
             tr_data = {}
             tr_data["loss"] = loss.item()
-            return out  # , label, tr_data
+            return out, label, tr_data

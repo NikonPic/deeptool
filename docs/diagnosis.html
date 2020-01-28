@@ -97,7 +97,7 @@ summary: "Structure for performing Diagnosis for 3D Datasets"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L78" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L79" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>adapted from <a href="https://github.com/yashbhalgat/MRNet-Competition">https://github.com/yashbhalgat/MRNet-Competition</a>
 with the knowledge of: <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699">https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699</a></p>
@@ -106,6 +106,23 @@ with the knowledge of: <a href="https://journals.plos.org/plosmedicine/article?i
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3 dim test</span>
+<span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;diagnosis&quot;</span>
+<span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 

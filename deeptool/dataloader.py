@@ -101,7 +101,7 @@ class MRNetDataset(Dataset):
         self.len = len(self.labels[self.mode]["acl"])
 
         # define how the output should be formated
-        if args.model_type == "triplenet":
+        if args.model_type == "diagnosis":
             self.get_img = self.image_stack
         else:
             self.get_img = self.volume_stack
@@ -285,7 +285,7 @@ class Rescale(object):
         self.shorten = False
         self.model = args.model_type
 
-        if self.model == "triplenet":
+        if self.model == "diagnosis":
             self.shorten = True
 
     def __call__(self, mr_scan):
@@ -367,7 +367,7 @@ def load_datasets(args):
     Crop = RandomCrop if args.rand_crop == True else MiddleCrop
 
     # special case with triplenet -> we can have more layers -> take percentage
-    if args.model_type == "triplenet":
+    if args.model_type == "diagnosis":
         args.batch_size = 1
         Crop = TriplePrep
 

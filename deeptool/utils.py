@@ -46,7 +46,7 @@ class Tracker(object):
         self.tr_dict = {}
         # create directory name
         date = datetime.datetime.now()
-        self.dir_name = "./data/%s %d-%d-%d at %d-%d" % (
+        self.dir_name = "../data/%s %d-%d-%d at %d-%d" % (
             args.model_type, date.year, date.month, date.day, date.hour, date.minute)
 
         # internal counting for visualization
@@ -148,7 +148,7 @@ class Tracker(object):
         torch.save(model.state_dict(), self.dir_name + "/_model")
 
         # Plot Results:
-        if self.model_type not in ("diagnosis", "triplenet") and self.internal_count > 10:
+        if self.model_type not in ("diagnosis") and self.internal_count > 10:
             self.internal_count = 0
 
             x = data["img"].detach().cpu()
