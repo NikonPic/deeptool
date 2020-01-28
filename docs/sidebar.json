@@ -4,9 +4,11 @@
     "Dataloader": "/dataloader",
     "Architecture": "/architecture",
     "Utils": "/utils",
+    "Parameters": "/parameters",
     "Diagnosis": "/diagnosis",
     "DCGAN": "/dcgan",
     "Intro VAE": "/introvae",
+    "RNN VAE": "/vae",
     "VQVAE (2)": "/vqvae"
   }
 }
