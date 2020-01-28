@@ -37,24 +37,28 @@ index = {"MAX_PIXEL_VAL": "00_dataloader.ipynb",
          "get_VQVAE_args": "03_parameters.ipynb",
          "get_MRNet_args": "03_parameters.ipynb",
          "get_all_args": "03_parameters.ipynb",
+         "get_model": "04_train_loop.ipynb",
+         "test_dataset": "04_train_loop.ipynb",
+         "main": "04_train_loop.ipynb",
          "Classify": "10_diagnosis.ipynb",
          "Classify_RNN": "10_diagnosis.ipynb",
          "TripleMRNet": "10_diagnosis.ipynb",
          "DCGAN": "20_dcgan.ipynb",
          "IntroVAE": "21_introvae.ipynb",
-         "Encoder2D": "22_rnn_vae.ipynb",
          "EncQuantDec": "22_vqvae.ipynb",
-         "VQVAE2": "22_vqvae.ipynb"}
+         "VQVAE2": "22_vqvae.ipynb",
+         "Encoder2D": "23_rnn_vae.ipynb"}
 
 modules = ["dataloader.py",
            "architecture.py",
            "utils.py",
            "parameters.py",
+           "train_loop.py",
            "model/diagnosis.py",
            "model/dcgan.py",
            "model/introvae.py",
-           "model/rnnvae.py",
-           "model/vqvae.py"]
+           "model/vqvae.py",
+           "model/rnnvae.py"]
 
 doc_url = "https://NikonPic.github.io/deeptool/"
 

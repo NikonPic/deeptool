@@ -47,7 +47,8 @@ class IntroVAE(nn.Module):
         self.optimizerDec = optim.Adam(self.decoder.parameters(), lr=args.lr)
 
         # Setup the tracker to visualize the progress
-        self.tracker = Tracker(args)
+        if args.track:
+            self.tracker = Tracker(args)
 
     def watch_progress(self, test_data, iteration):
         """

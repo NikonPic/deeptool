@@ -74,7 +74,8 @@ class DCGAN(nn.Module):
             self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
         # Setup the tracker to visualize the progress
-        self.tracker = Tracker(args, log_view=False)
+        if args.track:
+            self.tracker = Tracker(args, log_view=False)
 
 
     def watch_progress(self, test_data, iteration):

@@ -49,6 +49,8 @@ def get_dataset_args(parser, args=[]):
                         help='Perspectives of the Mr Scans')
     parser.add_argument('--num_worker', type=int, default=0,
                         help='Number of workers for loading the dataset')
+    parser.add_argument('--classes', type=list, default=["abn", "acl", "men"],
+                        help='Classify for these classes')
     # ------------------------------------------------------------------------
     return parser
 
@@ -63,7 +65,7 @@ def get_model_args(parser, args=[]):
     """
     # Model:
     # ------------------------------------------------------------------------
-    parser.add_argument('--model_type', type=str, default="triplenet",
+    parser.add_argument('--model_type', type=str, default="diagnosis",
                         help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis" or "triplenet"')
     parser.add_argument('--load_model', type=bool, default=False,
                         help='Determine whether to load pretrained model')
@@ -126,6 +128,8 @@ def get_vis_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument('--watch_batch', type=int, default=1130,
                         help='batchnumber for visualization')
+    parser.add_argument('--track', type=bool, default=False,
+                        help='track the training progress')
     # ------------------------------------------------------------------------
     return parser
 

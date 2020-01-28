@@ -81,7 +81,7 @@ class TripleMRNet(nn.Module):
     with the knowledge of: https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699
     """
 
-    def __init__(self, device, args, train_data, backbone="resnet18", training=True, document=True):
+    def __init__(self, device, args, train_data=None, backbone="resnet18", training=True, document=True):
         super(TripleMRNet, self).__init__()
 
         # general defines
@@ -90,7 +90,15 @@ class TripleMRNet(nn.Module):
         self.y_labels = args.classes
         self.y_len = len(self.y_labels)
         self.naming = args.perspectives
-        self.weights = train_data.weights
+
+        # depending on whether train_data is specified
+        if train_data == None:
+            self.weights = {}
+            self.weights['abn'] = [0.81, 0.19]
+            self.weights['acl'] = [0.23, 0.77]
+            self.weights['abn'] = [0.43, 0.57]
+        else:
+            self.weights = train_data.weights
 
         # picture center cropping to 224 resolution
         self.pic_size = 224
@@ -103,7 +111,7 @@ class TripleMRNet(nn.Module):
         self.label_smoothing = args.mrnet_label_smoothing
 
         # Setup the tracker to visualize the progress
-        if document:
+        if args.track:
             self.tracker = Tracker(args)
 
         # average together

@@ -6,7 +6,7 @@ __all__ = ['MAX_PIXEL_VAL', 'MEAN', 'STDDEV', 'INPUT_DIM', 'MRNetDataset', 'Rand
 # Cell
 import os  # file and path management
 import torch  # machine learning
-import numpy as np  # matrix multiplication
+import numpy as np
 from torch.utils.data import Dataset, DataLoader  # Structure for Dataloader
 from torchvision import transforms  # Predefined transformations
 from skimage import transform  # Rescale 2d images

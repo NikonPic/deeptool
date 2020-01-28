@@ -22,6 +22,9 @@ entries:
       title: Parameters
       url: /parameters
     - output: web,pdf
+      title: Training Loop
+      url: /loop
+    - output: web,pdf
       title: Diagnosis
       url: /diagnosis
     - output: web,pdf
@@ -31,11 +34,11 @@ entries:
       title: Intro VAE
       url: /introvae
     - output: web,pdf
-      title: RNN VAE
-      url: /vae
-    - output: web,pdf
       title: VQVAE (2)
       url: /vqvae
+    - output: web,pdf
+      title: RNN VAE
+      url: /vae
     output: web
     title: deeptool
   output: web

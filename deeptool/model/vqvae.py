@@ -231,7 +231,8 @@ class VQVAE2(nn.Module):
         self.optimizer = optim.Adam(self.EncQuantDec.parameters(), lr=args.lr)
 
         # Setup the tracker to visualize the progress
-        self.tracker = Tracker(args)
+        if args.track:
+            self.tracker = Tracker(args)
 
         # define forward function
         self.forward = self.forward_normal
