@@ -17,7 +17,6 @@ index = {"MAX_PIXEL_VAL": "00_dataloader.ipynb",
          "test_dataset": "00_dataloader.ipynb",
          "load_test_batch": "00_dataloader.ipynb",
          "weights_init": "01_architecture.ipynb",
-         "BlurPool3d": "01_architecture.ipynb",
          "Quantize": "01_architecture.ipynb",
          "ResNetBlock": "01_architecture.ipynb",
          "ConvBn": "01_architecture.ipynb",
@@ -50,7 +49,7 @@ index = {"MAX_PIXEL_VAL": "00_dataloader.ipynb",
          "IntroVAE": "21_introvae.ipynb",
          "EncQuantDec": "22_vqvae.ipynb",
          "VQVAE2": "22_vqvae.ipynb",
-         "Encoder2D": "23_rnn_vae.ipynb"}
+         "mod_batch": "23_rnn_vae.ipynb"}
 
 modules = ["dataloader.py",
            "architecture.py",
