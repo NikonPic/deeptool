@@ -69,7 +69,7 @@ def get_model_args(parser, args=[]):
     # Model:
     # ------------------------------------------------------------------------
     parser.add_argument('--model_type', type=str, default="diagnosis",
-                        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis" or "triplenet"')
+                        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis"')
     parser.add_argument('--load_model', type=bool, default=False,
                         help='Determine whether to load pretrained model')
     parser.add_argument('--model_path', type=str, default="./data/src/_model",

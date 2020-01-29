@@ -25,7 +25,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 
 ## How to use
 
-```
+```python
 from deeptool import *
 
 # add some nice functionality here ;)
