@@ -13,7 +13,7 @@ from .model.dcgan import DCGAN
 from .model.diagnosis import TripleMRNet
 from .model.vqvae import VQVAE2
 from .model.introvae import IntroVAE
-from .model.rnnvae import *
+from .model.rnnvae import RNN_VAE
 
 # import the dataset
 from .dataloader import load_datasets, load_test_batch
@@ -32,7 +32,7 @@ def get_model(device, args):
         "diagnosis": TripleMRNet,
         "vqvae": VQVAE2,
         "introvae": IntroVAE,
-        # ToDO
+        "rnnvae": RNN_VAE
         # add more!
     }
     # Get the model_creator
@@ -69,15 +69,25 @@ def main_loop(args):
     train_data, _, train_loader, valid_loader = load_datasets(
         args)
 
-    # test dataset
-    test_dataset(args, valid_loader)
-
     # Initialise the Model
     model = get_model(device, args)
 
     # Load pretrained params
     if args.load_model:
         model.load_state_dict(torch.load(args.model_path))
+
+    # test dataset
+    test_data = next(iter(valid_loader))
+    print("Input dimension:")
+
+    if args.model_type == "diagnosis":
+        print(test_data["img"][args.perspectives[0]].shape)
+        print(torch.min(test_data["img"][args.perspectives[0]]))
+        print(torch.max(test_data["img"][args.perspectives[0]]))
+    else:
+        print(test_data["img"].shape)
+        print(torch.min(test_data["img"]))
+        print(torch.max(test_data["img"]))
 
     # start training
     print("Start training")

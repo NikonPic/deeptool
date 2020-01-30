@@ -22,6 +22,7 @@ from scipy.ndimage.interpolation import affine_transform
 
 # Cell
 
+
 class Tracker(object):
     """
     The Data tracker class serves as a uniform datatracker for all Modules
@@ -58,6 +59,10 @@ class Tracker(object):
             self.best_score[cl] = 1e8
         # store the path of the best model
         self.model_path = self.dir_name + "/_model"
+
+        # repair for incorrect view
+        self.view_re_x = [1, len(args.perspectives), -1,
+                          args.pic_size, args.pic_size]
 
         # Create new directory
         try:
@@ -110,6 +115,9 @@ class Tracker(object):
         """
         Visualize the Progress by applying the validation loader and visualizing the results
         """
+        # Get the original image
+        x = data["img"].detach().cpu()
+
         # Get the current results:
         x_re, tr_data = model(data, update=False)
         x_re = x_re.detach().cpu()
@@ -148,14 +156,21 @@ class Tracker(object):
         torch.save(model.state_dict(), self.dir_name + "/_model")
 
         # Plot Results:
-        if self.model_type not in ("diagnosis") and self.internal_count > 10:
+        if self.model_type not in ("diagnosis") and self.internal_count > 2:
             self.internal_count = 0
-
-            x = data["img"].detach().cpu()
 
             for channel in range(self.channels):
                 # init view list
                 if self.dim == 3:
+
+                    if len(x.shape) < 5:
+                        x = x.permute(1, 0, 2, 3)
+                        x = x.reshape(self.view_re_x)
+
+                    if len(x_re.shape) < 5:
+                        x_re = x_re.permute(1, 0, 2, 3)
+                        x_re = x_re.reshape(self.view_re_x)
+
                     real_pic = x[0, channel, :, :, :].view(
                         (self.crop_size, -1, self.pic_size, self.pic_size))
 
