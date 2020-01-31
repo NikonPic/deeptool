@@ -2,6 +2,9 @@
 > Tool for applying several deep learning methods on the MRNet dataset.
 
 
+
+<img src="nbs\img\deeptool.png" alt="Drawing" style="width: 500px;">
+
 Current implementations:
 
 * DIAGNOSIS (MRNet based)
@@ -50,5 +53,5 @@ args = compat_args(args)
 ### 3. Train the model
 
 ```python
-# main_loop(args)
+main_loop(args) # run the training
 ```
