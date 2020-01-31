@@ -261,7 +261,7 @@ def compat_args(args):
 
 def get_all_args(args = []):
     """
-    return all predefined arguments
+    return all predefined arguments using the combined parameter getters
     """
     # setup
     parser = argparse.ArgumentParser(description='Parameters for training')

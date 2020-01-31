@@ -23,6 +23,7 @@ from .parameters import get_all_args
 
 # Cell
 
+
 def get_model(device, args):
     """
     return the required model depending on the arguments:
@@ -42,7 +43,11 @@ def get_model(device, args):
 
 # Cell
 
+
 def test_one_batch(args):
+    """
+    Useful functionality to test a new model using a demo databatch and check compatibility
+    """
     args.track = False
     # define calculating device
     device = torch.device("cuda:0" if (
@@ -51,12 +56,13 @@ def test_one_batch(args):
     batch = load_test_batch(args)
     # Initialise the Model
     model = get_model(device, args)
-    #switch to train mode
+    # switch to train mode
     model.train()
     # evaluate batch
     model(batch)
 
 # Cell
+
 
 def main_loop(args):
     """Perform the Training using the predefined arguments"""
