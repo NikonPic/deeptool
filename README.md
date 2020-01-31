@@ -15,9 +15,9 @@ Current implementations:
 
 
 
-## Install - not yet available
+## Install
 
-Later this will simply be:
+Later this will simply be something like:
 
 `pip install deeptool`
 
@@ -35,8 +35,8 @@ from deeptool.train_loop import get_model, test_one_batch, main_loop
 from deeptool.parameters import get_all_args, compat_args
 ```
 
-### 2. Adjust the arguments for training for your needs (check 03-parameters)
-Example:
+### 2. Adjust the arguments for training for your needs
+Example: (check parameters for more info)
 
 ```python
 # Define Arguments (Example)

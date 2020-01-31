@@ -478,6 +478,59 @@ summary: "Define all General Parameters for training!"
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="3.6-RNN-VAE">3.6 RNN VAE<a class="anchor-link" href="#3.6-RNN-VAE">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_RNN_VAE_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parameters determing the VQVAE parameters </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># RNN VAE Diagnosis:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_vae&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if the network should behave like an AE or VAE&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_vae_beta&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if beta factor for KL part&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_intro&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if the network should behave like an IntroVAE&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+</blockquote>
+<p>parameters determing the VQVAE parameters</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Export-all-arguments">Export all arguments<a class="anchor-link" href="#Export-all-arguments">&#182;</a></h2>
 </div>
 </div>
@@ -494,7 +547,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L266" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -521,7 +574,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L261" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L280" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
@@ -561,7 +614,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, root_dir=&#39;C:/Users/ga46yeg/data/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
+<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_intro=False, rnn_vae=True, rnn_vae_beta=5.0, root_dir=&#39;C:/Users/ga46yeg/data/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
 </div>
 
 </div>

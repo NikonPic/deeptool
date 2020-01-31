@@ -13,7 +13,7 @@ from .model.dcgan import DCGAN
 from .model.diagnosis import TripleMRNet
 from .model.vqvae import VQVAE2
 from .model.introvae import IntroVAE
-from .model.rnnvae import RNN_VAE
+from .model.rnnvae import Creator_RNN_AE
 
 # import the dataset
 from .dataloader import load_datasets, load_test_batch
@@ -33,7 +33,7 @@ def get_model(device, args):
         "diagnosis": TripleMRNet,
         "vqvae": VQVAE2,
         "introvae": IntroVAE,
-        "rnnvae": RNN_VAE
+        "rnnvae": Creator_RNN_AE
         # add more!
     }
     # Get the model_creator

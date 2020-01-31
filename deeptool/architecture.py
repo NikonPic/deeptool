@@ -570,3 +570,5 @@ class Discriminator(nn.Module):
         x = self.forward_wgan(x)
         torch.sigmoid_(x)
         return x
+
+# Cell
