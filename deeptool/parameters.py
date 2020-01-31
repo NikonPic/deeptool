@@ -245,7 +245,6 @@ def get_MRNet_args(parser, args=[]):
 
 # Cell
 
-
 def compat_args(args):
     """
     make arguments compatible with each others by applying all necessary logic
