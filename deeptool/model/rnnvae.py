@@ -231,28 +231,43 @@ class RNN_IN_VAE(RNN_VAE):
 
     def forward(self, batch, update=True):
 
-        # 1st Pass
+        # (1st) Pass Original
+        # --------------------------------------
         # prepare
-        img = self.prep_input(batch)
-        # encode
-        x = self.encode(img)
-        # apply the vae sampling
-        z, mu, log_sig2 = self.vae_sampling(x)
-        # now the transition
-        x = self.rnn_transition(z)
-        # decode
-        x_re = self.decode(x)
+        x = self.prep_input(batch)
 
-        # get losses
-        ae_loss = self.mse_loss(img, x_re)
+        # encode
+        z = self.encode(img)
+        z, mu, log_sig2 = self.vae_sampling(z)
+
+        # decode
+        z = self.rnn_transition(z)
+        x_re = self.decode(z)
+
+        # Losses
+        ae_loss = self.mse_loss(x, x_re)
         vae_loss = self.kl_loss(mu, log_sig2)
 
-        # 2nd Pass
-        x_re = self.encode(x_re.detach())
-        z_re, mu_re, log_sig2_re = self.vae_sampling(x_re)
+        # (2nd) Pass Reconstruct Original
+        # --------------------------------------
+        # encode
+        z_re = self.encode(x_re.detach())
+        z_re, mu_re, log_sig2_re = self.vae_sampling(z_re)
 
-        # get losses
-        vae_loss_2 = self.kl_loss(mu_re, log_sig2_re)
+        # Losses
+        vae_loss_re = self.kl_loss(mu_re, log_sig2_re)
+
+        # (3rd) Pass generate Fake imgs
+        # --------------------------------------
+        z_p = torch.randn_like(z, device=self.device)
+
+        # now perform transition on z (decode)
+        z_p = self.rnn_transition(z_p)
+        # decode
+        x_p = self.decode(x_p)
+
+        # Encode again to obtain z_pp, while stopping gradient of x_p
+        z_p_re = self.encode(x_p.detach())
 
 
 
