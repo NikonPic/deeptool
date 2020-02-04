@@ -79,7 +79,6 @@ def get_model_args(parser, args=[]):
 
 # Cell
 
-
 def get_architecture_args(parser, args=[]):
     """
     Parameters determing the network architecture
@@ -252,6 +251,8 @@ def get_RNN_VAE_args(parser, args=[]):
     """
     # RNN VAE Diagnosis:
     # ------------------------------------------------------------------------
+    parser.add_argument('--rnn_active', type=bool, default=True,
+                        help='Define whether the transition layer is active! -> 2D or Pseudo 3D!')
     parser.add_argument('--rnn_vae', type=bool, default=True,
                         help='Choose if the network should behave like an AE or VAE')
     parser.add_argument('--rnn_intro', type=bool, default=True,

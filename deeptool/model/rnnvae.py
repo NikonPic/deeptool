@@ -57,8 +57,13 @@ class RNN_AE(nn.Module):
             nn.Linear(max_fea, args.n_z),
         ).to(self.device)
 
-        # 3. Transition Layer: GRU
-        self.transition = nn.GRU(args.n_z, args.n_z, 1).to(self.device)
+        # 3. Transition Layer:
+        if args.rnn_active:
+            # Apply a RECURRENCE
+            self.transition = nn.GRU(args.n_z, args.n_z, 1).to(self.device)
+        else:
+            # simple Identity
+            self.transition = nn.Sequential()
 
         # 4. Apply FC-Decoder Part
         self.fc_part_dec = nn.Sequential(

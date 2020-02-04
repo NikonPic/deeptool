@@ -38,6 +38,52 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dataset_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all relevant parameters to handle the dataset</span>
+<span class="sd">    -&gt; here: MRNET</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># determine path</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/home/biomech/Documents/OsteoData/MRNet-v1.0/&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#path = &#39;C:/Users/Niko/Documents/data/MRNet-v1.0/MRNet-v1.0&#39;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/ga46yeg/data/MRNet-v1.0&quot;</span>
+
+    <span class="c1"># Dataset MRNet:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--root_dir&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">path</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Directory of the dataset&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_gpu&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of GPUs on the PC&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--crop_size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Depth of the MR-Scan&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--crop_percent&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;if we use triplenet take percentage of av. layers&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rand_crop&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Decide whether to crop randomly&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--pic_size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Picture size of the MR-Scan&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--batch_size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Batch size for training&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--perspectives&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;axial&quot;</span><span class="p">,</span> <span class="s2">&quot;coronal&quot;</span><span class="p">,</span> <span class="s2">&quot;sagittal&quot;</span><span class="p">],</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perspectives of the Mr Scans&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--num_worker&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of workers for loading the dataset&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--classes&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;abn&quot;</span><span class="p">,</span> <span class="s2">&quot;acl&quot;</span><span class="p">,</span> <span class="s2">&quot;men&quot;</span><span class="p">],</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Classify for these classes&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -75,6 +121,32 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_model_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parameters determing the network architecture</span>
+<span class="sd">    -&gt; model_type: Which model should be applied?</span>
+<span class="sd">    -&gt; load_model: Use pretrained model?</span>
+<span class="sd">    -&gt; model_path: pretrained from which path?  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Model:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--model_type&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model: &quot;introvae&quot;, &quot;dcgan&quot;, &quot;bigan&quot;, &quot;vqvae&quot;, &quot;diagnosis&quot;&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--load_model&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Determine whether to load pretrained model&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--model_path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./data/src/_model&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the model parameters&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -108,6 +180,41 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_architecture_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters determing the network architecture</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Architecture:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--dim&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Dimension of Network: -2- or -3- &#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_fea_down&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of Conv Features for Downscale Network&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_fea_up&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of Conv Features for Upscale Network&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_z&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Size of latent layer&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--min_size&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Minimum encoding dimension for convolutions&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--scale2d&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Feature factor for 2d downscale&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--scale3d&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Feature factor for 3d downscale&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_res2d&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of residual layers between striding -2d&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_res3d&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of residual layers between striding -3d&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -119,7 +226,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_architecture_args" class="doc_header"><code>get_architecture_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L83" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_architecture_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_architecture_args" class="doc_header"><code>get_architecture_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L82" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_architecture_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Parameters determing the network architecture</p>
 
@@ -138,6 +245,27 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_opt_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parameters determing the VQVAE parameters </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Optimizers:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lr&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;learning rate&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--n_epochs&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;number of training epochs&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -149,7 +277,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L113" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L112" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -168,6 +296,27 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_vis_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    parameters for visualization</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Visualization:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--watch_batch&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1130</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;batchnumber for visualization&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--track&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;track the training progress&#39;</span><span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -179,7 +328,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L129" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L128" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters for visualization</p>
 
@@ -242,7 +391,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L145" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L144" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the IntroVae parameters</p>
 
@@ -295,7 +444,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L167" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L166" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the DCGAN parameters</p>
 
@@ -344,7 +493,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L184" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the BiGAN parameters</p>
 
@@ -405,7 +554,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L199" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L198" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -464,7 +613,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L225" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L224" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -493,6 +642,8 @@ summary: "Define all General Parameters for training!"
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># RNN VAE Diagnosis:</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_active&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Define whether the transition layer is active! -&gt; 2D or Pseudo 3D!&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_vae&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if the network should behave like an AE or VAE&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_intro&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -515,7 +666,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L249" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -545,7 +696,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L264" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L265" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -572,7 +723,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L279" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
