@@ -168,7 +168,7 @@ class RNN_VAE(RNN_AE):
             nn.Linear(max_fea, 2 * args.n_z),
         ).to(self.device)
         # get the kl facor
-        self.beta = args.rnn_vae_beta
+        self.gamma = args.gamma
 
     def vae_sampling(self, x):
         mu, log_sig2 = x.chunk(2, dim=1)
@@ -197,7 +197,7 @@ class RNN_VAE(RNN_AE):
         # get loss
         ae_loss = self.mse_loss(img, x)
         vae_loss = self.kl_loss(mu, log_sig2)
-        loss = ae_loss + self.beta * vae_loss
+        loss = ae_loss + self.gamma * vae_loss
 
         if update:
             loss.backward()
@@ -211,7 +211,6 @@ class RNN_VAE(RNN_AE):
             tr_data["vae_loss"] = vae_loss.item()
 
         return x, tr_data
-
 
 # Cell
 
@@ -222,20 +221,31 @@ class RNN_IN_VAE(RNN_VAE):
     """
 
     def __init__(self, device, args):
-        #super(RNN_AE, self).__init__(device, args)
+        # super(RNN_AE, self).__init__(device, args)
         RNN_VAE.__init__(self, device, args)
         # add extra parameters
         self.alpha = args.alpha
+        self.beta = args.beta
+        self.gamma = args.gamma
         self.m = args.m
         self.n_pretrain = args.n_pretrain
 
+        enc_params = list(self.conv_part_enc.parameters(
+        )) + list(self.fc_part_enc.parameters()) + list(self.transition.parameters())
+        self.optimizerEnc = optim.Adam(enc_params, lr=args.lr)
+
+        dec_params = list(self.conv_part_dec.parameters(
+        )) + list(self.fc_part_dec.parameters()) + list(self.transition.parameters())
+        self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
+
     def forward(self, batch, update=True):
+
+        # prepare
+        self.optimizer.zero_grad()
+        img = self.prep_input(batch)
 
         # (1st) Pass Original
         # --------------------------------------
-        # prepare
-        x = self.prep_input(batch)
-
         # encode
         z = self.encode(img)
         z, mu, log_sig2 = self.vae_sampling(z)
@@ -245,57 +255,96 @@ class RNN_IN_VAE(RNN_VAE):
         x_re = self.decode(z)
 
         # Losses
-        ae_loss = self.mse_loss(x, x_re)
-        vae_loss = self.kl_loss(mu, log_sig2)
+        ae_loss = self.beta * self.mse_loss(img, x_re)
+        kl_loss = self. gamma * self.kl_loss(mu, log_sig2)
 
-        # (2nd) Pass Reconstruct Original
+        # (2nd) Pass Reconstruct Original (Enc)
         # --------------------------------------
         # encode
-        z_re = self.encode(x_re.detach())
-        z_re, mu_re, log_sig2_re = self.vae_sampling(z_re)
+        z_re_1 = self.encode(x_re.detach())
+        z_re_1, mu_re_1, log_sig2_re_1 = self.vae_sampling(z_re_1)
 
         # Losses
-        vae_loss_re = self.kl_loss(mu_re, log_sig2_re)
+        kl_loss_re_e = self.kl_loss(mu_re_1, log_sig2_re_1)
 
-        # (3rd) Pass generate Fake imgs
+        # (3rd) Pass Generate Fake imgs (Enc)
         # --------------------------------------
+        # generate fake samples
         z_p = torch.randn_like(z, device=self.device)
-
         # now perform transition on z (decode)
         z_p = self.rnn_transition(z_p)
+
         # decode
-        x_p = self.decode(x_p)
+        x_p = self.decode(z_p)
 
-        # Encode again to obtain z_pp, while stopping gradient of x_p
-        z_p_re = self.encode(x_p.detach())
+        # encode (xp stopped!)
+        z_p_re_1 = self.encode(x_p.detach())
+        z_p_re_1, mu_p_re_1, log_sig2_re_1 = self.vae_sampling(z_p_re_1)
 
+        # Losses
+        kl_loss_p_e = self.kl_loss(mu_p_re_1, log_sig2_re_1)
 
-
-
-        loss = ae_loss + self.beta * vae_loss
+        # -------
+        l_adv_e = self.alpha * \
+            0.5 * (torch.clamp(self.m - kl_loss_re_e, min=0) +
+                   torch.clamp(self.m - kl_loss_p_e, min=0))
+        L_e = ae_loss + kl_loss + l_adv_e
 
         if update:
-            loss.backward()
-            self.optimizer.step()
-            return x
+            L_e.backward(retain_graph=True)
+            self.optimizerEnc.step()
+        # ------
+
+        # (4th) Pass Reconstruct Original (Dec)
+        # --------------------------------------
+        # encode (x_re free)
+        z_re_2 = self.encode(x_re)
+        z_re_2, mu_re_2, log_sig2_re_2 = self.vae_sampling(z_re_2)
+
+        # Losses
+        kl_loss_re_d = self.kl_loss(mu_re_2, log_sig2_re_2)
+
+        # (5th) Pass Generate Fake imgs (Dec)
+        # --------------------------------------
+        # encode (xp free)
+        z_p_re_2 = self.encode(x_p)
+        z_p_re_2, mu_p_re_2, log_sig2_re_2 = self.vae_sampling(z_p_re_2)
+
+        # Losses
+        kl_loss_p_d = self.kl_loss(mu_p_re_1, log_sig2_re_1)
+
+        L_d = self.alpha * 0.5 * (kl_loss_re_d + kl_loss_p_d)
+
+        # ------
+        if update:
+            L_d.backward()
+            self.optimizerDec.step()
+            return x_re
+        # ------
 
         else:
             tr_data = {}
-            tr_data["loss"] = loss.item()
+            tr_data["L_encoder"] = L_e.item()
+            tr_data["L_decoder"] = L_d.item() + ae_loss.item() + kl_loss.item()
             tr_data["ae_loss"] = ae_loss.item()
-            tr_data["vae_loss"] = vae_loss.item()
+            tr_data["vae_loss"] = kl_loss.item()
+            tr_data["l_adv_e"] = l_adv_e.item()
+            tr_data["l_adv_d"] = L_d.item()
 
-        return x, tr_data
-
+        return x_re, tr_data
 
 # Cell
+
 
 def Creator_RNN_AE(device, args):
     """
     return an instance of the class depending on the mode set in args
     """
     if args.rnn_vae:
-        model = RNN_VAE(device, args)
+        if args.rnn_intro:
+            model = RNN_IN_VAE(device, args)
+        else:
+            model = RNN_VAE(device, args)
     else:
-        model = RNN_VAE(device, args)
+        model = RNN_AE(device, args)
     return model

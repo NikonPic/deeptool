@@ -254,9 +254,7 @@ def get_RNN_VAE_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument('--rnn_vae', type=bool, default=True,
                         help='Choose if the network should behave like an AE or VAE')
-    parser.add_argument('--rnn_vae_beta', type=float, default=5.0,
-                        help='Choose if beta factor for KL part')
-    parser.add_argument('--rnn_intro', type=bool, default=False,
+    parser.add_argument('--rnn_intro', type=bool, default=True,
                         help='Choose if the network should behave like an IntroVAE')
     # ------------------------------------------------------------------------
     return parser

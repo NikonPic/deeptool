@@ -495,9 +495,7 @@ summary: "Define all General Parameters for training!"
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_vae&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if the network should behave like an AE or VAE&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_vae_beta&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if beta factor for KL part&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_intro&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rnn_intro&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose if the network should behave like an IntroVAE&#39;</span><span class="p">)</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="k">return</span> <span class="n">parser</span>
@@ -547,7 +545,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L266" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L264" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -574,7 +572,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L280" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
@@ -614,7 +612,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_intro=False, rnn_vae=True, rnn_vae_beta=5.0, root_dir=&#39;C:/Users/ga46yeg/data/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
+<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_intro=True, rnn_vae=True, root_dir=&#39;C:/Users/ga46yeg/data/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
 </div>
 
 </div>
