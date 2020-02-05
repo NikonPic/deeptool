@@ -37,6 +37,9 @@ entries:
       title: VQVAE (2)
       url: /vqvae
     - output: web,pdf
+      title: BiGAN
+      url: /bigan
+    - output: web,pdf
       title: RNN VAE
       url: /vae
     output: web

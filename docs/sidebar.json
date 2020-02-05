@@ -10,6 +10,7 @@
     "DCGAN": "/dcgan",
     "Intro VAE": "/introvae",
     "VQVAE (2)": "/vqvae",
+    "BiGAN": "/bigan",
     "RNN VAE": "/vae"
   }
 }
