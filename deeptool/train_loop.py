@@ -13,13 +13,14 @@ from .model.dcgan import DCGAN
 from .model.diagnosis import TripleMRNet
 from .model.vqvae import VQVAE2
 from .model.introvae import IntroVAE
+from .model.bigan import BiGAN
 from .model.rnnvae import Creator_RNN_AE
 
 # import the dataset
 from .dataloader import load_datasets, load_test_batch
 
 # import the parameters
-from .parameters import get_all_args
+from .parameters import get_all_args, compat_args
 
 # Cell
 
@@ -28,18 +29,20 @@ def get_model(device, args):
     """
     return the required model depending on the arguments:
     """
+    print(args.model_type)
     switcher = {
         "dcgan": DCGAN,
         "diagnosis": TripleMRNet,
         "vqvae": VQVAE2,
         "introvae": IntroVAE,
-        "rnnvae": Creator_RNN_AE
-        # add more!
+        "rnnvae": Creator_RNN_AE,
+        "bigan": BiGAN,
     }
     # Get the model_creator
-    model_creater = switcher.get(args.model_type, lambda: "Invalid Model Type")
+    model_creator = switcher.get(args.model_type, lambda: "Invalid Model Type")
+    print(model_creator)
     # create model
-    return model_creater(device, args)
+    return model_creator(device, args)
 
 # Cell
 

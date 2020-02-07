@@ -6,7 +6,7 @@ __all__ = ['DisBiGan', 'BiGAN']
 
 import torch
 from torch import nn, optim
-from ..architecture import Encoder, Decoder, DownUpConv
+from ..architecture import Encoder, Decoder, DownUpConv, weights_init
 from ..utils import Tracker
 
 # Cell
@@ -150,7 +150,8 @@ class BiGAN(nn.Module):
             self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999))
 
         # Setup the tracker to visualize the progress
-        self.tracker = Tracker(args)
+        if args.track:
+            self.tracker = Tracker(args)
 
         # Fixed noise to visualize progression
         self.batch_size = args.batch_size
