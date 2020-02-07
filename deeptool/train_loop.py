@@ -40,7 +40,6 @@ def get_model(device, args):
     }
     # Get the model_creator
     model_creator = switcher.get(args.model_type, lambda: "Invalid Model Type")
-    print(model_creator)
     # create model
     return model_creator(device, args)
 
