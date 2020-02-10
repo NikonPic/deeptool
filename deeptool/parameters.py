@@ -189,6 +189,8 @@ def get_BiGAN_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument('--bi_extension', type=bool, default=False,
                         help='extending bigan to have sx, and sz (like in BigBiGAN)')
+    parser.add_argument('--bi_ae_scale', type=float, default=0.9,
+                        help='exponential decaying ae-part of the bigan network')
     # ------------------------------------------------------------------------
     return parser
 

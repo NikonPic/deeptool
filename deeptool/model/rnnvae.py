@@ -129,18 +129,23 @@ class RNN_AE(nn.Module):
         img = batch['img'].to(self.device)
         return img
 
-    def forward(self, batch, update=True):
-        """
-        calculate the forward pass
-        """
-        # prepare
-        img = self.prep_input(batch)
+    def ae_forward(self, img):
         # encode:
         x = self.encode(img)
         # decode
         x = self.decode(x)
         # calc loss
         loss = self.mse_loss(img, x)
+        return loss, x
+
+    def forward(self, batch, update=True):
+        """
+        calculate the forward pass
+        """
+        # prepare
+        img = self.prep_input(batch)
+        # autoencoder
+        loss, x = self.ae_forward(img)
 
         if update:
             loss.backward()
@@ -366,6 +371,7 @@ class RNN_BIGAN(RNN_AE):
             nn.Linear(max_fea*min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(max_fea, 1),
+            nn.Sigmoid(),
         ).to(self.device)
 
         enc_params = list(self.conv_part_enc.parameters(
@@ -386,6 +392,7 @@ class RNN_BIGAN(RNN_AE):
 
         # parameters
         self.lam = args.lam
+        self.bi_ae_scale = args.bi_ae_scale
 
         # Loss to be optimized for dcgan
         self.bi_loss = nn.BCELoss()
@@ -396,8 +403,12 @@ class RNN_BIGAN(RNN_AE):
         x = x.reshape(self.view_arr)
         xz = torch.cat([x, z], dim=1)
         xz = self.fc_part_dis(xz)
-        return xz
+        return xz.view(-1)
 
+    def ae_part(self, x):
+        # (1) Train Ae
+        #-------------------------------
+        pass
 
     def forward(self, batch, update=True):
         """main function"""
@@ -409,8 +420,17 @@ class RNN_BIGAN(RNN_AE):
         # load batch
         x = self.prep_input(batch)
 
+        # (0) Train Autoencoder
+        #-------------------------------
+        ae_loss, _ = self.ae_forward(x)
+        ae_loss *= self.bi_ae_scale
+        if update:
+            ae_loss.backward()
+
         # (1) Train Discriminator
         #-------------------------------
+        # load batch
+        x = self.prep_input(batch)
         # generate original z
         z = self.encode(x)
 
@@ -426,17 +446,19 @@ class RNN_BIGAN(RNN_AE):
         # real
         out = self.decide(x.detach(), z.detach())
         errD_real = self.bi_loss(out, label)
+        if update:
+            errD_real.backward()
 
         #fake
         label.fill_(self.fake_label)
         out = self.decide(x_p.detach(), z_p.detach())
         errD_fake = self.bi_loss(out, label)
 
-        errD = errD_real + errD_fake
-
         if update:
-            errD.backward()
+            errD_fake.backward()
             self.optimizerDis.step()
+
+        errD = (errD_real + errD_fake).mean().item()
 
         # (2) Train Encoder / Decoder
         #-------------------------------
@@ -452,16 +474,19 @@ class RNN_BIGAN(RNN_AE):
         out = self.decide(x, z)
         errEnc = self.bi_loss(out, label)
 
+        if update:
+            errEnc.backward()
+
         #fake
         label.fill_(self.real_label)
         out = self.decide(x_p, z_p)
         errDec = self.bi_loss(out, label)
 
-        errEncDec = errEnc + errDec
+        errEncDec = (errEnc + errDec).mean().item()
 
         # Update Generator
         if update:
-            errEncDec.backward()
+            errDec.backward()
             self.optimizerEnc.step()
             self.optimizerDec.step()
             return x_p
@@ -469,8 +494,9 @@ class RNN_BIGAN(RNN_AE):
         else:
             # Track all relevant losses
             tr_data = {}
-            tr_data["errDis"] = errD.mean().item()
-            tr_data["errEncDec"] = errEncDec.mean().item()
+            tr_data["ae_loss"] = ae_loss.mean().item()
+            tr_data["errDis"] = errD
+            tr_data["errEncDec"] = errEncDec
 
             tr_data["errD_real"] = errD_real.mean().item()
             tr_data["errD_fake"] = errD_fake.mean().item()
@@ -496,9 +522,9 @@ def Creator_RNN_AE(device, args):
     switcher = {
         "ae": RNN_AE,
         "vae": RNN_VAE,
-        "introvae": RNN_IN_VAE,
+        "introvae": RNN_INTROVAE,
         "bigan": RNN_BIGAN,
     }
     # Get the model_creator
     model_creator = switcher.get(args.rnn_type, lambda: "Invalid Model Type")
-    return model
+    return model_creator(device, args)
