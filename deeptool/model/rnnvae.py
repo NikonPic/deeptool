@@ -405,10 +405,12 @@ class RNN_BIGAN(RNN_AE):
         xz = self.fc_part_dis(xz)
         return xz.view(-1)
 
-    def ae_part(self, x):
-        # (1) Train Ae
-        #-------------------------------
-        pass
+    def ae_part(self, x, update):
+        ae_loss, _ = self.ae_forward(x)
+        ae_loss *= self.bi_ae_scale
+        if update:
+            ae_loss.backward()
+        return ae_loss.mean().item()
 
     def forward(self, batch, update=True):
         """main function"""
@@ -422,10 +424,8 @@ class RNN_BIGAN(RNN_AE):
 
         # (0) Train Autoencoder
         #-------------------------------
-        ae_loss, _ = self.ae_forward(x)
-        ae_loss *= self.bi_ae_scale
-        if update:
-            ae_loss.backward()
+        ae_loss = 0
+        #ae_loss = self.ae_part(x, update)
 
         # (1) Train Discriminator
         #-------------------------------
@@ -494,7 +494,7 @@ class RNN_BIGAN(RNN_AE):
         else:
             # Track all relevant losses
             tr_data = {}
-            tr_data["ae_loss"] = ae_loss.mean().item()
+            tr_data["ae_loss"] = ae_loss
             tr_data["errDis"] = errD
             tr_data["errEncDec"] = errEncDec
 
