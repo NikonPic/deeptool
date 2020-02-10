@@ -253,10 +253,8 @@ def get_RNN_VAE_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument('--rnn_active', type=bool, default=True,
                         help='Define whether the transition layer is active! -> 2D or Pseudo 3D!')
-    parser.add_argument('--rnn_vae', type=bool, default=True,
-                        help='Choose if the network should behave like an AE or VAE')
-    parser.add_argument('--rnn_intro', type=bool, default=True,
-                        help='Choose if the network should behave like an IntroVAE')
+    parser.add_argument('--rnn_type', type=str, default="ae",
+                        help='Define the Type: ae / vae / intro /bigan')
     # ------------------------------------------------------------------------
     return parser
 

@@ -55,7 +55,8 @@ index = {"MAX_PIXEL_VAL": "00_dataloader.ipynb",
          "mod_batch": "33_rnn_vae.ipynb",
          "RNN_AE": "33_rnn_vae.ipynb",
          "RNN_VAE": "33_rnn_vae.ipynb",
-         "RNN_IN_VAE": "33_rnn_vae.ipynb",
+         "RNN_INTROVAE": "33_rnn_vae.ipynb",
+         "RNN_BIGAN": "33_rnn_vae.ipynb",
          "Creator_RNN_AE": "33_rnn_vae.ipynb"}
 
 modules = ["dataloader.py",
