@@ -364,14 +364,27 @@ class RNN_BIGAN(RNN_AE):
 
         # take saved params
         max_fea, min_size, n_z = self.max_fea, self.min_size, args.n_z
-        #add the fc part
-        self.fc_part_dis = nn.Sequential(
-            nn.Linear(n_z+max_fea*min_size*min_size, max_fea*min_size),
-            nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(max_fea*min_size, max_fea),
+
+        # add the fc part(s)
+        self.fc_part_dis_x = nn.Sequential(
+            nn.Linear(max_fea*min_size*min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(max_fea, 1),
-            nn.Sigmoid(),
+            #nn.Sigmoid(),
+        ).to(self.device)
+
+        self.fc_part_dis_z = nn.Sequential(
+            nn.Linear(n_z, max_fea),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(max_fea, 1),
+            #nn.Sigmoid(),
+        ).to(self.device)
+
+        self.fc_part_dis_xz = nn.Sequential(
+            nn.Linear(n_z+max_fea*min_size*min_size, max_fea*min_size),
+            nn.LeakyReLU(0.2, inplace=True),
+            nn.Linear(max_fea*min_size, 1),
+            #nn.Sigmoid(),
         ).to(self.device)
 
         enc_params = list(self.conv_part_enc.parameters(
@@ -382,13 +395,16 @@ class RNN_BIGAN(RNN_AE):
         )) + list(self.fc_part_dec.parameters()) + list(self.transition.parameters())
         self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
-        dis_params = list(self.conv_part_dis.parameters(
-        )) + list(self.fc_part_dis.parameters())
+        dis_params = list(self.conv_part_dis.parameters()) + list(self.fc_part_dis_x.parameters()) + \
+            list(self.fc_part_dis_z.parameters()) + \
+            list(self.fc_part_dis_xz.parameters())
         self.optimizerDis = optim.Adam(dis_params, lr=args.lr)
+
+        self.h_relu = nn.ReLU()
 
         # labeling
         self.real_label = 1
-        self.fake_label = 0
+        self.fake_label = -1
 
         # parameters
         self.lam = args.lam
@@ -397,13 +413,40 @@ class RNN_BIGAN(RNN_AE):
         # Loss to be optimized for dcgan
         self.bi_loss = nn.BCELoss()
 
-    def decide(self, x, z):
-        """apply discriminator"""
+    def get_s(self, x, z):
+        """apply discriminator and output sx, sz and sxz"""
+        # shape inputs
         x = self.conv_part_dis(x)
         x = x.reshape(self.view_arr)
         xz = torch.cat([x, z], dim=1)
-        xz = self.fc_part_dis(xz)
-        return xz.view(-1)
+
+        #apply fc decisions to generate out-dis
+        s_x = self.fc_part_dis_x(x).view(-1)
+        s_z = self.fc_part_dis_z(z).view(-1)
+        s_xz = self.fc_part_dis_xz(xz).view(-1)
+
+        return s_x, s_z, s_xz
+
+    def hinge(self, x):
+        return self.h_relu(1-x)
+
+    def decide(self, x, z, y, ed=False):
+        """
+        generate dis-loss
+        ed -> ENCODE-DECODE Learning
+        """
+        # get decisions from Discriminator
+        s_x, s_z, s_xz = self.get_s(x, z)
+
+        if ed:
+            return y * (s_x + s_z + s_xz)
+
+        hs_x = self.hinge(y * s_x)
+        hs_z = self.hinge(y * s_z)
+        hs_xz = self.hinge(y * s_xz)
+
+        return hs_x + hs_z + hs_xz
+
 
     def ae_part(self, x, update):
         ae_loss, _ = self.ae_forward(x)
@@ -423,12 +466,12 @@ class RNN_BIGAN(RNN_AE):
         x = self.prep_input(batch)
 
         # (0) Train Autoencoder
-        #-------------------------------
+        # -------------------------------
         ae_loss = 0
         #ae_loss = self.ae_part(x, update)
 
         # (1) Train Discriminator
-        #-------------------------------
+        # -------------------------------
         # load batch
         x = self.prep_input(batch)
         # generate original z
@@ -441,18 +484,14 @@ class RNN_BIGAN(RNN_AE):
 
         # fill the labels
         b_size = x.size(0)
-        label = torch.full((b_size,), self.real_label, device=self.device)
 
         # real
-        out = self.decide(x.detach(), z.detach())
-        errD_real = self.bi_loss(out, label)
+        errD_real = self.decide(x.detach(), z.detach(), +1).mean()
         if update:
             errD_real.backward()
 
-        #fake
-        label.fill_(self.fake_label)
-        out = self.decide(x_p.detach(), z_p.detach())
-        errD_fake = self.bi_loss(out, label)
+        # fake
+        errD_fake = self.decide(x_p.detach(), z_p.detach(), -1).mean()
 
         if update:
             errD_fake.backward()
@@ -461,26 +500,21 @@ class RNN_BIGAN(RNN_AE):
         errD = (errD_real + errD_fake).mean().item()
 
         # (2) Train Encoder / Decoder
-        #-------------------------------
+        # -------------------------------
         # encode
         z = self.encode(x)
 
         # decode
         x_p = self.decode(z_p)
 
-
         # real
-        label.fill_(self.fake_label)
-        out = self.decide(x, z)
-        errEnc = self.bi_loss(out, label)
+        errEnc = self.decide(x, z, +1, ed=True).mean()
 
         if update:
             errEnc.backward()
 
-        #fake
-        label.fill_(self.real_label)
-        out = self.decide(x_p, z_p)
-        errDec = self.bi_loss(out, label)
+        # fake
+        errDec = self.decide(x_p, z_p, -1, ed=True).mean()
 
         errEncDec = (errEnc + errDec).mean().item()
 
@@ -510,8 +544,6 @@ class RNN_BIGAN(RNN_AE):
             # Return losses and reconstruction data
             return x_r, tr_data
 
-
-
 # Cell
 
 
@@ -525,6 +557,7 @@ def Creator_RNN_AE(device, args):
         "introvae": RNN_INTROVAE,
         "bigan": RNN_BIGAN,
     }
+    print(args.rnn_type)
     # Get the model_creator
     model_creator = switcher.get(args.rnn_type, lambda: "Invalid Model Type")
     return model_creator(device, args)
