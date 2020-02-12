@@ -428,6 +428,7 @@ class RNN_BIGAN(RNN_AE):
         return s_x, s_z, s_xz
 
     def hinge(self, x):
+        """the hinge loss: max(0, 1-x)"""
         return self.h_relu(1-x)
 
     def decide(self, x, z, y, ed=False):
@@ -438,9 +439,11 @@ class RNN_BIGAN(RNN_AE):
         # get decisions from Discriminator
         s_x, s_z, s_xz = self.get_s(x, z)
 
+        # apply y for encoder-decoder
         if ed:
             return y * (s_x + s_z + s_xz)
 
+        # apply hinge losses for discriminator
         hs_x = self.hinge(y * s_x)
         hs_z = self.hinge(y * s_z)
         hs_xz = self.hinge(y * s_xz)
@@ -449,6 +452,7 @@ class RNN_BIGAN(RNN_AE):
 
 
     def ae_part(self, x, update):
+        """simple forward pass of autoencoder"""
         ae_loss, _ = self.ae_forward(x)
         ae_loss *= self.bi_ae_scale
         if update:
