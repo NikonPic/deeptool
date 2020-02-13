@@ -81,7 +81,7 @@ summary: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="mod_batch" class="doc_header"><code>mod_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L15" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mod_batch</code>(<strong><code>batch</code></strong>, <strong><code>key</code></strong>=<em><code>'img'</code></em>)</p>
+<h4 id="mod_batch" class="doc_header"><code>mod_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L16" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>mod_batch</code>(<strong><code>batch</code></strong>, <strong><code>key</code></strong>=<em><code>'img'</code></em>)</p>
 </blockquote>
 <p>transform the batch to be compatible with the network by permuting</p>
 
@@ -141,7 +141,7 @@ summary: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L27" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <code>Module</code></p>
+<h2 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L28" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -255,7 +255,7 @@ ae
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L164" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
+<h2 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L165" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
 </blockquote>
 <p>inherit from RNN_AE and add the variational part</p>
 
@@ -318,7 +318,7 @@ vae
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L227" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
+<h2 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L228" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>inherit from RNN_VAE and add the GAN part</p>
 
@@ -365,8 +365,8 @@ introvae
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Architecture:">Architecture:<a class="anchor-link" href="#Architecture:">&#182;</a></h3><p>{% include image.html alt="Drawing" style="width: 800px;" file="/deeptool/img/arch_biggan.png" %}</p>
-<h3 id="Loss:">Loss:<a class="anchor-link" href="#Loss:">&#182;</a></h3><p>{% include image.html alt="Drawing" style="width: 800px;" file="/deeptool/img/biggan.png" %}</p>
+<h3 id="Architecture:">Architecture:<a class="anchor-link" href="#Architecture:">&#182;</a></h3><p>{% include image.html alt="Drawing" style="width: 800px;" file="/deeptool/img/arch_biggan.PNG" %}</p>
+<h3 id="Loss:">Loss:<a class="anchor-link" href="#Loss:">&#182;</a></h3><p>{% include image.html alt="Drawing" style="width: 800px;" file="/deeptool/img/biggan.PNG" %}</p>
 <p>(by: <a href="https://arxiv.org/pdf/1907.02544.pdf">https://arxiv.org/pdf/1907.02544.pdf</a>)</p>
 
 </div>
@@ -384,7 +384,7 @@ introvae
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L345" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
+<h2 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L346" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>apply the Bidirectional-GAN part, inherit from the normal autoencoder</p>
 
@@ -408,7 +408,7 @@ introvae
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L554" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
+<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L576" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
 </blockquote>
 <p>return an instance of the class depending on the mode set in args</p>
 
