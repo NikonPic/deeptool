@@ -252,6 +252,8 @@ class RNN_INTROVAE(RNN_VAE):
 
         # prepare
         self.optimizer.zero_grad()
+        self.optimizerEnc.zero_grad()
+        self.optimizerDec.zero_grad()
         img = self.prep_input(batch)
 
         # (1st) Pass Original
@@ -484,6 +486,7 @@ class RNN_BIGAN(RNN_VAE):
     def forward(self, batch, update=True):
         """main function"""
         # zero all gradients
+        self.optimizer.zero_grad()
         self.optimizerEnc.zero_grad()
         self.optimizerDec.zero_grad()
         self.optimizerDis.zero_grad()
