@@ -182,6 +182,9 @@ class RNN_VAE(RNN_AE):
         # get the kl facor
         self.gamma = args.gamma
 
+        # reset the optimizer
+        self.optimizer = optim.Adam(self.parameters(), lr=args.lr)
+
     def vae_sampling(self, x):
         mu, log_sig2 = x.chunk(2, dim=1)
         # get random matrix
@@ -240,6 +243,9 @@ class RNN_INTROVAE(RNN_VAE):
         self.m = args.m
         self.n_pretrain = args.n_pretrain
 
+        # reset the optimizer
+        self.optimizer = None
+
         enc_params = list(self.conv_part_enc.parameters(
         )) + list(self.fc_part_enc.parameters()) + list(self.transition.parameters())
         self.optimizerEnc = optim.Adam(enc_params, lr=args.lr)
@@ -251,7 +257,6 @@ class RNN_INTROVAE(RNN_VAE):
     def forward(self, batch, update=True):
 
         # prepare
-        self.optimizer.zero_grad()
         self.optimizerEnc.zero_grad()
         self.optimizerDec.zero_grad()
         img = self.prep_input(batch)
@@ -408,6 +413,9 @@ class RNN_BIGAN(RNN_VAE):
             nn.Linear(max_fea, 1),
         ).to(self.device)
 
+        # reset the optimizer
+        self.optimizer = None
+
         enc_params = list(self.conv_part_enc.parameters(
         )) + list(self.fc_part_enc.parameters())
         self.optimizerEnc = optim.Adam(enc_params, lr=args.lr)
@@ -486,7 +494,6 @@ class RNN_BIGAN(RNN_VAE):
     def forward(self, batch, update=True):
         """main function"""
         # zero all gradients
-        self.optimizer.zero_grad()
         self.optimizerEnc.zero_grad()
         self.optimizerDec.zero_grad()
         self.optimizerDis.zero_grad()

@@ -6,7 +6,7 @@ __all__ = ['get_model', 'test_one_batch', 'main_loop']
 
 # general
 import torch
-from tqdm import tqdm
+from tqdm import tqdm, tqdm_notebook
 
 # import the relevant models
 from .model.dcgan import DCGAN
@@ -66,8 +66,13 @@ def test_one_batch(args):
 # Cell
 
 
-def main_loop(args):
+def main_loop(args, tq_nb = True):
     """Perform the Training using the predefined arguments"""
+
+    # select tqdm_type
+    tq = tqdm
+    if tq_nb:
+        tq = tqdm_notebook
 
     # define calculating device
     device = torch.device("cuda:0" if (
@@ -102,7 +107,7 @@ def main_loop(args):
     batch_count = 0
     model.train()
 
-    for epoch in range(args.n_epochs):
+    for epoch in tq(range(args.n_epochs)):
 
         # remodify after pretraining training
         if epoch == args.n_pretrain and args.model_type in ("vqvae", "introvae"):
@@ -110,7 +115,7 @@ def main_loop(args):
             model.set_parameters(args)
 
         # For each batch in the dataloader
-        for data in tqdm(train_loader):
+        for data in tq(train_loader):
             # perform training
             model(data)
 
