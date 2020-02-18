@@ -5,12 +5,12 @@
     "Architecture": "/architecture",
     "Utils": "/utils",
     "Parameters": "/parameters",
-    "Training Loop": "/loop",
+    "Training Loop": "/train_loop",
     "Diagnosis": "/diagnosis",
     "DCGAN": "/dcgan",
     "Intro VAE": "/introvae",
     "VQVAE (2)": "/vqvae",
     "BiGAN": "/bigan",
-    "RNN VAE": "/vae"
+    "RNN VAE": "/rnn_vae"
   }
 }

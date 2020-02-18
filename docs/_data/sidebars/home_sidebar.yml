@@ -23,7 +23,7 @@ entries:
       url: /parameters
     - output: web,pdf
       title: Training Loop
-      url: /loop
+      url: /train_loop
     - output: web,pdf
       title: Diagnosis
       url: /diagnosis
@@ -41,7 +41,7 @@ entries:
       url: /bigan
     - output: web,pdf
       title: RNN VAE
-      url: /vae
+      url: /rnn_vae
     output: web
     title: deeptool
   output: web

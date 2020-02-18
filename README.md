@@ -3,7 +3,7 @@
 
 
 
-<img src="nbs\img\deeptool.png" alt="Drawing" style="width: 500px;">
+<img src="nbs/img/deeptool.png" alt="Drawing" style="width: 500px;">
 
 Current implementations:
 
@@ -30,7 +30,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 
 ### 1. Import the library and some functionality
 
-```python
+```
 from deeptool.train_loop import get_model, test_one_batch, main_loop
 from deeptool.parameters import get_all_args, compat_args
 ```
@@ -38,7 +38,7 @@ from deeptool.parameters import get_all_args, compat_args
 ### 2. Adjust the arguments for training for your needs
 Example: (check parameters for more info)
 
-```python
+```
 # Define Arguments (Example)
 args = get_all_args()
 args.dim = 2 # Dimension of network reduced to 2
