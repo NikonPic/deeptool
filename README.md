@@ -3,7 +3,7 @@
 
 
 
-<img src="nbs/img/deeptool.png" alt="Drawing" style="width: 500px;">
+<img src="nbs\img\deeptool.png" alt="Drawing" style="width: 500px;">
 
 Current implementations:
 
