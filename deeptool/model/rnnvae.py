@@ -24,6 +24,7 @@ def mod_batch(batch, key="img"):
 
 # Cell
 
+
 class Transition(nn.Module):
     """
     Transition Network with Recurrence / 1D Convolutions / Identity Function
@@ -34,20 +35,19 @@ class Transition(nn.Module):
         self.define_switches(args)
         self.n_z = args.n_z
 
-
     def define_switches(self, args):
         """subfunc of init to define switches"""
         # in = Identity mapping
         ident = nn.Sequential()
 
         # rnn = Recurrence
-        rnn = nn.Sequential(
-            nn.GRU(args.n_z, args.n_z, 1),
-        )
+        rnn = nn.Sequential(nn.GRU(args.n_z, args.n_z, 1),)
 
         # cnn = 1d Convolution
         cnn = nn.Sequential(
-            nn.Conv1d(args.n_z, args.n_z, kernel_size=3, dilation=1, padding=1, stride=1),
+            nn.Conv1d(
+                args.n_z, args.n_z, kernel_size=3, dilation=1, padding=1, stride=1
+            ),
             nn.ReLU(),
         )
 
@@ -65,8 +65,12 @@ class Transition(nn.Module):
             "cnn": self.forward_cnn,
         }
 
-        self.main_part = switcher_part.get(args.rnn_transition, lambda: "Invalid Transition Type")
-        self.forward = switcher_func.get(args.rnn_transition, lambda: "Invalid Transition Type")
+        self.main_part = switcher_part.get(
+            args.rnn_transition, lambda: "Invalid Transition Type"
+        )
+        self.forward = switcher_func.get(
+            args.rnn_transition, lambda: "Invalid Transition Type"
+        )
 
         print("Transition: " + args.rnn_transition)
 
@@ -102,7 +106,6 @@ class Transition(nn.Module):
 
 
 class RNN_AE(nn.Module):
-
     def __init__(self, device, args):
         """
         The recurrent autoencoder for compressing 3d data.
@@ -113,23 +116,27 @@ class RNN_AE(nn.Module):
 
         # 1. create the convolutional Encoder
         args.dim = 2
-        self.conv_part_enc = DownUpConv(args, pic_size=args.pic_size, n_fea_in=len(
-            args.perspectives), n_fea_next=args.n_fea_up, depth=1).to(self.device)
+        self.conv_part_enc = DownUpConv(
+            args,
+            pic_size=args.pic_size,
+            n_fea_in=len(args.perspectives),
+            n_fea_next=args.n_fea_up,
+            depth=1,
+        ).to(self.device)
 
         # save important features
         max_fea, min_size = self.conv_part_enc.max_fea, self.conv_part_enc.min_size
         self.n_z, self.max_fea, self.min_size = args.n_z, max_fea, min_size
 
-        self.view_arr = [-1, max_fea * min_size**2]  # as flat vector
+        self.view_arr = [-1, max_fea * min_size ** 2]  # as flat vector
         self.view_conv = [-1, max_fea, min_size, min_size]  # as conv block
-        self.view_track = [1, len(args.perspectives), -1,
-                           args.pic_size, args.pic_size]
+        self.view_track = [1, len(args.perspectives), -1, args.pic_size, args.pic_size]
 
         # 2. Apply FC- Encoder Part
         self.fc_part_enc = nn.Sequential(
-            nn.Linear(max_fea*min_size*min_size, max_fea*min_size),
+            nn.Linear(max_fea * min_size * min_size, max_fea * min_size),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(max_fea*min_size, max_fea),
+            nn.Linear(max_fea * min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(max_fea, args.n_z),
         ).to(self.device)
@@ -141,18 +148,23 @@ class RNN_AE(nn.Module):
         self.fc_part_dec = nn.Sequential(
             nn.Linear(args.n_z, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(max_fea, max_fea*min_size),
+            nn.Linear(max_fea, max_fea * min_size),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(max_fea*min_size, max_fea*min_size*min_size),
+            nn.Linear(max_fea * min_size, max_fea * min_size * min_size),
         ).to(self.device)
 
         # 5. create the convolutional Decoder
         self.conv_part_dec = DownUpConv(
-            args, pic_size=args.pic_size, n_fea_in=len(
-                args.perspectives), n_fea_next=args.n_fea_down, depth=1, move='up').to(self.device)
+            args,
+            pic_size=args.pic_size,
+            n_fea_in=len(args.perspectives),
+            n_fea_next=args.n_fea_down,
+            depth=1,
+            move="up",
+        ).to(self.device)
 
         # the standard loss
-        self.mse_loss = nn.MSELoss(reduction='sum')
+        self.mse_loss = nn.MSELoss(reduction="sum")
 
         # the optimizer
         self.optimizer = optim.Adam(self.parameters(), lr=args.lr)
@@ -186,7 +198,7 @@ class RNN_AE(nn.Module):
     def prep_input(self, batch):
         self.zero_grad()
         batch = mod_batch(batch)
-        img = batch['img'].to(self.device)
+        img = batch["img"].to(self.device)
         return img
 
     def ae_forward(self, img):
@@ -227,14 +239,14 @@ class RNN_VAE(RNN_AE):
     """
 
     def __init__(self, device, args):
-        #super(RNN_AE, self).__init__(device, args) # maybe just RNN_VAE
+        # super(RNN_AE, self).__init__(device, args) # maybe just RNN_VAE
         RNN_AE.__init__(self, device, args)
         # 2. rewrite FC- Encoder Part
         max_fea, min_size = self.max_fea, self.min_size
         self.fc_part_enc = nn.Sequential(
-            nn.Linear(max_fea*min_size*min_size, max_fea*min_size),
+            nn.Linear(max_fea * min_size * min_size, max_fea * min_size),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(max_fea*min_size, max_fea),
+            nn.Linear(max_fea * min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(max_fea, 2 * args.n_z),
         ).to(self.device)
@@ -247,8 +259,7 @@ class RNN_VAE(RNN_AE):
     def vae_sampling(self, x):
         mu, log_sig2 = x.chunk(2, dim=1)
         # get random matrix
-        eps = torch.rand_like(
-            mu, device=self.device)
+        eps = torch.rand_like(mu, device=self.device)
         # sample together
         z = mu + torch.exp(torch.mul(0.5, log_sig2)) * eps
         return z, mu, log_sig2
@@ -305,12 +316,18 @@ class RNN_INTROVAE(RNN_VAE):
         # reset the optimizer
         self.optimizer = None
 
-        enc_params = list(self.conv_part_enc.parameters(
-        )) + list(self.fc_part_enc.parameters()) + list(self.transition.parameters())
+        enc_params = (
+            list(self.conv_part_enc.parameters())
+            + list(self.fc_part_enc.parameters())
+            + list(self.transition.parameters())
+        )
         self.optimizerEnc = optim.Adam(enc_params, lr=args.lr)
 
-        dec_params = list(self.conv_part_dec.parameters(
-        )) + list(self.fc_part_dec.parameters()) + list(self.transition.parameters())
+        dec_params = (
+            list(self.conv_part_dec.parameters())
+            + list(self.fc_part_dec.parameters())
+            + list(self.transition.parameters())
+        )
         self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
     def forward(self, batch, update=True):
@@ -331,7 +348,7 @@ class RNN_INTROVAE(RNN_VAE):
 
         # Losses
         ae_loss = self.beta * self.mse_loss(img, x_re)
-        kl_loss = self. gamma * self.kl_loss(mu, log_sig2)
+        kl_loss = self.gamma * self.kl_loss(mu, log_sig2)
 
         # (2nd) Pass Reconstruct Original (Enc)
         # --------------------------------------
@@ -358,9 +375,14 @@ class RNN_INTROVAE(RNN_VAE):
         kl_loss_p_e = self.kl_loss(mu_p_re_1, log_sig2_re_1)
 
         # -------
-        l_adv_e = self.alpha * \
-            0.5 * (torch.clamp(self.m - kl_loss_re_e, min=0) +
-                   torch.clamp(self.m - kl_loss_p_e, min=0))
+        l_adv_e = (
+            self.alpha
+            * 0.5
+            * (
+                torch.clamp(self.m - kl_loss_re_e, min=0)
+                + torch.clamp(self.m - kl_loss_p_e, min=0)
+            )
+        )
         L_e = ae_loss + kl_loss + l_adv_e
 
         if update:
@@ -424,8 +446,13 @@ class RNN_BIGAN(RNN_VAE):
         # switch to 2 dim for the init:
         # -----------
         args.dim = 2
-        self.conv_part_dis = DownUpConv(args, pic_size=args.pic_size, n_fea_in=len(
-            args.perspectives), n_fea_next=args.n_fea_up, depth=1).to(self.device)
+        self.conv_part_dis = DownUpConv(
+            args,
+            pic_size=args.pic_size,
+            n_fea_in=len(args.perspectives),
+            n_fea_next=args.n_fea_up,
+            depth=1,
+        ).to(self.device)
         args.dim = 3
         # -----------
 
@@ -435,10 +462,10 @@ class RNN_BIGAN(RNN_VAE):
         # add the fc part(s)
         self.fc_part_dis_x = nn.Sequential(
             # layer 1
-            nn.Linear(max_fea*min_size*min_size, max_fea*min_size),
+            nn.Linear(max_fea * min_size * min_size, max_fea * min_size),
             nn.LeakyReLU(0.2, inplace=True),
             # layer 2
-            nn.Linear(max_fea*min_size, max_fea),
+            nn.Linear(max_fea * min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             # layer 3
             nn.Linear(max_fea, max_fea),
@@ -460,10 +487,10 @@ class RNN_BIGAN(RNN_VAE):
 
         self.fc_part_dis_xz = nn.Sequential(
             # layer 1
-            nn.Linear(n_z+max_fea*min_size*min_size, max_fea*min_size),
+            nn.Linear(n_z + max_fea * min_size * min_size, max_fea * min_size),
             nn.LeakyReLU(0.2, inplace=True),
             # layer 2
-            nn.Linear(max_fea*min_size, max_fea),
+            nn.Linear(max_fea * min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             # layer 3
             nn.Linear(max_fea, max_fea),
@@ -475,17 +502,24 @@ class RNN_BIGAN(RNN_VAE):
         # reset the optimizer
         self.optimizer = None
 
-        enc_params = list(self.conv_part_enc.parameters(
-        )) + list(self.fc_part_enc.parameters())
+        enc_params = list(self.conv_part_enc.parameters()) + list(
+            self.fc_part_enc.parameters()
+        )
         self.optimizerEnc = optim.Adam(enc_params, lr=args.lr)
 
-        dec_params = list(self.conv_part_dec.parameters(
-        )) + list(self.fc_part_dec.parameters()) + list(self.transition.parameters())
+        dec_params = (
+            list(self.conv_part_dec.parameters())
+            + list(self.fc_part_dec.parameters())
+            + list(self.transition.parameters())
+        )
         self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
-        dis_params = list(self.conv_part_dis.parameters()) + list(self.fc_part_dis_x.parameters()) + \
-            list(self.fc_part_dis_z.parameters()) + \
-            list(self.fc_part_dis_xz.parameters())
+        dis_params = (
+            list(self.conv_part_dis.parameters())
+            + list(self.fc_part_dis_x.parameters())
+            + list(self.fc_part_dis_z.parameters())
+            + list(self.fc_part_dis_xz.parameters())
+        )
         self.optimizerDis = optim.Adam(dis_params, lr=args.lr)
 
         # parameters
@@ -520,7 +554,7 @@ class RNN_BIGAN(RNN_VAE):
 
     def hinge(self, x):
         """the hinge loss: max(0, 1-x)"""
-        return F.relu(1-x)
+        return F.relu(1 - x)
 
     def decide(self, x, z, y, ed=False):
         """
@@ -563,7 +597,7 @@ class RNN_BIGAN(RNN_VAE):
         # (0) Train Autoencoder
         # -------------------------------
         ae_loss = 0
-        #ae_loss = self.ae_part(x, update)
+        # ae_loss = self.ae_part(x, update)
 
         # (1) Train Discriminator
         # -------------------------------

@@ -13,15 +13,16 @@ import numpy as np
 
 # Cell
 
+
 def weights_init(m):
     """
     Define the weight parameters depending on the type:
     Conv or Batchnorm
     """
     classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
+    if classname.find("Conv") != -1:
         nn.init.normal_(m.weight.data, 0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
+    elif classname.find("BatchNorm") != -1:
         nn.init.normal_(m.weight.data, 1.0, 0.02)
         nn.init.constant_(m.bias.data, 0)
 
@@ -50,9 +51,9 @@ class Quantize(nn.Module):
         # Init matrix of available embeddings
         embed = torch.randn(dim, n_embed)
         # Register to avoid gradients
-        self.register_buffer('embed', embed)
-        self.register_buffer('cluster_size', torch.zeros(n_embed))
-        self.register_buffer('embed_avg', embed.clone())
+        self.register_buffer("embed", embed)
+        self.register_buffer("cluster_size", torch.zeros(n_embed))
+        self.register_buffer("embed_avg", embed.clone())
 
     def forward(self, x, update=True):
         """
@@ -89,14 +90,12 @@ class Quantize(nn.Module):
             # Sum(E(x))
             embed_sum = flatten.transpose(0, 1) @ embed_onehot
             # m_i = m_(i-1) *gamma + (1-gamma) * Sum(E(x))
-            self.embed_avg.data.mul_(self.decay).add_(
-                1 - self.decay, embed_sum)
+            self.embed_avg.data.mul_(self.decay).add_(1 - self.decay, embed_sum)
             # N_i
             n = self.cluster_size.sum()
             # norm N_i
             cluster_size = (
-                (self.cluster_size + self.eps) /
-                (n + self.n_embed * self.eps) * n
+                (self.cluster_size + self.eps) / (n + self.n_embed * self.eps) * n
             )
             embed_normalized = self.embed_avg / cluster_size.unsqueeze(0)
             # e_i = m_i / N_i
@@ -124,9 +123,14 @@ class ResNetBlock(nn.Module):
     based on: https://arxiv.org/abs/1512.03385
     """
 
-    def __init__(self, n_chan, convsize=3,
-                 activation=nn.ReLU(inplace=True),
-                 init_w=weights_init, dim=3):
+    def __init__(
+        self,
+        n_chan,
+        convsize=3,
+        activation=nn.ReLU(inplace=True),
+        init_w=weights_init,
+        dim=3,
+    ):
         """setup the general architecture"""
         super(ResNetBlock, self).__init__()
 
@@ -141,13 +145,11 @@ class ResNetBlock(nn.Module):
 
         self.main_part = nn.Sequential(
             # Layer 1
-            Conv(n_chan, n_chan, convsize,
-                 stride=1, padding=1, bias=False),
+            Conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False),
             BatchNorm(n_chan),
             self.activation,
             # Layer 2
-            Conv(n_chan, n_chan, convsize,
-                 stride=1, padding=1, bias=False),
+            Conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False),
             BatchNorm(n_chan),
         )
         self.main_part.apply(init_w)
@@ -169,9 +171,18 @@ class ConvBn(nn.Module):
     An individually designalble Block for 3 Dimensional Convoluions with Batchnorm and Dropout
     """
 
-    def __init__(self, in_chan, out_chan, convsize=3,
-                 stride=2, activation=nn.LeakyReLU(0.2, inplace=True),
-                 init_w=weights_init, padding=1, dim=3, p_drop=0):
+    def __init__(
+        self,
+        in_chan,
+        out_chan,
+        convsize=3,
+        stride=2,
+        activation=nn.LeakyReLU(0.2, inplace=True),
+        init_w=weights_init,
+        padding=1,
+        dim=3,
+        p_drop=0,
+    ):
         """setup the general architecture"""
         super(ConvBn, self).__init__()
 
@@ -192,8 +203,9 @@ class ConvBn(nn.Module):
                     stride = stride[1:]
 
         self.main_part = nn.Sequential(
-            Conv(in_chan, out_chan, convsize,
-                 stride=stride, padding=padding, bias=False),
+            Conv(
+                in_chan, out_chan, convsize, stride=stride, padding=padding, bias=False
+            ),
             BatchNorm(out_chan),
             activation,
             Dropout(p=p_drop),
@@ -212,9 +224,17 @@ class ConvTpBn(nn.Module):
     An individually designalble Block for 3 Dimensional Transposed Convoluions with Batchnorm
     """
 
-    def __init__(self, in_chan, out_chan, convsize=3,
-                 stride=2, activation=nn.ReLU(inplace=True),
-                 init_w=weights_init, padding=1, dim=3):
+    def __init__(
+        self,
+        in_chan,
+        out_chan,
+        convsize=3,
+        stride=2,
+        activation=nn.ReLU(inplace=True),
+        init_w=weights_init,
+        padding=1,
+        dim=3,
+    ):
         """setup the general architecture"""
         super(ConvTpBn, self).__init__()
         if dim == 3:
@@ -232,8 +252,9 @@ class ConvTpBn(nn.Module):
                     stride = stride[1:]
 
         self.main_part = nn.Sequential(
-            ConvTranspose(in_chan, out_chan, convsize,
-                          stride=stride, padding=padding, bias=False),
+            ConvTranspose(
+                in_chan, out_chan, convsize, stride=stride, padding=padding, bias=False
+            ),
             BatchNorm(out_chan),
             activation,
         )
@@ -260,8 +281,7 @@ class LinearSigmoid(nn.Module):
         self.bias = bias
         # make network
         self.main_part = nn.Sequential(
-            nn.Linear(self.hidden_dim, self.y_dim, bias=self.bias),
-            nn.Sigmoid()
+            nn.Linear(self.hidden_dim, self.y_dim, bias=self.bias), nn.Sigmoid()
         )
 
     def forward(self, x):
@@ -277,7 +297,9 @@ class DownUpConv(nn.Module):
     for 3d up- or downsclaing depending on "move"
     """
 
-    def __init__(self, args, n_fea_in, n_fea_next, pic_size, depth, move="down", p_drop=0):
+    def __init__(
+        self, args, n_fea_in, n_fea_next, pic_size, depth, move="down", p_drop=0
+    ):
         """Setup the conv-network"""
         super(DownUpConv, self).__init__()
         # Convolutions in 2d / 3d
@@ -304,7 +326,9 @@ class DownUpConv(nn.Module):
         self.main, output_tuple = self.generic_conv_init()
         self.max_fea, self.max_fea_next, self.pic_out, self.final_depth = output_tuple
 
-    def add_layers(self, conv_layers, fea_in, fea_out, n_res, pic_size, convsize=4, stride=2):
+    def add_layers(
+        self, conv_layers, fea_in, fea_out, n_res, pic_size, convsize=4, stride=2
+    ):
         """
         Add layers according to number of residual blocks and down/upscale mode
         """
@@ -312,15 +336,23 @@ class DownUpConv(nn.Module):
         # ---------------------------------------------------
         if self.move == "down":
             # 1. Downsample
-            conv_layers.extend([
-                ConvBn(fea_in, fea_out, dim=self.dim,
-                       convsize=convsize, stride=stride, p_drop=self.p_drop),
-            ])
+            conv_layers.extend(
+                [
+                    ConvBn(
+                        fea_in,
+                        fea_out,
+                        dim=self.dim,
+                        convsize=convsize,
+                        stride=stride,
+                        p_drop=self.p_drop,
+                    ),
+                ]
+            )
             # 2. Add the residual blocks:
             for _ in range(n_res):
-                conv_layers.extend([
-                    ResNetBlock(fea_out, convsize=3, dim=self.dim),
-                ])
+                conv_layers.extend(
+                    [ResNetBlock(fea_out, convsize=3, dim=self.dim),]
+                )
 
         # Upsample
         # ---------------------------------------------------
@@ -332,15 +364,16 @@ class DownUpConv(nn.Module):
 
             # 1. Add the residual blocks:
             for _ in range(n_res):
-                conv_layers[:0] = ([
+                conv_layers[:0] = [
                     ResNetBlock(fea_in, convsize=3, dim=self.dim),
-                ])
+                ]
 
             # 2. Upsample
-            conv_layers[:0] = ([
-                ConvTpBn(fea_out, fea_in, dim=self.dim,
-                         convsize=convsize, stride=stride),
-            ])
+            conv_layers[:0] = [
+                ConvTpBn(
+                    fea_out, fea_in, dim=self.dim, convsize=convsize, stride=stride
+                ),
+            ]
 
     def generic_conv_init(self):
         """
@@ -371,8 +404,14 @@ class DownUpConv(nn.Module):
         while cur_pic_dim > self.depth and cur_pic_dim > self.min_size:
             # Add layers
             self.add_layers(
-                conv_layers, cur_fea_in, cur_fea_out, self.n_res2d,
-                cur_pic_dim, convsize=(3, 4, 4), stride=(1, 2, 2))
+                conv_layers,
+                cur_fea_in,
+                cur_fea_out,
+                self.n_res2d,
+                cur_pic_dim,
+                convsize=(3, 4, 4),
+                stride=(1, 2, 2),
+            )
             # Update input size
             cur_fea_in = cur_fea_out
             # Features are doupled
@@ -395,8 +434,14 @@ class DownUpConv(nn.Module):
         while cur_pic_dim > self.min_size:
             # Add layers
             self.add_layers(
-                conv_layers, cur_fea_in, cur_fea_out, self.n_res3d,
-                cur_pic_dim, convsize=4, stride=2)
+                conv_layers,
+                cur_fea_in,
+                cur_fea_out,
+                self.n_res3d,
+                cur_pic_dim,
+                convsize=4,
+                stride=2,
+            )
             # Update input size
             cur_fea_in = cur_fea_out
             # Features are doupled
@@ -441,11 +486,16 @@ class Encoder(nn.Module):
         self.forward = self.forward_vae if vae_mode else self.forward_ae
 
         # Convolutional network
-        self.conv_part = DownUpConv(args, n_fea_next=args.n_fea_down, move="down",
-                                    pic_size=args.pic_size, depth=args.crop_size,
-                                    n_fea_in=len(args.perspectives))
+        self.conv_part = DownUpConv(
+            args,
+            n_fea_next=args.n_fea_down,
+            move="down",
+            pic_size=args.pic_size,
+            depth=args.crop_size,
+            n_fea_in=len(args.perspectives),
+        )
         self.max_fea = self.conv_part.max_fea
-        self.hidden_dim = self.max_fea * args.min_size**(args.dim)
+        self.hidden_dim = self.max_fea * args.min_size ** (args.dim)
 
         # Finish with fully connected layers
         self.fc_part = nn.Sequential(
@@ -497,11 +547,16 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
 
         # Convolutional network
-        self.conv_part = DownUpConv(args, n_fea_next=args.n_fea_up, move="up",
-                                    pic_size=args.pic_size, depth=args.crop_size,
-                                    n_fea_in=len(args.perspectives))
+        self.conv_part = DownUpConv(
+            args,
+            n_fea_next=args.n_fea_up,
+            move="up",
+            pic_size=args.pic_size,
+            depth=args.crop_size,
+            n_fea_in=len(args.perspectives),
+        )
         self.max_fea = self.conv_part.max_fea
-        self.hidden_dim = self.max_fea * args.min_size**(args.dim)
+        self.hidden_dim = self.max_fea * args.min_size ** (args.dim)
         self.view_arr = [-1, self.max_fea]
         self.view_arr.extend([args.min_size for _ in range(args.dim)])
 
@@ -537,11 +592,17 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
 
         # Convolutional network
-        self.conv_part = DownUpConv(args, n_fea_next=args.n_fea_down, move="down",
-                                    pic_size=args.pic_size, depth=args.crop_size,
-                                    n_fea_in=len(args.perspectives), p_drop=args.p_drop)
+        self.conv_part = DownUpConv(
+            args,
+            n_fea_next=args.n_fea_down,
+            move="down",
+            pic_size=args.pic_size,
+            depth=args.crop_size,
+            n_fea_in=len(args.perspectives),
+            p_drop=args.p_drop,
+        )
         self.max_fea = self.conv_part.max_fea
-        self.hidden_dim = self.max_fea * args.min_size**(args.dim)
+        self.hidden_dim = self.max_fea * args.min_size ** (args.dim)
 
         # Finish with fully connected layers
         self.fc_part = nn.Sequential(

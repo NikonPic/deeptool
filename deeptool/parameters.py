@@ -262,7 +262,6 @@ def get_RNN_VAE_args(parser, args=[]):
 
 # Cell
 
-
 def compat_args(args):
     """
     make arguments compatible with each others by applying all necessary logic

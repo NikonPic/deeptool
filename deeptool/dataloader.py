@@ -25,6 +25,7 @@ INPUT_DIM = 224
 
 # Cell
 
+
 class MRNetDataset(Dataset):
     """
     Magnetic Resonance Imaging Dataset of 1129 knee joints in training data and 119 for validation.
@@ -49,8 +50,9 @@ class MRNetDataset(Dataset):
         self.transform = transform
 
         self.subpaths = os.listdir(self.root_dir)
-        assert len(
-            self.subpaths) > 8, "Not enough files in directory! - Check directory"
+        assert (
+            len(self.subpaths) > 8
+        ), "Not enough files in directory! - Check directory"
 
         self.dirs = {}
         self.traindir = os.path.join(self.root_dir, "train")
@@ -64,38 +66,40 @@ class MRNetDataset(Dataset):
         self.labels["train"] = {}
 
         # start with abnormal labels
-        labels = self.read_labels(os.path.join(
-            self.root_dir, "train-abnormal.csv"))
+        labels = self.read_labels(os.path.join(self.root_dir, "train-abnormal.csv"))
         self.labels["train"]["abn"] = labels
         neg_weight = np.mean(self.labels["train"]["abn"])
-        self.weights["abn"] = [neg_weight, 1-neg_weight]
+        self.weights["abn"] = [neg_weight, 1 - neg_weight]
 
         # acl labels
-        labels = self.read_labels(
-            os.path.join(self.root_dir, "train-acl.csv"))
+        labels = self.read_labels(os.path.join(self.root_dir, "train-acl.csv"))
         self.labels["train"]["acl"] = labels
-        temp_labels = [labels[i] for i in range(
-            len(labels)) if self.labels["train"]["abn"][i] == 1]
+        temp_labels = [
+            labels[i] for i in range(len(labels)) if self.labels["train"]["abn"][i] == 1
+        ]
         neg_weight = np.mean(temp_labels)
-        self.weights["acl"] = [neg_weight, 1-neg_weight]
+        self.weights["acl"] = [neg_weight, 1 - neg_weight]
 
         # men labels and weights
-        labels = self.read_labels(
-            os.path.join(self.root_dir, "train-meniscus.csv"))
+        labels = self.read_labels(os.path.join(self.root_dir, "train-meniscus.csv"))
         self.labels["train"]["men"] = labels
-        temp_labels = [labels[i] for i in range(
-            len(labels)) if self.labels["train"]["abn"][i] == 1]
+        temp_labels = [
+            labels[i] for i in range(len(labels)) if self.labels["train"]["abn"][i] == 1
+        ]
         neg_weight = np.mean(temp_labels)
-        self.weights["men"] = [neg_weight, 1-neg_weight]
+        self.weights["men"] = [neg_weight, 1 - neg_weight]
 
         # validation labels without weights
         self.labels["valid"] = {}
         self.labels["valid"]["abn"] = self.read_labels(
-            os.path.join(self.root_dir, "valid-abnormal.csv"))
+            os.path.join(self.root_dir, "valid-abnormal.csv")
+        )
         self.labels["valid"]["acl"] = self.read_labels(
-            os.path.join(self.root_dir, "valid-acl.csv"))
+            os.path.join(self.root_dir, "valid-acl.csv")
+        )
         self.labels["valid"]["men"] = self.read_labels(
-            os.path.join(self.root_dir, "valid-meniscus.csv"))
+            os.path.join(self.root_dir, "valid-meniscus.csv")
+        )
 
         # length of the dataset
         self.len = len(self.labels[self.mode]["acl"])
@@ -124,7 +128,7 @@ class MRNetDataset(Dataset):
         """
         labels = []
         for i, line in enumerate(open(datadir).readlines()):
-            line = line.strip().split(',')
+            line = line.strip().split(",")
             label = int(line[1])
             labels.append(label)
         return labels
@@ -189,6 +193,7 @@ class MRNetDataset(Dataset):
 
 # Cell
 
+
 class RandomCrop(object):
     """Randomly crop to only some slices of the image"""
 
@@ -205,9 +210,10 @@ class RandomCrop(object):
         # choose random range within the depth
         cr_start = np.random.randint(depth - self.crop_size)
         # crop by returning only a part of the true scan
-        return mr_scan[cr_start:cr_start+self.crop_size]
+        return mr_scan[cr_start : cr_start + self.crop_size]
 
 # Cell
+
 
 class TriplePrep(object):
     """
@@ -219,7 +225,7 @@ class TriplePrep(object):
         """define the number of slices which will be cropped"""
         self.crop_percent = args.crop_percent
         self.pic_size = 224
-        self.pad = int((args.pic_size - self.pic_size)/2)
+        self.pad = int((args.pic_size - self.pic_size) / 2)
         self.p_h = 0.5
 
     def h_flip(self, mr_scan, depth):
@@ -240,19 +246,21 @@ class TriplePrep(object):
         # choose random range within the depth
         cr_start = np.random.randint(depth - cr_layers)
         # choose random range within width:
-        pad_w_b = np.random.randint(2*self.pad)
+        pad_w_b = np.random.randint(2 * self.pad)
         pad_w_e = 2 * self.pad - pad_w_b
         # choose random range within height:
-        pad_h_b = np.random.randint(2*self.pad)
+        pad_h_b = np.random.randint(2 * self.pad)
         pad_h_e = 2 * self.pad - pad_h_b
         # crop by returning only a part of the true scan and pad picture
-        mr_scan = mr_scan[cr_start:cr_start+cr_layers,
-                          pad_w_b:-pad_w_e, pad_h_b:-pad_h_e]
+        mr_scan = mr_scan[
+            cr_start : cr_start + cr_layers, pad_w_b:-pad_w_e, pad_h_b:-pad_h_e
+        ]
         # randonly flip the picture
         mr_scan = self.h_flip(mr_scan, depth)
         return mr_scan
 
 # Cell
+
 
 class MiddleCrop(object):
     """Crop to only some slices of the image from the middle"""
@@ -270,9 +278,10 @@ class MiddleCrop(object):
         # choose the middle range within the scan
         cr = int(depth / 2) - int(self.crop_size / 2)
         # crop by returning only a part of the true scan
-        return mr_scan[cr:cr+self.crop_size]
+        return mr_scan[cr : cr + self.crop_size]
 
 # Cell
+
 
 class Rescale(object):
     """Rescale a whole MR set to a new size"""
@@ -321,6 +330,7 @@ class Rescale(object):
 
 # Cell
 
+
 class ToTensor(object):
     """Convert ndarrays in sample to Tensors."""
 
@@ -332,6 +342,7 @@ class ToTensor(object):
         return self.type(mr_scan)
 
 # Cell
+
 
 class Normalize(object):
     """Normalize the array"""
@@ -361,6 +372,7 @@ class Normalize(object):
 
 # Cell
 
+
 def load_datasets(args):
     """Retruns the training and validation dataset with the corresponding loader"""
     # Select the right cropping
@@ -372,12 +384,9 @@ def load_datasets(args):
         Crop = TriplePrep
 
     # Transformations for training
-    transform = transforms.Compose([
-        Normalize(usegpu=False),
-        Crop(args),
-        Rescale(args),
-        ToTensor(),
-    ])
+    transform = transforms.Compose(
+        [Normalize(usegpu=False), Crop(args), Rescale(args), ToTensor(),]
+    )
 
     # Create Datasets
     train_dataset = MRNetDataset(args, mode="train", transform=transform)
@@ -386,26 +395,32 @@ def load_datasets(args):
     args.crop_percent = 0.99
 
     # Transformations for validation
-    transform = transforms.Compose([
-        Normalize(usegpu=False),
-        Crop(args),
-        Rescale(args),
-        ToTensor(),
-    ])
+    transform = transforms.Compose(
+        [Normalize(usegpu=False), Crop(args), Rescale(args), ToTensor(),]
+    )
 
     args.crop_percent = store
 
     valid_dataset = MRNetDataset(args, mode="valid", transform=transform)
 
     # Create the Dataloaders
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size,
-                              shuffle=True, num_workers=args.num_worker)
-    valid_loader = DataLoader(valid_dataset, batch_size=args.batch_size,
-                              shuffle=False, num_workers=args.num_worker)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=args.batch_size,
+        shuffle=True,
+        num_workers=args.num_worker,
+    )
+    valid_loader = DataLoader(
+        valid_dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        num_workers=args.num_worker,
+    )
 
     return train_dataset, valid_dataset, train_loader, valid_loader
 
 # Cell
+
 
 def test_dataset(args, valid_loader):
     """
@@ -425,6 +440,7 @@ def test_dataset(args, valid_loader):
 
 # Cell
 
+
 def load_test_batch(args):
     """
     This function creates a "pseudo" batch for simple testing
@@ -433,12 +449,11 @@ def load_test_batch(args):
     data["img"] = {}
 
     # structure separately
-    if args.model_type == 'diagnosis':
+    if args.model_type == "diagnosis":
 
         for name in args.perspectives:
             slices = np.random.randint(1, 60)
-            data["img"][name] = torch.randn(
-                1, slices, 224, 224)
+            data["img"][name] = torch.randn(1, slices, 224, 224)
 
         for cla in args.classes:
             target = np.random.randint(0, 2)
@@ -447,11 +462,17 @@ def load_test_batch(args):
     # structure coupled
     else:
         if args.dim == 3:
-            data["img"] = torch.randn(args.batch_size, len(
-                args.perspectives), args.crop_size, args.pic_size, args.pic_size)
+            data["img"] = torch.randn(
+                args.batch_size,
+                len(args.perspectives),
+                args.crop_size,
+                args.pic_size,
+                args.pic_size,
+            )
         else:
-            data["img"] = torch.randn(args.batch_size, len(
-                args.perspectives), args.pic_size, args.pic_size)
+            data["img"] = torch.randn(
+                args.batch_size, len(args.perspectives), args.pic_size, args.pic_size
+            )
         for cla in args.classes:
             target = np.random.randint(0, 2, args.batch_size)
             data[cla] = target
