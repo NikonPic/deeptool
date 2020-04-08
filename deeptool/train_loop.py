@@ -30,7 +30,7 @@ def get_model(device, args):
     """
     return the required model depending on the arguments:
     """
-    print(args.model_type)
+    print(f'Model-Type: {args.model_type}')
     switcher = {
         "dcgan": DCGAN,
         "diagnosis": TripleMRNet,
@@ -94,19 +94,18 @@ def main_loop(args, tq_nb=True):
 
     # test dataset
     test_data = next(iter(valid_loader))
-    print("Input dimension:")
 
     if args.model_type == "diagnosis":
         print(test_data["img"][args.perspectives[0]].shape)
         print(torch.min(test_data["img"][args.perspectives[0]]))
         print(torch.max(test_data["img"][args.perspectives[0]]))
     else:
-        print(test_data["img"].shape)
-        print(torch.min(test_data["img"]))
-        print(torch.max(test_data["img"]))
+        print(f'Input Dimension: {test_data["img"].shape}')
+        print(f'Minimum Value in Batch: {torch.min(test_data["img"])}')
+        print(f'Maximum Valuein Batch: {torch.max(test_data["img"])}')
 
     # start training
-    print("Start training")
+    print("\nStart training")
     batch_count = 0
     model.train()
 

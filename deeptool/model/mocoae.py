@@ -85,15 +85,22 @@ class MoCoAE(nn.Module):
 
         ptr = int(getattr(self, f"ptr_{mode}"))
 
+        indixes = list(range(ptr, ptr + batch_size))
+
+        if ptr + batch_size > self.K:
+            ind1 = list(range((ptr + batch_size) % self.K))
+            ind2 = list(range(ptr, self.K))
+            indixes = ind1 + ind2
+
         # replace the keys at ptr (dequeue and enqueue)
         if mode == "enc":
-            self.enc_queue[:, ptr : ptr + batch_size] = keys.T
+            self.enc_queue[:, indixes] = keys.T
             ptr = (ptr + batch_size) % self.K
             self.ptr_enc[0] = ptr
 
         # mode is 'dec'
         else:
-            self.dec_queue[:, ptr : ptr + batch_size] = keys.T
+            self.dec_queue[:, indixes] = keys.T
             ptr = (ptr + batch_size) % self.K
             self.ptr_dec[0] = ptr
 
