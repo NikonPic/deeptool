@@ -15,6 +15,7 @@ from ..utils import Tracker
 
 # Cell
 
+
 class EncQuantDec(nn.Module):
     """
     Helper Class for the generic generated Network with variable number of Quantization Layers
@@ -63,8 +64,14 @@ class EncQuantDec(nn.Module):
         count = 0
         while arr_pic_size[-1] > args.min_size:
             # Create next Network
-            cur_net = DownUpConv(args, n_fea_in=arr_fea_in[-1], n_fea_next=arr_fea_out[-1],
-                                 pic_size=arr_pic_size[-1], depth=arr_depth[-1], move="down")
+            cur_net = DownUpConv(
+                args,
+                n_fea_in=arr_fea_in[-1],
+                n_fea_next=arr_fea_out[-1],
+                pic_size=arr_pic_size[-1],
+                depth=arr_depth[-1],
+                move="down",
+            )
 
             # Save the current dimensions
             arr_fea_in.append(cur_net.max_fea)
@@ -86,8 +93,14 @@ class EncQuantDec(nn.Module):
                     fea_fac = 3
 
                 # create classification networks
-                cur_net = DownUpConv(args, n_fea_in=arr_fea_in[-2] * fea_fac, n_fea_next=arr_fea_out[-2],
-                                     pic_size=arr_pic_size[-2], depth=arr_depth[-2], move="down")
+                cur_net = DownUpConv(
+                    args,
+                    n_fea_in=arr_fea_in[-2] * fea_fac,
+                    n_fea_next=arr_fea_out[-2],
+                    pic_size=arr_pic_size[-2],
+                    depth=arr_depth[-2],
+                    move="down",
+                )
                 self.Cla.append(cur_net)
 
                 # add the final layer if min size is reached:
@@ -95,15 +108,16 @@ class EncQuantDec(nn.Module):
                     # output dim
                     y_dim = self.y_dim
                     # input dim (Class + Quant-single input)
-                    hidden_dim = 2 * \
-                        arr_fea_in[-1] * args.min_size**(args.dim)
+                    hidden_dim = 2 * arr_fea_in[-1] * args.min_size ** (args.dim)
                     # add a simple Linear Net with Sigmoid activation
                     cur_net = LinearSigmoid(hidden_dim, y_dim)
                     # include at end of network
                     self.Cla.append(cur_net)
 
         # Add the Quantization layers starting from smallest dimension
-        for fea_in, pic_size in zip(reversed(arr_fea_in[1:]), reversed(arr_pic_size[1:])):
+        for fea_in, pic_size in zip(
+            reversed(arr_fea_in[1:]), reversed(arr_pic_size[1:])
+        ):
             # Double the feature input if we dont deal with the last layer
             if pic_size != args.min_size:
                 fea_in *= 2
@@ -119,10 +133,18 @@ class EncQuantDec(nn.Module):
 
         # Now add the corresponding decoders to the list
         count = 0
-        for fea_in, fea_out, pic_size, depth in zip(arr_fea_in, arr_fea_out, arr_pic_size, arr_depth):
+        for fea_in, fea_out, pic_size, depth in zip(
+            arr_fea_in, arr_fea_out, arr_pic_size, arr_depth
+        ):
             # Create Next Decoder (pay attention to special case in "add_layers" of DownUpConv)
-            cur_net = DownUpConv(args, n_fea_in=fea_in, n_fea_next=fea_out,
-                                 pic_size=pic_size, depth=depth, move="up")
+            cur_net = DownUpConv(
+                args,
+                n_fea_in=fea_in,
+                n_fea_next=fea_out,
+                pic_size=pic_size,
+                depth=depth,
+                move="up",
+            )
             # Append this to the list of networks
             self.Dec.append(cur_net)
 
@@ -212,6 +234,7 @@ class EncQuantDec(nn.Module):
 
 # Cell
 
+
 class VQVAE2(nn.Module):
     """
     Vector Quantized Variational AutoEncoder
@@ -282,28 +305,33 @@ class VQVAE2(nn.Module):
         sh = real_data.shape
         b_size = sh[0]
         alpha = torch.rand(b_size, 1)
-        alpha = alpha.expand(b_size, int(
-            real_data.nelement()/b_size)).contiguous().view(sh)
+        alpha = (
+            alpha.expand(b_size, int(real_data.nelement() / b_size))
+            .contiguous()
+            .view(sh)
+        )
         alpha = alpha.to(self.device)
 
         # interpolating as disc input
-        interpolates = (alpha * real_data +
-                        ((1 - alpha) * fake_data)).to(self.device)
+        interpolates = (alpha * real_data + ((1 - alpha) * fake_data)).to(self.device)
         interpolates = autograd.Variable(interpolates, requires_grad=True)
 
         # evaluate discriminator
         disc_interpolates = self.Cla(interpolates)
 
         # calculate gradients
-        gradients = autograd.grad(outputs=disc_interpolates, inputs=interpolates,
-                                  grad_outputs=torch.ones(
-                                      disc_interpolates.size()).to(self.device),
-                                  create_graph=True, retain_graph=True, only_inputs=True)[0]
+        gradients = autograd.grad(
+            outputs=disc_interpolates,
+            inputs=interpolates,
+            grad_outputs=torch.ones(disc_interpolates.size()).to(self.device),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True,
+        )[0]
         gradients = gradients.view(gradients.size(0), -1)
 
         # constrain gradients
-        gradient_penalty = ((gradients.norm(2, dim=1) - 1)
-                            ** 2).mean() * self.lam
+        gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * self.lam
 
         return gradient_penalty
 

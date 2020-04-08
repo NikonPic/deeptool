@@ -40,6 +40,9 @@ entries:
       title: BiGAN
       url: /bigan
     - output: web,pdf
+      title: MoCoAE
+      url: /mocoae
+    - output: web,pdf
       title: RNN VAE
       url: /rnn_vae
     output: web

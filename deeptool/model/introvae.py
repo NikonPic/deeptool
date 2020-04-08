@@ -11,6 +11,7 @@ from ..utils import Tracker
 
 # Cell
 
+
 class IntroVAE(nn.Module):
     """
     Modification of the IntroVAE-Paper for 3-Dimensional tasks in MR-Imaging
@@ -39,8 +40,8 @@ class IntroVAE(nn.Module):
         self.m = args.m  # margin for stopping gae learning if too far apart
 
         # without mean -> squarred error
-        self.mse_loss = nn.MSELoss(reduction='sum')
-        self.bce_loss = nn.BCELoss(reduction='sum')
+        self.mse_loss = nn.MSELoss(reduction="sum")
+        self.bce_loss = nn.BCELoss(reduction="sum")
 
         # optimizers
         self.optimizerEnc = optim.Adam(self.encoder.parameters(), lr=args.lr)
@@ -59,8 +60,7 @@ class IntroVAE(nn.Module):
     def reparametrisation(self, mu, log_sig2):
         """Apply the reparametrisation trick for VAE."""
 
-        eps = torch.rand_like(
-            mu, device=self.device)  # uniform distributed matrix
+        eps = torch.rand_like(mu, device=self.device)  # uniform distributed matrix
         # mean + sigma * eps
         z_latent = mu + torch.exp(torch.mul(0.5, log_sig2)) * eps
         return z_latent
@@ -132,9 +132,14 @@ class IntroVAE(nn.Module):
         l_kl_z_pp = self.kl_loss(z_pp_mu, z_pp_log_sig2)
 
         # Adversarial part for Encoder -> GAN
-        l_adv_enc = self.alpha * 0.5 * \
-            (torch.clamp(self.m - l_kl_z_re, min=0) +
-             torch.clamp(self.m - l_kl_z_pp, min=0))
+        l_adv_enc = (
+            self.alpha
+            * 0.5
+            * (
+                torch.clamp(self.m - l_kl_z_re, min=0)
+                + torch.clamp(self.m - l_kl_z_pp, min=0)
+            )
+        )
 
         # Set loss of Enc
         L_enc = l_rec + l_kl_z + l_adv_enc

@@ -17,6 +17,7 @@ from ..utils import Tracker
 
 # Cell
 
+
 class Classify(nn.Module):
     """
     The Classifier on top of the triplenet network
@@ -27,14 +28,10 @@ class Classify(nn.Module):
         super(Classify, self).__init__()
         # reduction block
         self.reduce = nn.Sequential(
-            nn.Linear(in_dim, mid_dim),
-            nn.Dropout(p=p_drop),
-            nn.ReLU(inplace=True),
+            nn.Linear(in_dim, mid_dim), nn.Dropout(p=p_drop), nn.ReLU(inplace=True),
         )
         # final block
-        self.fin_block = nn.Sequential(
-            nn.Linear(mid_dim, out_dim)
-        )
+        self.fin_block = nn.Sequential(nn.Linear(mid_dim, out_dim))
 
     def forward(self, x):
         """perform forward calculation"""
@@ -44,6 +41,7 @@ class Classify(nn.Module):
         return x
 
 # Cell
+
 
 class Classify_RNN(nn.Module):
     """
@@ -82,7 +80,15 @@ class TripleMRNet(nn.Module):
     with the knowledge of: https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699
     """
 
-    def __init__(self, device, args, train_data=None, backbone="resnet18", training=True, document=True):
+    def __init__(
+        self,
+        device,
+        args,
+        train_data=None,
+        backbone="resnet18",
+        training=True,
+        document=True,
+    ):
         super(TripleMRNet, self).__init__()
 
         # general defines
@@ -95,9 +101,9 @@ class TripleMRNet(nn.Module):
         # depending on whether train_data is specified
         if train_data == None:
             self.weights = {}
-            self.weights['abn'] = [0.81, 0.19]
-            self.weights['acl'] = [0.23, 0.77]
-            self.weights['men'] = [0.43, 0.57]
+            self.weights["abn"] = [0.81, 0.19]
+            self.weights["acl"] = [0.23, 0.77]
+            self.weights["men"] = [0.43, 0.57]
         else:
             self.weights = train_data.weights
 
@@ -141,26 +147,24 @@ class TripleMRNet(nn.Module):
                 self.input_rnn = 256
 
             # the RNN gapping
-            self.max_axial = Classify_RNN(
-                self.device, self.input_rnn, self.hidden_dim)
-            self.max_sagit = Classify_RNN(
-                self.device, self.input_rnn, self.hidden_dim)
-            self.max_coron = Classify_RNN(
-                self.device, self.input_rnn, self.hidden_dim)
+            self.max_axial = Classify_RNN(self.device, self.input_rnn, self.hidden_dim)
+            self.max_sagit = Classify_RNN(self.device, self.input_rnn, self.hidden_dim)
+            self.max_coron = Classify_RNN(self.device, self.input_rnn, self.hidden_dim)
 
             # add a classifier at the end
-            #self.classifier = nn.Sequential(nn.Linear(3 * self.hidden_dim, self.y_len))
-            self.classifier = Classify(
-                3*self.hidden_dim, self.hidden_dim, self.y_len)
+            # self.classifier = nn.Sequential(nn.Linear(3 * self.hidden_dim, self.y_len))
+            self.classifier = Classify(3 * self.hidden_dim, self.hidden_dim, self.y_len)
 
         else:
             # only for the avergae case
             if self.backbone in ("resnet18", "vgg", "squeeze"):
-                self.classifier = Classify(
-                    3*512, self.hidden_dim, self.y_len).to(self.device)
+                self.classifier = Classify(3 * 512, self.hidden_dim, self.y_len).to(
+                    self.device
+                )
             elif self.backbone == "alexnet":
-                self.classifier = Classify(
-                    3*256, self.hidden_dim, self.y_len).to(self.device)
+                self.classifier = Classify(3 * 256, self.hidden_dim, self.y_len).to(
+                    self.device
+                )
 
         # fineal sigmoid layer
         self.sigmoid = nn.Sigmoid().to(self.device)
@@ -213,8 +217,7 @@ class TripleMRNet(nn.Module):
         Calculate the weighted loss with label smoothing
         """
         # determin the weights
-        weights_npy = np.array(
-            [self.weights[cl][int(target)]])
+        weights_npy = np.array([self.weights[cl][int(target)]])
         weights_tensor = torch.FloatTensor(weights_npy)
         weights_tensor = weights_tensor.to(self.device)[0]
 
@@ -224,7 +227,8 @@ class TripleMRNet(nn.Module):
 
         # calculate binary cross entropy
         loss = F.binary_cross_entropy_with_logits(
-            prediction, target, weight=Variable(weights_tensor))
+            prediction, target, weight=Variable(weights_tensor)
+        )
         return loss
 
     def watch_progress(self, valid_loader, iteration):
@@ -238,13 +242,13 @@ class TripleMRNet(nn.Module):
         # get the three volumes from the dictionary
         # data["img"]["axial"] -> shape = batch x depth x pic x pic
         vol_axial = data["img"][self.naming[0]][0, :, :, :].to(self.device)
-        vol_axial = torch.stack((vol_axial,)*3, axis=1)
+        vol_axial = torch.stack((vol_axial,) * 3, axis=1)
 
         vol_sagit = data["img"][self.naming[1]][0, :, :, :].to(self.device)
-        vol_sagit = torch.stack((vol_sagit,)*3, axis=1)
+        vol_sagit = torch.stack((vol_sagit,) * 3, axis=1)
 
         vol_coron = data["img"][self.naming[2]][0, :, :, :].to(self.device)
-        vol_coron = torch.stack((vol_coron,)*3, axis=1)
+        vol_coron = torch.stack((vol_coron,) * 3, axis=1)
 
         label = torch.zeros(vol_axial.shape[0], self.y_len)  # init
         for i, cl in enumerate(self.y_labels):

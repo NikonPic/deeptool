@@ -11,6 +11,7 @@
     "Intro VAE": "/introvae",
     "VQVAE (2)": "/vqvae",
     "BiGAN": "/bigan",
+    "MoCoAE": "/mocoae",
     "RNN VAE": "/rnn_vae"
   }
 }

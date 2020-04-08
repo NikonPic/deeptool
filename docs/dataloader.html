@@ -46,7 +46,7 @@ summary: "Define the Dataset and Testset"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MRNetDataset" class="doc_header"><code>class</code> <code>MRNetDataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L28" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MRNetDataset</code>(<strong><code>args</code></strong>, <strong><code>transform</code></strong>=<em><code>None</code></em>, <strong><code>mode</code></strong>=<em><code>'train'</code></em>) :: <code>Dataset</code></p>
+<h2 id="MRNetDataset" class="doc_header"><code>class</code> <code>MRNetDataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L29" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MRNetDataset</code>(<strong><code>args</code></strong>, <strong><code>transform</code></strong>=<em><code>None</code></em>, <strong><code>mode</code></strong>=<em><code>'train'</code></em>) :: <code>Dataset</code></p>
 </blockquote>
 <p>Magnetic Resonance Imaging Dataset of 1129 knee joints in training data and 119 for validation.
 The Dataset contains information about:
@@ -80,7 +80,7 @@ The Dataset contains information about:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RandomCrop" class="doc_header"><code>class</code> <code>RandomCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L192" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RandomCrop</code>(<strong><code>args</code></strong>)</p>
+<h2 id="RandomCrop" class="doc_header"><code>class</code> <code>RandomCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L197" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RandomCrop</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Randomly crop to only some slices of the image</p>
 
@@ -104,7 +104,7 @@ The Dataset contains information about:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TriplePrep" class="doc_header"><code>class</code> <code>TriplePrep</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L212" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TriplePrep</code>(<strong><code>args</code></strong>)</p>
+<h2 id="TriplePrep" class="doc_header"><code>class</code> <code>TriplePrep</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L218" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TriplePrep</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Randomly crop to only some slices of the image
 Further pad the picture to the 224 size!</p>
@@ -129,7 +129,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MiddleCrop" class="doc_header"><code>class</code> <code>MiddleCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L257" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MiddleCrop</code>(<strong><code>args</code></strong>)</p>
+<h2 id="MiddleCrop" class="doc_header"><code>class</code> <code>MiddleCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L265" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MiddleCrop</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Crop to only some slices of the image from the middle</p>
 
@@ -153,7 +153,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Rescale" class="doc_header"><code>class</code> <code>Rescale</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L277" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Rescale</code>(<strong><code>args</code></strong>, <strong><code>dtype</code></strong>=<em><code>'float32'</code></em>)</p>
+<h2 id="Rescale" class="doc_header"><code>class</code> <code>Rescale</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L286" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Rescale</code>(<strong><code>args</code></strong>, <strong><code>dtype</code></strong>=<em><code>'float32'</code></em>)</p>
 </blockquote>
 <p>Rescale a whole MR set to a new size</p>
 
@@ -177,7 +177,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L324" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>type</code></strong>=<em><code>'FloatTensor'</code></em>)</p>
+<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L334" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>type</code></strong>=<em><code>'FloatTensor'</code></em>)</p>
 </blockquote>
 <p>Convert ndarrays in sample to Tensors.</p>
 
@@ -201,7 +201,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L336" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>usegpu</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L347" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>usegpu</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Normalize the array</p>
 
@@ -231,7 +231,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_datasets" class="doc_header"><code>load_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L364" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_datasets</code>(<strong><code>args</code></strong>)</p>
+<h4 id="load_datasets" class="doc_header"><code>load_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L376" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_datasets</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Retruns the training and validation dataset with the corresponding loader</p>
 
@@ -255,7 +255,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_dataset" class="doc_header"><code>test_dataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L410" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_dataset</code>(<strong><code>args</code></strong>, <strong><code>valid_loader</code></strong>)</p>
+<h4 id="test_dataset" class="doc_header"><code>test_dataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L425" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_dataset</code>(<strong><code>args</code></strong>, <strong><code>valid_loader</code></strong>)</p>
 </blockquote>
 <p>return the required model depending on the arguments:</p>
 
@@ -279,7 +279,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_test_batch" class="doc_header"><code>load_test_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_test_batch</code>(<strong><code>args</code></strong>)</p>
+<h4 id="load_test_batch" class="doc_header"><code>load_test_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L444" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_test_batch</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>This function creates a "pseudo" batch for simple testing</p>
 
@@ -384,7 +384,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>torch.Size([1, 59, 224, 224])</pre>
+<pre>torch.Size([1, 28, 224, 224])</pre>
 </div>
 
 </div>

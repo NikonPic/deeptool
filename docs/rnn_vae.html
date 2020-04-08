@@ -40,6 +40,7 @@ summary: "Structure for an Approach maintained a pseudo space realtion"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># load some test dataset to confirm architecture:</span>
 <span class="kn">from</span> <span class="nn">deeptool.parameters</span> <span class="kn">import</span> <span class="n">get_all_args</span>
 <span class="kn">from</span> <span class="nn">deeptool.dataloader</span> <span class="kn">import</span> <span class="n">load_test_batch</span>
+
 <span class="n">args</span> <span class="o">=</span> <span class="n">get_all_args</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;rnnvae&quot;</span>
 <span class="n">args</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
@@ -135,7 +136,7 @@ summary: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transition" class="doc_header"><code>class</code> <code>Transition</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L27" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transition</code>(<strong><code>args</code></strong>) :: <code>Module</code></p>
+<h2 id="Transition" class="doc_header"><code>class</code> <code>Transition</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L28" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transition</code>(<strong><code>args</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Transition Network with Recurrence / 1D Convolutions / Identity Function</p>
 
@@ -165,7 +166,7 @@ summary: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L104" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <code>Module</code></p>
+<h2 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L108" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -233,7 +234,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">rnn_transition</span> <span class="o">=</span> <span class="s1">&#39;cnn&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">rnn_transition</span> <span class="o">=</span> <span class="s2">&quot;cnn&quot;</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">34</span><span class="p">)</span>
 <span class="n">tran</span> <span class="o">=</span> <span class="n">Transition</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tran</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -300,7 +301,7 @@ torch.Size([34, 100])
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>rnnvae
 ae
-cnn
+Transition: cnn
 </pre>
 </div>
 </div>
@@ -327,7 +328,7 @@ cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L224" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
+<h2 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L236" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
 </blockquote>
 <p>inherit from RNN_AE and add the variational part</p>
 
@@ -346,7 +347,7 @@ cnn
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3 dim test</span>
 <span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;rnnvae&quot;</span>
-<span class="n">args</span><span class="o">.</span><span class="n">rnn_type</span><span class="o">=</span> <span class="s2">&quot;vae&quot;</span>
+<span class="n">args</span><span class="o">.</span><span class="n">rnn_type</span> <span class="o">=</span> <span class="s2">&quot;vae&quot;</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -364,7 +365,7 @@ cnn
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>rnnvae
 vae
-cnn
+Transition: cnn
 </pre>
 </div>
 </div>
@@ -391,7 +392,7 @@ cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L290" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
+<h2 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L301" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>inherit from RNN_VAE and add the GAN part</p>
 
@@ -410,7 +411,7 @@ cnn
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3 dim test</span>
 <span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;rnnvae&quot;</span>
-<span class="n">args</span><span class="o">.</span><span class="n">rnn_type</span><span class="o">=</span> <span class="s2">&quot;introvae&quot;</span>
+<span class="n">args</span><span class="o">.</span><span class="n">rnn_type</span> <span class="o">=</span> <span class="s2">&quot;introvae&quot;</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -428,7 +429,7 @@ cnn
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>rnnvae
 introvae
-cnn
+Transition: cnn
 </pre>
 </div>
 </div>
@@ -458,7 +459,7 @@ cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L412" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
+<h2 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L434" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>apply the Bidirectional-GAN part, inherit from the normal autoencoder</p>
 
@@ -482,7 +483,7 @@ cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L645" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
+<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L679" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
 </blockquote>
 <p>return an instance of the class depending on the mode set in args</p>
 
@@ -499,8 +500,9 @@ cnn
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="p">(</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">n_gpu</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span>
+    <span class="s2">&quot;cuda:0&quot;</span> <span class="k">if</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">n_gpu</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="p">)</span>
 <span class="n">rnn_bigan</span> <span class="o">=</span> <span class="n">RNN_BIGAN</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">load_test_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">x</span><span class="p">,</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">rnn_bigan</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>

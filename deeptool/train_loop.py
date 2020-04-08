@@ -15,6 +15,7 @@ from .model.vqvae import VQVAE2
 from .model.introvae import IntroVAE
 from .model.bigan import BiGAN
 from .model.rnnvae import Creator_RNN_AE
+from .model.mocoae import MoCoAE
 
 # import the dataset
 from .dataloader import load_datasets, load_test_batch
@@ -37,6 +38,7 @@ def get_model(device, args):
         "introvae": IntroVAE,
         "rnnvae": Creator_RNN_AE,
         "bigan": BiGAN,
+        "mocoae": MoCoAE,
     }
     # Get the model_creator
     model_creator = switcher.get(args.model_type, lambda: "Invalid Model Type")
@@ -52,8 +54,9 @@ def test_one_batch(args):
     """
     args.track = False
     # define calculating device
-    device = torch.device("cuda:0" if (
-        torch.cuda.is_available() and args.n_gpu > 0) else "cpu")
+    device = torch.device(
+        "cuda:0" if (torch.cuda.is_available() and args.n_gpu > 0) else "cpu"
+    )
     # avoid dataloaders for testing on server:
     batch = load_test_batch(args)
     # Initialise the Model
@@ -66,7 +69,7 @@ def test_one_batch(args):
 # Cell
 
 
-def main_loop(args, tq_nb = True):
+def main_loop(args, tq_nb=True):
     """Perform the Training using the predefined arguments"""
 
     # select tqdm_type
@@ -75,12 +78,12 @@ def main_loop(args, tq_nb = True):
         tq = tqdm_notebook
 
     # define calculating device
-    device = torch.device("cuda:0" if (
-        torch.cuda.is_available() and args.n_gpu > 0) else "cpu")
+    device = torch.device(
+        "cuda:0" if (torch.cuda.is_available() and args.n_gpu > 0) else "cpu"
+    )
 
     # build the dataloaders
-    train_data, _, train_loader, valid_loader = load_datasets(
-        args)
+    train_data, _, train_loader, valid_loader = load_datasets(args)
 
     # Initialise the Model
     model = get_model(device, args)
