@@ -290,6 +290,7 @@ class VQVAE2(nn.Module):
         """reset the intern parameters to allow pretraining"""
         self.vq_class = args.vq_class
 
+    @torch.no_grad()
     def watch_progress(self, test_data, iteration):
         """Outsourced to Tracker"""
         self.tracker.track_progress(self, test_data, iteration)

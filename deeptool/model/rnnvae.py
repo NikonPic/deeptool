@@ -176,6 +176,7 @@ class RNN_AE(nn.Module):
         if args.track:
             self.tracker = Tracker(args)
 
+    @torch.no_grad()
     def watch_progress(self, test_data, iteration):
         """Outsourced to Tracker"""
         self.tracker.track_progress(self, test_data, iteration)
@@ -195,6 +196,7 @@ class RNN_AE(nn.Module):
         x = self.conv_part_dec(x)
         return x
 
+    @torch.no_grad()
     def prep_input(self, batch):
         self.zero_grad()
         batch = mod_batch(batch)

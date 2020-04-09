@@ -38,7 +38,7 @@ class MoCoAE(nn.Module):
         self.dec_q = Decoder(args).to(self.device)  # query decoder
         self.dec_k = Decoder(args).to(self.device)  # key decoder
 
-        # set the params of the knetwork to be equal q network:
+        # set the params of the k-network to be equal to the q-network:
         copy_q2k_params(self.enc_q, self.enc_k)
         copy_q2k_params(self.dec_q, self.dec_k)
 
@@ -138,7 +138,7 @@ class MoCoAE(nn.Module):
             self.optimizerEnc.step()
 
             # update the Key Encoder with Momentum update
-            momentum_update(self.enc_q, self.enc_k, self.m)
+            momentum_update(self.enc_q, self.enc_k, self.m[0])
 
         # append keys to the queue
         self._dequeue_and_enqueue(k, mode="enc")
@@ -168,7 +168,7 @@ class MoCoAE(nn.Module):
             self.optimizerDec.step()
 
             # update the Key Decoder with Momentum update
-            momentum_update(self.dec_q, self.dec_k, self.m)
+            momentum_update(self.dec_q, self.dec_k, self.m[1])
 
         # append keys to the queue
         self._dequeue_and_enqueue(kk, mode="dec")
@@ -219,6 +219,8 @@ def momentum_update(Q_network: nn.Module, K_network: nn.Module, m: float):
         param_k.data = param_k.data * m + param_q.data * (1.0 - m)
 
 # Cell
+from ..dataloader import TriplePrep
+
 def aug(x):
     """perform random data augmentation on an image batch"""
     # ToDo
@@ -248,7 +250,7 @@ def MomentumContrastiveLoss(k, q, queue, tau, device):
     logits = torch.cat([l_pos, l_neg], dim=1) / tau
 
     # positive key indicators
-    labels = torch.zeros(logits.shape[0], dtype=torch.long).cuda()
+    labels = torch.zeros(logits.shape[0], dtype=torch.long).to(device)
 
     # calculate the crossentropyloss
     loss = ce_loss(logits, labels)

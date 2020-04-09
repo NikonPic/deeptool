@@ -231,10 +231,12 @@ class TripleMRNet(nn.Module):
         )
         return loss
 
+    @torch.no_grad()
     def watch_progress(self, valid_loader, iteration):
         """Outsourced to Tracker"""
         self.tracker.get_accuracy(self, valid_loader, iteration)
 
+    @torch.no_grad()
     def get_input_image(self, data):
         """
         take the input from the stack and give the single volumes
