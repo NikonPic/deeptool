@@ -8,7 +8,7 @@ import torch
 from torch import nn, optim
 import torch.nn.functional as F
 from ..architecture import Encoder, Decoder, DownUpConv
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
@@ -105,13 +105,13 @@ class Transition(nn.Module):
 # Cell
 
 
-class RNN_AE(nn.Module):
+class RNN_AE(AbsModel):
     def __init__(self, device, args):
         """
         The recurrent autoencoder for compressing 3d data.
         It compresses in 2d while (hopefully) maintaining the spatial relation between layers
         """
-        super(RNN_AE, self).__init__()
+        super(RNN_AE, self).__init__(args)
         self.device = device
 
         # 1. create the convolutional Encoder
@@ -171,15 +171,6 @@ class RNN_AE(nn.Module):
 
         # reset the dimension
         args.dim = 3
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
-
-    @torch.no_grad()
-    def watch_progress(self, test_data, iteration):
-        """Outsourced to Tracker"""
-        self.tracker.track_progress(self, test_data, iteration)
 
     def encode(self, x):
         x = self.conv_part_enc(x)

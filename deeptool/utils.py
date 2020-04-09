@@ -129,7 +129,7 @@ class Tracker(object):
         Visualize the Progress by applying the validation loader and visualizing the results
         """
         # Get the original image
-        x = data["img"].detach().cpu()
+        x = model.prep(data).detach().cpu()
 
         # Get the current results:
         x_re, tr_data = model(data, update=False)

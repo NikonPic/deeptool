@@ -8,19 +8,19 @@ import torch
 from torch import nn, optim
 import torch.nn.functional as F
 from ..architecture import Encoder, Decoder, DownUpConv
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
 
-class MoCoAE(nn.Module):
+class MoCoAE(AbsModel):
     """
     The MoCoAE contains the Autoencoder based Architecture and the modified Pretext task
     """
 
     def __init__(self, device, args):
         """init the network"""
-        super(MoCoAE, self).__init__()
+        super(MoCoAE, self).__init__(args)
         self.device = device  # GPU
         self.dim = args.dim  # 2/3 Dimensional input
         self.n_z = args.n_z  # Compression
@@ -47,16 +47,16 @@ class MoCoAE(nn.Module):
         self.register_queue("dec_queue")
 
         # Save the pointer position as well
-        self.register_buffer("ptr_enc", torch.zeros(1, dtype=torch.long).to(self.device))
-        self.register_buffer("ptr_dec", torch.zeros(1, dtype=torch.long).to(self.device))
+        self.register_buffer(
+            "ptr_enc", torch.zeros(1, dtype=torch.long).to(self.device)
+        )
+        self.register_buffer(
+            "ptr_dec", torch.zeros(1, dtype=torch.long).to(self.device)
+        )
 
         # optimizers
         self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr)
         self.optimizerDec = optim.Adam(self.dec_q.parameters(), lr=args.lr)
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
 
     @torch.no_grad()
     def register_queue(self, name: str):
@@ -66,13 +66,6 @@ class MoCoAE(nn.Module):
         # create the queue
         self.register_buffer(name, torch.randn(self.n_z, self.K).to(self.device))
         setattr(self, name, nn.functional.normalize(getattr(self, name), dim=0))
-
-    @torch.no_grad()
-    def watch_progress(self, test_data, iteration):
-        """
-        Outsourced to Tracker
-        """
-        self.tracker.track_progress(self, test_data, iteration)
 
     @torch.no_grad()
     def _dequeue_and_enqueue(self, keys, mode="enc"):
@@ -113,7 +106,7 @@ class MoCoAE(nn.Module):
         self.optimizerDec.zero_grad()
 
         # 1. Send data to device
-        x = data["img"]
+        x = self.prep(data)
 
         # 2. further we will apply additional augmentation to the picture!
         x_q = aug(x).to(self.device)
@@ -128,7 +121,9 @@ class MoCoAE(nn.Module):
             k = nn.functional.normalize(k, dim=1)
 
         # Get the InfoNCE loss:
-        loss_enc = MomentumContrastiveLoss(k, q, self.enc_queue, self.tau, device=self.device)
+        loss_enc = MomentumContrastiveLoss(
+            k, q, self.enc_queue, self.tau, device=self.device
+        )
 
         # Perform encoder update
         if update:
@@ -158,7 +153,9 @@ class MoCoAE(nn.Module):
             kk = nn.functional.normalize(kk, dim=1)
 
         # Get the InfoNCE loss:
-        loss_dec = MomentumContrastiveLoss(kk, qq, self.dec_queue, self.tau, device=self.device)
+        loss_dec = MomentumContrastiveLoss(
+            kk, qq, self.dec_queue, self.tau, device=self.device
+        )
 
         # perform decoder update
         if update:
@@ -220,6 +217,7 @@ def momentum_update(Q_network: nn.Module, K_network: nn.Module, m: float):
 
 # Cell
 from ..dataloader import TriplePrep
+
 
 def aug(x):
     """perform random data augmentation on an image batch"""

@@ -11,11 +11,12 @@ from torch import autograd
 
 # Personal includes
 from ..architecture import Decoder, Discriminator
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
-class DCGAN(nn.Module):
+
+class DCGAN(AbsModel):
     """
     Modification of the DCGAN-Paper https://arxiv.org/pdf/1511.06434.pdf for 3-Dimensional tasks in MR-Imaging
     oriented on: https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html
@@ -26,7 +27,7 @@ class DCGAN(nn.Module):
         Setup the general architecture for the DCGAN model, composed of:
         Generator, Discriminator
         """
-        super(DCGAN, self).__init__()
+        super(DCGAN, self).__init__(args)
         # dimension of networks (2d conv or 3d conv)
         self.dim = args.dim
 
@@ -37,14 +38,12 @@ class DCGAN(nn.Module):
         # Generator
         self.generator = Decoder(args).to(self.device)
 
-
         # Encoding dimension
         self.n_z = args.n_z
         self.batch_size = args.batch_size
 
         # Fixed noise to visualize progression
-        self.fixed_noise = torch.randn(
-            self.batch_size, self.n_z, device=self.device)
+        self.fixed_noise = torch.randn(self.batch_size, self.n_z, device=self.device)
 
         # lambda factor for gradient penatly
         self.lam = args.lam
@@ -69,20 +68,11 @@ class DCGAN(nn.Module):
 
         # Optimizers
         self.optimizerGen = optim.Adam(
-            self.generator.parameters(), lr=args.lr, betas=(0.5, 0.999))
+            self.generator.parameters(), lr=args.lr, betas=(0.5, 0.999)
+        )
         self.optimizerDis = optim.Adam(
-            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999))
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args, log_view=False)
-
-
-    def watch_progress(self, test_data, iteration):
-        """
-        Outsourced to Tracker
-        """
-        self.tracker.track_progress(self, test_data, iteration)
+            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999)
+        )
 
     def calc_gradient_penalty(self, real_data, fake_data):
         """
@@ -95,28 +85,33 @@ class DCGAN(nn.Module):
         sh = real_data.shape
         b_size = sh[0]
         alpha = torch.rand(b_size, 1)
-        alpha = alpha.expand(b_size, int(
-            real_data.nelement()/b_size)).contiguous().view(sh)
+        alpha = (
+            alpha.expand(b_size, int(real_data.nelement() / b_size))
+            .contiguous()
+            .view(sh)
+        )
         alpha = alpha.to(self.device)
 
         # interpolating as disc input
-        interpolates = (alpha * real_data +
-                        ((1 - alpha) * fake_data)).to(self.device)
+        interpolates = (alpha * real_data + ((1 - alpha) * fake_data)).to(self.device)
         interpolates = autograd.Variable(interpolates, requires_grad=True)
 
         # evaluate discriminator
         disc_interpolates = self.discriminator(interpolates)
 
         # calculate gradients
-        gradients = autograd.grad(outputs=disc_interpolates, inputs=interpolates,
-                                  grad_outputs=torch.ones(
-                                      disc_interpolates.size()).to(self.device),
-                                  create_graph=True, retain_graph=True, only_inputs=True)[0]
+        gradients = autograd.grad(
+            outputs=disc_interpolates,
+            inputs=interpolates,
+            grad_outputs=torch.ones(disc_interpolates.size()).to(self.device),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True,
+        )[0]
         gradients = gradients.view(gradients.size(0), -1)
 
         # constrain gradients
-        gradient_penalty = ((gradients.norm(2, dim=1) - 1)
-                            ** 2).mean() * self.lam
+        gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * self.lam
 
         return gradient_penalty
 
@@ -133,7 +128,7 @@ class DCGAN(nn.Module):
         Calculate output and update networks with wgan
         """
         # get the image data
-        real_gpu = data["img"].to(self.device)
+        real_gpu = self.prep(data).to(self.device)
 
         # (1) Update D network: maximize D(x) - D(G(z))
         # 1.1 Train with all-real batch
@@ -186,7 +181,7 @@ class DCGAN(nn.Module):
         Calculate output and update networks with dcgan
         """
         # get the image data
-        real_gpu = data["img"].to(self.device)
+        real_gpu = self.prep(data).to(self.device)
 
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
         # 1.1 Train with all-real batch

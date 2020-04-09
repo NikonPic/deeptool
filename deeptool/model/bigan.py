@@ -7,7 +7,7 @@ __all__ = ['DisBiGan', 'BiGAN']
 import torch
 from torch import nn, optim
 from ..architecture import Encoder, Decoder, DownUpConv, weights_init
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
@@ -23,11 +23,17 @@ class DisBiGan(nn.Module):
         super(DisBiGan, self).__init__()
 
         # convolutional neural network
-        self.conv_part = DownUpConv(args, n_fea_next=args.n_fea_down, move="down",
-                                    pic_size=args.pic_size, depth=args.crop_size,
-                                    n_fea_in=len(args.perspectives), p_drop=args.p_drop)
+        self.conv_part = DownUpConv(
+            args,
+            n_fea_next=args.n_fea_down,
+            move="down",
+            pic_size=args.pic_size,
+            depth=args.crop_size,
+            n_fea_in=len(args.perspectives),
+            p_drop=args.p_drop,
+        )
         self.max_fea = self.conv_part.max_fea
-        self.hidden_dim = self.max_fea * args.min_size**(args.dim)
+        self.hidden_dim = self.max_fea * args.min_size ** (args.dim)
         self.last_dim = int(args.n_z / 2)
 
         # Finish with fully connected layers
@@ -110,7 +116,7 @@ class DisBiGan(nn.Module):
 # Cell
 
 
-class BiGAN(nn.Module):
+class BiGAN(AbsModel):
     """
     The Bidirectional Generative adversarial network
     based on https://arxiv.org/abs/1605.09782
@@ -121,7 +127,7 @@ class BiGAN(nn.Module):
         """
         network architecture
         """
-        super(BiGAN, self).__init__()
+        super(BiGAN, self).__init__(args)
         self.device = device
         self.dim = args.dim
         self.n_z = args.n_z
@@ -143,28 +149,18 @@ class BiGAN(nn.Module):
 
         # the optimizers
         self.optimizerDec = optim.Adam(
-            self.decoder.parameters(), lr=args.lr, betas=(0.5, 0.999))
+            self.decoder.parameters(), lr=args.lr, betas=(0.5, 0.999)
+        )
         self.optimizerEnc = optim.Adam(
-            self.encoder.parameters(), lr=args.lr, betas=(0.5, 0.999))
+            self.encoder.parameters(), lr=args.lr, betas=(0.5, 0.999)
+        )
         self.optimizerDis = optim.Adam(
-            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999))
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
+            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999)
+        )
 
         # Fixed noise to visualize progression
         self.batch_size = args.batch_size
-        self.fixed_noise = torch.randn(
-            self.batch_size, self.n_z, device=self.device)
-
-        self.forward = self.forward_normal
-
-    def watch_progress(self, test_data, iteration):
-        """
-        Outsourced to Tracker
-        """
-        self.tracker.track_progress(self, test_data, iteration)
+        self.fixed_noise = torch.randn(self.batch_size, self.n_z, device=self.device)
 
     def sample_noise(self, batch_size, update):
         """
@@ -185,32 +181,35 @@ class BiGAN(nn.Module):
         sh = real.shape
         b_size = sh[0]
         alpha = torch.rand(b_size, 1)
-        alpha = alpha.expand(b_size, int(
-            real.nelement()/b_size)).contiguous().view(sh)
+        alpha = (
+            alpha.expand(b_size, int(real.nelement() / b_size)).contiguous().view(sh)
+        )
         alpha = alpha.to(self.device)
 
         # interpolating as disc input
-        interpolates = (alpha * real +
-                        ((1 - alpha) * fake)).to(self.device)
+        interpolates = (alpha * real + ((1 - alpha) * fake)).to(self.device)
         interpolates = autograd.Variable(interpolates, requires_grad=True)
 
         # evaluate discriminator
         disc_interpolates = self.discriminator(interpolates)
 
         # calculate gradients
-        gradients = autograd.grad(outputs=disc_interpolates, inputs=interpolates,
-                                  grad_outputs=torch.ones(
-                                      disc_interpolates.size()).to(self.device),
-                                  create_graph=True, retain_graph=True, only_inputs=True)[0]
+        gradients = autograd.grad(
+            outputs=disc_interpolates,
+            inputs=interpolates,
+            grad_outputs=torch.ones(disc_interpolates.size()).to(self.device),
+            create_graph=True,
+            retain_graph=True,
+            only_inputs=True,
+        )[0]
         gradients = gradients.view(gradients.size(0), -1)
 
         # constrain gradients
-        gradient_penalty = ((gradients.norm(2, dim=1) - 1)
-                            ** 2).mean() * self.lam
+        gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * self.lam
 
         return gradient_penalty
 
-    def forward_normal(self, data, update=True):
+    def forward(self, data, update=True):
         """
         Calculate output and update networks with dcgan
         """
@@ -218,7 +217,7 @@ class BiGAN(nn.Module):
         # ------------------------------------------------------------
         # 1.1 Train with all-real batch
         # Get the true data
-        real_x = data["img"].to(self.device)
+        real_x = self.prep(data).to(self.device)
         real_z = self.encoder(real_x)
         real = (real_x, real_z.detach())
 

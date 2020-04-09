@@ -109,21 +109,22 @@ def main_loop(args, tq_nb=True):
     # Initialise the Model
     model = get_model(device, args)
 
+    # test dataset
+    test_data = next(iter(train_loader))
+    test_x = model.prep(test_data)
+
+    if args.model_type == "diagnosis":
+        print(test_x[args.perspectives[0]].shape)
+        print(torch.min(test_x[args.perspectives[0]]))
+        print(torch.max(test_x[args.perspectives[0]]))
+    else:
+        print(f'Input Dimension: {test_x.shape}')
+        print(f'Minimum Value in Batch: {torch.min(test_x)}')
+        print(f'Maximum Value in Batch: {torch.max(test_x)}')
+
     # Load pretrained params
     if args.load_model:
         model.load_state_dict(torch.load(args.model_path))
-
-    # test dataset
-    test_data = next(iter(valid_loader))
-
-    if args.model_type == "diagnosis":
-        print(test_data["img"][args.perspectives[0]].shape)
-        print(torch.min(test_data["img"][args.perspectives[0]]))
-        print(torch.max(test_data["img"][args.perspectives[0]]))
-    else:
-        print(f'Input Dimension: {test_data["img"].shape}')
-        print(f'Minimum Value in Batch: {torch.min(test_data["img"])}')
-        print(f'Maximum Valuein Batch: {torch.max(test_data["img"])}')
 
     # start training
     print("\nStart training")

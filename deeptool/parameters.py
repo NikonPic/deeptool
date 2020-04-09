@@ -490,6 +490,7 @@ def compat_args(args):
     ]:
         args.dim = 2
         args.crop_size = 1
+        args.perspectives = list(range(3))
 
     return args
 

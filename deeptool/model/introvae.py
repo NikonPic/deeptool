@@ -7,12 +7,12 @@ __all__ = ['IntroVAE']
 import torch
 from torch import nn, optim
 from ..architecture import Encoder, Decoder
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
 
-class IntroVAE(nn.Module):
+class IntroVAE(AbsModel):
     """
     Modification of the IntroVAE-Paper for 3-Dimensional tasks in MR-Imaging
     based on: https://arxiv.org/abs/1807.06358
@@ -24,7 +24,7 @@ class IntroVAE(nn.Module):
         Setup the general architecture for the IntroVAE model, composed of:
         >Encoder, Decoder<
         """
-        super(IntroVAE, self).__init__()
+        super(IntroVAE, self).__init__(args)
         # gpu / cpu
         self.device = device
 
@@ -46,16 +46,6 @@ class IntroVAE(nn.Module):
         # optimizers
         self.optimizerEnc = optim.Adam(self.encoder.parameters(), lr=args.lr)
         self.optimizerDec = optim.Adam(self.decoder.parameters(), lr=args.lr)
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
-
-    def watch_progress(self, test_data, iteration):
-        """
-        Outsourced to Tracker
-        """
-        self.tracker.track_progress(self, test_data, iteration)
 
     def reparametrisation(self, mu, log_sig2):
         """Apply the reparametrisation trick for VAE."""
@@ -96,7 +86,7 @@ class IntroVAE(nn.Module):
         return x_re (reconstructed) and x_p (sampled)
         """
         # 1. Send data to device
-        x = data["img"].to(self.device)
+        x = self.prep(data).to(self.device)
 
         # 2. Go trough the networks
         # Reset Gradients

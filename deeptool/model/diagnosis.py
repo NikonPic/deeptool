@@ -11,9 +11,8 @@ from torch import nn, optim
 from torch.autograd import Variable
 import torch.nn.functional as F
 
-
 from torchvision import models
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
@@ -74,7 +73,7 @@ class Classify_RNN(nn.Module):
 # Cell
 
 
-class TripleMRNet(nn.Module):
+class TripleMRNet(AbsModel):
     """
     adapted from https://github.com/yashbhalgat/MRNet-Competition
     with the knowledge of: https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699
@@ -89,7 +88,7 @@ class TripleMRNet(nn.Module):
         training=True,
         document=True,
     ):
-        super(TripleMRNet, self).__init__()
+        super(TripleMRNet, self).__init__(args)
 
         # general defines
         self.device = device
@@ -116,10 +115,6 @@ class TripleMRNet(nn.Module):
         self.int_count = 0
         self.batch_update = args.mrnet_batch_update
         self.label_smoothing = args.mrnet_label_smoothing
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
 
         # average together
         self.rnn_gap = args.mrnet_rnn_gap
