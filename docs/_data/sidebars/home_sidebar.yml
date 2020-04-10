@@ -25,6 +25,9 @@ entries:
       title: Training Loop
       url: /train_loop
     - output: web,pdf
+      title: Abstract Model
+      url: /abstract_model
+    - output: web,pdf
       title: Diagnosis
       url: /diagnosis
     - output: web,pdf

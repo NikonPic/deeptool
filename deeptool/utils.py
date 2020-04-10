@@ -54,6 +54,7 @@ class Tracker(object):
             date.hour,
             date.minute,
         )
+        self.dataset = args.dataset_type
 
         # internal counting for visualization
         self.internal_count = 100
@@ -169,7 +170,11 @@ class Tracker(object):
         torch.save(model.state_dict(), self.dir_name + "/_model")
 
         # Plot Results:
-        if self.model_type not in ("diagnosis") and self.internal_count > 2:
+        if (
+            self.model_type not in ("diagnosis")
+            and self.internal_count > 2
+            and self.dataset == "MRNet"
+        ):
             self.internal_count = 0
 
             for channel in range(self.channels):
@@ -229,6 +234,24 @@ class Tracker(object):
                         + "/rec_iteration_%d_class_%d.jpg" % (iteration, channel)
                     )
                 plt.close()
+
+        else:
+            # plot in figure
+            plt.figure(1337, figsize=(24, 24))
+            if iteration == 0:
+                self.show(
+                    vutils.make_grid(x[0, :, :, :], nrow=4, padding=2, normalize=True)
+                )
+                plt.savefig(self.dir_name + "/original.jpg")
+            else:
+                self.show(
+                    vutils.make_grid(
+                        x_re[0, :, :, :], nrow=4, padding=2, normalize=True
+                    )
+                )
+                plt.savefig(self.dir_name + f"/rec_iteration_{iteration}.jpg")
+                plt.savefig(self.dir_name + "/current.jpg")
+            plt.close()
 
         # increase the counter
         self.internal_count += 1

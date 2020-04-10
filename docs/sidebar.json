@@ -6,6 +6,7 @@
     "Utils": "/utils",
     "Parameters": "/parameters",
     "Training Loop": "/train_loop",
+    "Abstract Model": "/abstract_model",
     "Diagnosis": "/diagnosis",
     "DCGAN": "/dcgan",
     "Intro VAE": "/introvae",

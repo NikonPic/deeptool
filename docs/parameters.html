@@ -31,12 +31,6 @@ summary: "Define all General Parameters for training!"
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="1.1-Dataset-MRNet">1.1 Dataset MRNet<a class="anchor-link" href="#1.1-Dataset-MRNet">&#182;</a></h3>
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
@@ -45,20 +39,14 @@ summary: "Define all General Parameters for training!"
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dataset_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get all relevant parameters to handle the dataset</span>
-<span class="sd">    -&gt; here: MRNET</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># determine path</span>
-    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/home/biomech/Documents/OsteoData/MRNet-v1.0/&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># path = &#39;C:/Users/Niko/Documents/data/MRNet-v1.0/MRNet-v1.0&#39;</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/ga46yeg/data/MRNet-v1.0&quot;</span>
-
-    <span class="c1"># Dataset MRNet:</span>
+    <span class="c1"># Dataset:</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--root_dir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory of the dataset&quot;</span>
+        <span class="s2">&quot;--dataset_type&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;MRNet&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Dataset: &quot;MRNet, KneeXray, ...&quot;&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--n_gpu&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of GPUs on the PC&quot;</span><span class="p">,</span>
@@ -82,16 +70,77 @@ summary: "Define all General Parameters for training!"
         <span class="s2">&quot;--batch_size&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Batch size for training&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--perspectives&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;axial&quot;</span><span class="p">,</span> <span class="s2">&quot;coronal&quot;</span><span class="p">,</span> <span class="s2">&quot;sagittal&quot;</span><span class="p">],</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Perspectives of the Mr Scans&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--num_worker&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of workers for loading the dataset&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_dataset_args" class="doc_header"><code>get_dataset_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L22" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dataset_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+</blockquote>
+<p>Get all relevant parameters to handle the dataset</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="1.1-Dataset-MRNet">1.1 Dataset MRNet<a class="anchor-link" href="#1.1-Dataset-MRNet">&#182;</a></h3><blockquote><p>https: //stanfordmlgroup.github.io/competitions/mrnet/</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dataset_mrnet_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all relevant parameters to handle the dataset</span>
+<span class="sd">    -&gt; here: MRNET</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># determine path</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/home/biomech/Documents/OsteoData/MRNet-v1.0/&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/Niko/Documents/data/MRNet-v1.0/MRNet-v1.0&quot;</span>
+        <span class="c1"># path = &quot;C:/Users/ga46yeg/data/MRNet-v1.0&quot;</span>
+
+    <span class="c1"># Dataset MRNet:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--root_dir_mrnet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory of the dataset&quot;</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--perspectives&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;axial&quot;</span><span class="p">,</span> <span class="s2">&quot;coronal&quot;</span><span class="p">,</span> <span class="s2">&quot;sagittal&quot;</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Perspectives of the Mr Scans&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--classes&quot;</span><span class="p">,</span>
@@ -117,10 +166,71 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_dataset_args" class="doc_header"><code>get_dataset_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L21" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dataset_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_dataset_mrnet_args" class="doc_header"><code>get_dataset_mrnet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L67" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dataset_mrnet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Get all relevant parameters to handle the dataset
 -&gt; here: MRNET</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="1.2-Dataset-Kneexray">1.2 Dataset Kneexray<a class="anchor-link" href="#1.2-Dataset-Kneexray">&#182;</a></h3><blockquote><p>https: //data.mendeley.com/datasets/56rmx5bjcr/1</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_dataset_kneexray_args</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all relevant parameters to handle the dataset</span>
+<span class="sd">    -&gt; here: KneeXray</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># determine path</span>
+    <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/home/biomech/Documents/OsteoData/KneeXrayData/ClsKLData/kneeKL224/&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;C:/Users/Niko/Documents/data/KneeXrayData/ClsKLData/kneeKL224&quot;</span>
+
+    <span class="c1"># Dataset KneeXray:</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--root_dir_kneexray&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Directory of the dataset&quot;</span>
+    <span class="p">)</span>
+    <span class="c1"># ------------------------------------------------------------------------</span>
+    <span class="k">return</span> <span class="n">parser</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_dataset_kneexray_args" class="doc_header"><code>get_dataset_kneexray_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L103" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_dataset_kneexray_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+</blockquote>
+<p>Get all relevant parameters to handle the dataset
+-&gt; here: KneeXray</p>
 
 </div>
 
@@ -160,7 +270,7 @@ summary: "Define all General Parameters for training!"
         <span class="s2">&quot;--model_type&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model: &quot;introvae&quot;, &quot;dcgan&quot;, &quot;bigan&quot;, &quot;vqvae&quot;, &quot;diagnosis&quot;, &quot;MoCoAE&quot;, &quot;rnnvae&quot;&#39;</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model: &quot;introvae&quot;, &quot;dcgan&quot;, &quot;bigan&quot;, &quot;vqvae&quot;, &quot;diagnosis&quot;, &quot;MoCoAE&quot;, &quot;rnnvae&quot;&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--load_model&quot;</span><span class="p">,</span>
@@ -192,7 +302,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_model_args" class="doc_header"><code>get_model_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L84" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_model_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_model_args" class="doc_header"><code>get_model_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L126" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_model_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the network architecture
 -&gt; model_type: Which model should be applied?
@@ -282,7 +392,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_architecture_args" class="doc_header"><code>get_architecture_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L117" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_architecture_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_architecture_args" class="doc_header"><code>get_architecture_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L159" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_architecture_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>Parameters determing the network architecture</p>
 
@@ -333,7 +443,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L169" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L211" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -386,7 +496,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L227" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters for visualization</p>
 
@@ -460,7 +570,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L203" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the IntroVae parameters</p>
 
@@ -495,7 +605,7 @@ summary: "Define all General Parameters for training!"
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--wgan&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Determine if WGAN training should be activated&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -522,7 +632,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L236" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the DCGAN parameters</p>
 
@@ -581,7 +691,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L263" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the BiGAN parameters</p>
 
@@ -625,7 +735,7 @@ summary: "Define all General Parameters for training!"
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--vq_layers&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Dimensions of layers with quantization&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
@@ -664,7 +774,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L287" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L329" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -747,7 +857,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L335" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the MRNet parameters</p>
 
@@ -806,7 +916,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L425" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the Recurrent Varaitional Autoencoder parameters</p>
 
@@ -849,9 +959,9 @@ summary: "Define all General Parameters for training!"
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--moco_m&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="mf">0.999</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The Momentum for the key Network update&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">0.999</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The Momentum for the key Network update encoder[0] and decoder[1]&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="k">return</span> <span class="n">parser</span>
@@ -871,7 +981,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_MoCoAE_args" class="doc_header"><code>get_MoCoAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L407" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MoCoAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_MoCoAE_args" class="doc_header"><code>get_MoCoAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L449" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MoCoAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -901,7 +1011,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L437" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L479" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -928,7 +1038,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L451" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
@@ -968,7 +1078,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_ae_scale=0.9, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, moco_K=4096, moco_m=0.999, moco_tau=0.07, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_transition=&#39;cnn&#39;, rnn_type=&#39;ae&#39;, root_dir=&#39;C:/Users/ga46yeg/data/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
+<pre>Namespace(alpha=1, batch_size=16, beta=1, bi_ae_scale=0.9, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dataset_type=&#39;MRNet&#39;, dim=3, gamma=5, lam=10, load_model=False, lr=0.0001, m=2000, min_size=4, moco_K=16384, moco_m=[0.999, 0.99], moco_tau=0.07, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.1, mrnet_rnn_gap=True, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=10, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_transition=&#39;cnn&#39;, rnn_type=&#39;ae&#39;, root_dir_kneexray=&#39;C:/Users/Niko/Documents/data/KneeXrayData/ClsKLData/kneeKL224&#39;, root_dir_mrnet=&#39;C:/Users/Niko/Documents/data/MRNet-v1.0/MRNet-v1.0&#39;, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8, 16], vq_n_embed=512, watch_batch=1130, wgan=True)</pre>
 </div>
 
 </div>

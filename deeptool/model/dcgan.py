@@ -144,7 +144,10 @@ class DCGAN(AbsModel):
         errD_fake = torch.mean(output)
 
         # 1.3 assign Gradient penalty
-        gradient_penalty = self.calc_gradient_penalty(real_gpu, fake.detach())
+        if update:
+            gradient_penalty = self.calc_gradient_penalty(real_gpu, fake.detach())
+        else:
+            gradient_penalty = 0
 
         # sum the losses up
         errD = errD_fake + errD_real + gradient_penalty
@@ -190,7 +193,10 @@ class DCGAN(AbsModel):
         label = torch.full((b_size,), self.real_label, device=self.device)
         output = self.discriminator(real_gpu).view(-1)
         errD_real = self.loss(output, label)
-        errD_real.backward()
+
+        if update:
+            errD_real.backward()
+
         D_x = output.mean().item()
 
         # 1.2 Train with all-fake batch
@@ -199,7 +205,10 @@ class DCGAN(AbsModel):
         output = self.discriminator(fake.detach()).view(-1)
         label.fill_(self.fake_label)
         errD_fake = self.loss(output, label)
-        errD_fake.backward()
+
+        if update:
+            errD_fake.backward()
+
         D_G_z1 = output.mean().item()
         errD = errD_fake.item() + errD_real.item()
 
@@ -212,10 +221,10 @@ class DCGAN(AbsModel):
         label.fill_(self.real_label)
         output = self.discriminator(fake).view(-1)
         errG = self.loss(output, label)
-        errG.backward()
 
         # Update Generator
         if update:
+            errG.backward()
             self.optimizerGen.step()
             return fake
 

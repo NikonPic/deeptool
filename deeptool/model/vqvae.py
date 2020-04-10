@@ -11,7 +11,7 @@ from torch import autograd
 
 # Personal imports
 from ..architecture import DownUpConv, Quantize, LinearSigmoid, Discriminator
-from ..utils import Tracker
+from ..abs_model import AbsModel
 
 # Cell
 
@@ -235,7 +235,7 @@ class EncQuantDec(nn.Module):
 # Cell
 
 
-class VQVAE2(nn.Module):
+class VQVAE2(AbsModel):
     """
     Vector Quantized Variational AutoEncoder
     based on https://arxiv.org/abs/1906.00446
@@ -244,7 +244,7 @@ class VQVAE2(nn.Module):
 
     def __init__(self, device, args):
         """Network and parameter definitions"""
-        super(VQVAE2, self).__init__()
+        super(VQVAE2, self).__init__(args)
 
         # Initialise all networks within the Enc-Dec List
         self.device = device
@@ -252,10 +252,6 @@ class VQVAE2(nn.Module):
         self.criterion = nn.MSELoss()
         self.vq_beta = args.vq_beta
         self.optimizer = optim.Adam(self.EncQuantDec.parameters(), lr=args.lr)
-
-        # Setup the tracker to visualize the progress
-        if args.track:
-            self.tracker = Tracker(args)
 
         # define forward function
         self.forward = self.forward_normal
@@ -289,11 +285,6 @@ class VQVAE2(nn.Module):
     def set_parameters(self, args):
         """reset the intern parameters to allow pretraining"""
         self.vq_class = args.vq_class
-
-    @torch.no_grad()
-    def watch_progress(self, test_data, iteration):
-        """Outsourced to Tracker"""
-        self.tracker.track_progress(self, test_data, iteration)
 
     def calc_gradient_penalty(self, real_data, fake_data):
         """
@@ -412,7 +403,7 @@ class VQVAE2(nn.Module):
         Encode-Quantize-Decode and update
         """
         # Move img-input on GPU
-        inp = data["img"].to(self.device)
+        inp = self.prep(data).to(self.device)
         # Reset Gradients
         self.EncQuantDec.zero_grad()
         # Encode
@@ -460,7 +451,7 @@ class VQVAE2(nn.Module):
     def forward_normal(self, data, update=True):
         """Encode-Quantize-Decode and update"""
         # Move img-input on GPU
-        inp = data["img"].to(self.device)
+        inp = self.prep(data).to(self.device)
         # Reset Gradients
         self.EncQuantDec.zero_grad()
         # Encode

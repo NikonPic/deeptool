@@ -39,7 +39,6 @@ class AbsModel(nn.Module):
         # create model
         return prep
 
-
     def prep_mrnet_input(self, data):
         """
         This function deals with the MRNET input

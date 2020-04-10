@@ -187,13 +187,6 @@ class RNN_AE(AbsModel):
         x = self.conv_part_dec(x)
         return x
 
-    @torch.no_grad()
-    def prep_input(self, batch):
-        self.zero_grad()
-        batch = mod_batch(batch)
-        img = batch["img"].to(self.device)
-        return img
-
     def ae_forward(self, img):
         # encode:
         x = self.encode(img)
@@ -208,7 +201,9 @@ class RNN_AE(AbsModel):
         calculate the forward pass
         """
         # prepare
-        img = self.prep_input(batch)
+        batch = mod_batch(batch)
+        img = self.prep(batch).to(self.device)
+
         # autoencoder
         loss, x = self.ae_forward(img)
 
@@ -262,7 +257,8 @@ class RNN_VAE(RNN_AE):
 
     def forward(self, batch, update=True):
         # prepare
-        img = self.prep_input(batch)
+        batch = mod_batch(batch)
+        img = self.prep(batch).to(self.device)
         # encode
         x = self.encode(img)
         # apply the vae sampling
@@ -328,7 +324,9 @@ class RNN_INTROVAE(RNN_VAE):
         # prepare
         self.optimizerEnc.zero_grad()
         self.optimizerDec.zero_grad()
-        img = self.prep_input(batch)
+
+        batch = mod_batch(batch)
+        img = self.prep(batch).to(self.device)
 
         # (1st) Pass Original
         # --------------------------------------
@@ -584,9 +582,6 @@ class RNN_BIGAN(RNN_VAE):
         self.optimizerDec.zero_grad()
         self.optimizerDis.zero_grad()
 
-        # load batch
-        x = self.prep_input(batch)
-
         # (0) Train Autoencoder
         # -------------------------------
         ae_loss = 0
@@ -595,7 +590,8 @@ class RNN_BIGAN(RNN_VAE):
         # (1) Train Discriminator
         # -------------------------------
         # load batch
-        x = self.prep_input(batch)
+        batch = mod_batch(batch)
+        x = self.prep(batch).to(self.device)
         # generate original z
         z = self.encode_non_d(x)
 

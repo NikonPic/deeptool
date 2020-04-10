@@ -287,7 +287,7 @@ def get_DCGAN_args(parser, args=[]):
     parser.add_argument(
         "--wgan",
         type=bool,
-        default=True,
+        default=False,
         help="Determine if WGAN training should be activated",
     )
     parser.add_argument(
@@ -347,7 +347,7 @@ def get_VQVAE_args(parser, args=[]):
     parser.add_argument(
         "--vq_layers",
         type=list,
-        default=[8],
+        default=[8, 16],
         help="Dimensions of layers with quantization",
     )
     parser.add_argument(
