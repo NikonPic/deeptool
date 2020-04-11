@@ -231,7 +231,7 @@ class BiGAN(AbsModel):
         output = self.discriminator(real).view(-1)
         label.fill_(self.real_label)
         errD_real = self.loss(output, label)
-        errD_real.backward()
+        errD_real.backward() if update else None
         D_x = output.mean().item()
 
         # 1.2 Train with all-fake batch
@@ -243,7 +243,8 @@ class BiGAN(AbsModel):
         output = self.discriminator(fake).view(-1)
         label.fill_(self.fake_label)
         errD_fake = self.loss(output, label)
-        errD_fake.backward()
+        errD_fake.backward() if update else None
+
         D_G_z1 = output.mean().item()
 
         # final discriminatro loss
@@ -263,14 +264,14 @@ class BiGAN(AbsModel):
         output = self.discriminator(real).view(-1)
         label.fill_(self.fake_label)
         errE = self.loss(output, label)
-        errE.backward()
+        errE.backward() if update else None
 
         # Fake set
         fake = (fake_x, fake_z)
         output = self.discriminator(fake).view(-1)
         label.fill_(self.real_label)
         errD = self.loss(output, label)
-        errD.backward()
+        errD.backward() if update else None
 
         # Update Generator
         if update:
