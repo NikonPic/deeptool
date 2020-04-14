@@ -68,10 +68,10 @@ class DCGAN(AbsModel):
 
         # Optimizers
         self.optimizerGen = optim.Adam(
-            self.generator.parameters(), lr=args.lr, betas=(0.5, 0.999)
+            self.generator.parameters(), lr=0.0002, betas=(0.5, 0.999)
         )
         self.optimizerDis = optim.Adam(
-            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999)
+            self.discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999)
         )
 
     def calc_gradient_penalty(self, real_data, fake_data):
@@ -144,10 +144,9 @@ class DCGAN(AbsModel):
         errD_fake = torch.mean(output)
 
         # 1.3 assign Gradient penalty
-        if update:
-            gradient_penalty = self.calc_gradient_penalty(real_gpu, fake.detach())
-        else:
-            gradient_penalty = 0
+        gradient_penalty = (
+            self.calc_gradient_penalty(real_gpu, fake.detach()) if update else 0
+        )
 
         # sum the losses up
         errD = errD_fake + errD_real + gradient_penalty
@@ -166,7 +165,7 @@ class DCGAN(AbsModel):
         if update:
             errG.backward()
             self.optimizerGen.step()
-            return fake
+            return fake.detach()
 
         else:
             # Track all relevant losses
@@ -177,7 +176,7 @@ class DCGAN(AbsModel):
             tr_data["D_G_z1"] = errD_fake.item()
             tr_data["D_G_z2"] = output.mean().item()
             # Return losses and fake data
-            return fake, tr_data
+            return fake.detach(), tr_data
 
     def forward_dcgan(self, data, update=True):
         """
@@ -187,16 +186,14 @@ class DCGAN(AbsModel):
         real_gpu = self.prep(data).to(self.device)
 
         # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
+
         # 1.1 Train with all-real batch
         self.discriminator.zero_grad()
         b_size = real_gpu.size(0)
         label = torch.full((b_size,), self.real_label, device=self.device)
         output = self.discriminator(real_gpu).view(-1)
         errD_real = self.loss(output, label)
-
-        if update:
-            errD_real.backward()
-
+        errD_real.backward() if update else None
         D_x = output.mean().item()
 
         # 1.2 Train with all-fake batch
@@ -205,16 +202,11 @@ class DCGAN(AbsModel):
         output = self.discriminator(fake.detach()).view(-1)
         label.fill_(self.fake_label)
         errD_fake = self.loss(output, label)
-
-        if update:
-            errD_fake.backward()
+        errD_fake.backward() if update else None
+        self.optimizerDis.step() if update else None
 
         D_G_z1 = output.mean().item()
         errD = errD_fake.item() + errD_real.item()
-
-        # Update Discriminator
-        if update:
-            self.optimizerDis.step()
 
         # (2) Update G network: maximize 1 - log(D(G(z)))
         self.generator.zero_grad()
@@ -226,7 +218,7 @@ class DCGAN(AbsModel):
         if update:
             errG.backward()
             self.optimizerGen.step()
-            return fake
+            return fake.detach()
 
         else:
             # Track all relevant losses
@@ -237,4 +229,4 @@ class DCGAN(AbsModel):
             tr_data["D_G_z1"] = D_G_z1
             tr_data["D_G_z2"] = output.mean().item()
             # Return losses and fake data
-            return fake, tr_data
+            return fake.detach(), tr_data

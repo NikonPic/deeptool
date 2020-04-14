@@ -963,6 +963,12 @@ summary: "Define all General Parameters for training!"
         <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="mf">0.999</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The Momentum for the key Network update encoder[0] and decoder[1]&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--moco_aemode&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Define whether the normale autoencoder loss should be considered during training&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="k">return</span> <span class="n">parser</span>
 </pre></div>
@@ -1011,7 +1017,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L479" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L485" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -1038,7 +1044,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L506" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 

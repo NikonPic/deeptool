@@ -30,6 +30,10 @@ class MoCoAE(AbsModel):
         self.tau = args.moco_tau  # temperature
         self.m = args.moco_m  # momentum
 
+        # AE Loss
+        self.ae_mode = args.moco_aemode
+        self.mse_loss = nn.MSELoss(reduction="mean")
+
         # Encoder
         self.enc_q = Encoder(args, vae_mode=False).to(self.device)  # query encoder
         self.enc_k = Encoder(args, vae_mode=False).to(self.device)  # key encoder
@@ -170,15 +174,28 @@ class MoCoAE(AbsModel):
         # append keys to the queue
         self._dequeue_and_enqueue(kk, mode="dec")
 
+        if self.ae_mode:
+            # Reset Gradients
+            self.optimizerEnc.zero_grad()
+            self.optimizerDec.zero_grad()
+            z = self.enc_q(x)
+            x_r = self.dec_q(q)
+            ae_loss = self.mse_loss(x_r, x)
+            ae_loss.backward() if update else None
+            self.optimizerDec.step() if update else None
+            self.optimizerEnc.step() if update else None
+
         if update:
-            return x_kk
+            return x_kk.detach()
 
         else:
             tr_data = {
                 "loss_enc": loss_enc.item(),
                 "loss_dec": loss_dec.item(),
             }
-            return x_kk, tr_data
+            if ae_mode:
+                tr_data["ae_loss"] = ae_loss.item()
+            return x_kk.detach(), tr_data
 
 # Cell
 @torch.no_grad()

@@ -470,6 +470,12 @@ def get_MoCoAE_args(parser, args=[]):
         default=[0.999, 0.99],
         help="The Momentum for the key Network update encoder[0] and decoder[1]",
     )
+    parser.add_argument(
+        "--moco_aemode",
+        type=bool,
+        default=False,
+        help="Define whether the normale autoencoder loss should be considered during training",
+    )
     # ------------------------------------------------------------------------
     return parser
 
