@@ -150,8 +150,7 @@ class Tracker(object):
 
         plt.xlabel("Iteration")
         plt.ylabel("Loss")
-        if self.log_view:
-            plt.yscale("log")
+        plt.yscale("log") if self.log_view else None
         plt.grid(True, alpha=0.25)
         plt.legend()
         plt.savefig(self.dir_name + "/_Losses.pdf")

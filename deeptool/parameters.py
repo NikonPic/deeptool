@@ -136,7 +136,7 @@ def get_model_args(parser, args=[]):
         "--model_type",
         type=str,
         default="diagnosis",
-        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis", "MoCoAE", "rnnvae"',
+        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis", "mocoae", "rnnvae"',
     )
     parser.add_argument(
         "--load_model",
@@ -201,6 +201,12 @@ def get_architecture_args(parser, args=[]):
         type=int,
         default=0,
         help="Number of residual layers between striding -3d",
+    )
+    parser.add_argument(
+        "--evo_on",
+        type=bool,
+        default=False,
+        help="Define whether to use the advancements of Evolving Normalization-Activation Layers",
     )
     # ------------------------------------------------------------------------
     return parser

@@ -101,6 +101,22 @@ class MoCoAE(AbsModel):
             ptr = (ptr + batch_size) % self.K
             self.ptr_dec[0] = ptr
 
+    def ae_forward(self, x, update):
+        """
+        Classic regression part of a normal Autoencoder
+        """
+        # to device
+        x = x.to(self.device)
+        # encode
+        z = self.enc_q(x)
+        # decode
+        x_r = self.dec_q(z)
+        # loss
+        ae_loss = self.mse_loss(x_r, x)
+        # backprop
+        ae_loss.backward() if update else None
+        return ae_loss
+
     def forward(self, data, update=True):
         """
         Perform forward computaion and update
@@ -111,6 +127,9 @@ class MoCoAE(AbsModel):
 
         # 1. Send data to device
         x = self.prep(data)
+
+        # ae part if on
+        ae_loss = self.ae_forward(x, update) if self.ae_mode else None
 
         # 2. further we will apply additional augmentation to the picture!
         x_q = aug(x).to(self.device)
@@ -174,17 +193,6 @@ class MoCoAE(AbsModel):
         # append keys to the queue
         self._dequeue_and_enqueue(kk, mode="dec")
 
-        if self.ae_mode:
-            # Reset Gradients
-            self.optimizerEnc.zero_grad()
-            self.optimizerDec.zero_grad()
-            z = self.enc_q(x)
-            x_r = self.dec_q(q)
-            ae_loss = self.mse_loss(x_r, x)
-            ae_loss.backward() if update else None
-            self.optimizerDec.step() if update else None
-            self.optimizerEnc.step() if update else None
-
         if update:
             return x_kk.detach()
 
@@ -193,7 +201,7 @@ class MoCoAE(AbsModel):
                 "loss_enc": loss_enc.item(),
                 "loss_dec": loss_dec.item(),
             }
-            if ae_mode:
+            if self.ae_mode:
                 tr_data["ae_loss"] = ae_loss.item()
             return x_kk.detach(), tr_data
 

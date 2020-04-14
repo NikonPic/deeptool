@@ -395,7 +395,7 @@ class VQVAE2(AbsModel):
             tr_data["D_real(1)"] = D_x
             tr_data["D_fake(0)"] = D_G_z1
             # Return losses and fake data
-            return x_r, tr_data
+            return x_r.detach(), tr_data
 
     def forward_class(self, data, update=True):
         """
@@ -471,7 +471,7 @@ class VQVAE2(AbsModel):
             self.optimizer.step()
 
             # Return the output
-            return x_re
+            return x_re.detach()
 
         # Return a dictionary of data to track
         else:
@@ -481,4 +481,4 @@ class VQVAE2(AbsModel):
             tr_data["l_latent"] = latent_loss.item()
 
             # Return output and losses
-            return x_re, tr_data
+            return x_re.detach(), tr_data

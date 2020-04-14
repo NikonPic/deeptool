@@ -270,7 +270,7 @@ summary: "Define all General Parameters for training!"
         <span class="s2">&quot;--model_type&quot;</span><span class="p">,</span>
         <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model: &quot;introvae&quot;, &quot;dcgan&quot;, &quot;bigan&quot;, &quot;vqvae&quot;, &quot;diagnosis&quot;, &quot;MoCoAE&quot;, &quot;rnnvae&quot;&#39;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Model: &quot;introvae&quot;, &quot;dcgan&quot;, &quot;bigan&quot;, &quot;vqvae&quot;, &quot;diagnosis&quot;, &quot;mocoae&quot;, &quot;rnnvae&quot;&#39;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--load_model&quot;</span><span class="p">,</span>
@@ -374,6 +374,12 @@ summary: "Define all General Parameters for training!"
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of residual layers between striding -3d&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--evo_on&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Define whether to use the advancements of Evolving Normalization-Activation Layers&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="k">return</span> <span class="n">parser</span>
 </pre></div>
@@ -443,7 +449,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L211" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_opt_args" class="doc_header"><code>get_opt_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L217" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_opt_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -496,7 +502,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L227" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_vis_args" class="doc_header"><code>get_vis_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L233" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_vis_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters for visualization</p>
 
@@ -570,7 +576,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L245" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_IntroVAE_args" class="doc_header"><code>get_IntroVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L251" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_IntroVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the IntroVae parameters</p>
 
@@ -632,7 +638,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L278" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_DCGAN_args" class="doc_header"><code>get_DCGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L284" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_DCGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the DCGAN parameters</p>
 
@@ -691,7 +697,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L305" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_BiGAN_args" class="doc_header"><code>get_BiGAN_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_BiGAN_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the BiGAN parameters</p>
 
@@ -774,7 +780,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L329" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_VQVAE_args" class="doc_header"><code>get_VQVAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L335" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_VQVAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -857,7 +863,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_MRNet_args" class="doc_header"><code>get_MRNet_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L383" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MRNet_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the MRNet parameters</p>
 
@@ -916,7 +922,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L425" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_RNN_VAE_args" class="doc_header"><code>get_RNN_VAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L431" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_RNN_VAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the Recurrent Varaitional Autoencoder parameters</p>
 
@@ -987,7 +993,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_MoCoAE_args" class="doc_header"><code>get_MoCoAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L449" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MoCoAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_MoCoAE_args" class="doc_header"><code>get_MoCoAE_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L455" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_MoCoAE_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -1017,7 +1023,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L485" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L491" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -1044,7 +1050,7 @@ summary: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L506" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L512" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
