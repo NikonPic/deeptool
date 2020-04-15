@@ -67,7 +67,7 @@ class IntroVAE(AbsModel):
         sqrt(sum_i sum_j (x_ij - x_hat_ij)^2)
         pixelwise mean squared error! (sum requires to sum over one picture and the mean!)
         """
-        return self.mse_loss(x_hat, x).mean()
+        return self.mse_loss(x_hat, x)
 
     def set_parameters(self, args):
         """

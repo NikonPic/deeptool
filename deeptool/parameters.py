@@ -38,6 +38,9 @@ def get_dataset_args(parser, args=[]):
         "--crop_size", type=int, default=16, help="Depth of the MR-Scan",
     )
     parser.add_argument(
+        "--rot_max", type=int, default=30, help="Maximum random rotation angle",
+    )
+    parser.add_argument(
         "--crop_percent",
         type=float,
         default=0.7,
@@ -220,7 +223,7 @@ def get_opt_args(parser, args=[]):
     """
     # Optimizers:
     # ------------------------------------------------------------------------
-    parser.add_argument("--lr", type=float, default=0.0001, help="learning rate")
+    parser.add_argument("--lr", type=float, default=0.0002, help="learning rate")
     parser.add_argument(
         "--n_epochs", type=int, default=500, help="number of training epochs"
     )
@@ -255,24 +258,24 @@ def get_IntroVAE_args(parser, args=[]):
     # IntroVAE:
     # ------------------------------------------------------------------------
     parser.add_argument(
-        "--alpha", type=float, default=1, help="Factor for adversarial leaning"
+        "--alpha", type=float, default=0.25, help="Factor for adversarial leaning"
     )
     parser.add_argument(
-        "--beta", type=float, default=1, help="Factor for autoencoder leaning"
+        "--beta", type=float, default=0.05, help="Factor for autoencoder leaning"
     )
     parser.add_argument(
         "--gamma",
         type=float,
-        default=5,
+        default=1,
         help="Factor for variational autoencoder leaning",
     )
     parser.add_argument(
-        "--m", type=float, default=2000, help="Positive margin for valid learning"
+        "--m", type=float, default=90, help="Positive margin for valid learning"
     )
     parser.add_argument(
         "--n_pretrain",
         type=int,
-        default=10,
+        default=5,
         help="training epochs for pretraining autoencoder",
     )
     # ------------------------------------------------------------------------

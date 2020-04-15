@@ -259,6 +259,7 @@ class ConvBn(nn.Module):
         padding=1,
         dim=3,
         p_drop=0,
+        evo_on=False
     ):
         """setup the general architecture"""
         super(ConvBn, self).__init__()
@@ -269,7 +270,7 @@ class ConvBn(nn.Module):
             Dropout = nn.Dropout3d
         else:
             Conv = nn.Conv2d
-            BatchNorm = nn.BatchNorm2d
+            BatchNorm = EvoNorm2D if evo_on else nn.BatchNorm2d
             Dropout = nn.Dropout2d
             # Check convsize and stride
             if type(convsize) == tuple:
@@ -311,6 +312,7 @@ class ConvTpBn(nn.Module):
         init_w=weights_init,
         padding=1,
         dim=3,
+        evo_on=False
     ):
         """setup the general architecture"""
         super(ConvTpBn, self).__init__()
@@ -319,7 +321,7 @@ class ConvTpBn(nn.Module):
             BatchNorm = nn.BatchNorm3d
         else:
             ConvTranspose = nn.ConvTranspose2d
-            BatchNorm = nn.BatchNorm2d
+            BatchNorm = EvoNorm2D if evo_on else nn.BatchNorm2d
             # Check convsize and stride
             if type(convsize) == tuple:
                 if len(convsize) > 2:
@@ -423,6 +425,7 @@ class DownUpConv(nn.Module):
                         convsize=convsize,
                         stride=stride,
                         p_drop=self.p_drop,
+                        evo_on=self.evo_on
                     ),
                 ]
             )
@@ -431,7 +434,7 @@ class DownUpConv(nn.Module):
                 conv_layers.extend(
                     [
                         ResNetBlock(
-                            fea_out, convsize=3, dim=self.dim, evo_on=self.evo_on
+                            fea_out, convsize=3, dim=self.dim, evo_on=self.evo_on,
                         ),
                     ]
                 )
@@ -453,7 +456,7 @@ class DownUpConv(nn.Module):
             # 2. Upsample
             conv_layers[:0] = [
                 ConvTpBn(
-                    fea_out, fea_in, dim=self.dim, convsize=convsize, stride=stride
+                    fea_out, fea_in, dim=self.dim, convsize=convsize, stride=stride, evo_on=self.evo_on,
                 ),
             ]
 

@@ -411,7 +411,57 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_kneexray_datasets" class="doc_header"><code>load_kneexray_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L489" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_kneexray_datasets</code>(<strong><code>args</code></strong>)</p>
+<h2 id="GaussianBlur" class="doc_header"><code>class</code> <code>GaussianBlur</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L486" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GaussianBlur</code>(<strong><code>sigma</code></strong>=<em><code>[0.1, 2.0]</code></em>)</p>
+</blockquote>
+<p>Gaussian blur augmentation in SimCLR <a href="https://arxiv.org/abs/2002.05709">https://arxiv.org/abs/2002.05709</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="TwoCropsTransform" class="doc_header"><code>class</code> <code>TwoCropsTransform</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L499" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwoCropsTransform</code>(<strong><code>base_transform</code></strong>)</p>
+</blockquote>
+<p>Take two random crops of one image as the query and key.
+from: <a href="https://arxiv.org/abs/1805.01978">https://arxiv.org/abs/1805.01978</a>
+<a href="https://github.com/facebookresearch/moco/blob/master/main_moco.py">https://github.com/facebookresearch/moco/blob/master/main_moco.py</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="load_kneexray_datasets" class="doc_header"><code>load_kneexray_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L520" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_kneexray_datasets</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Load the kneexray dataset</p>
 
@@ -432,7 +482,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_loader" class="doc_header"><code>get_loader</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L504" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_loader</code>(<strong><code>args</code></strong>, <strong><code>root_dir</code></strong>)</p>
+<h4 id="get_loader" class="doc_header"><code>get_loader</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L535" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_loader</code>(<strong><code>args</code></strong>, <strong><code>root_dir</code></strong>)</p>
 </blockquote>
 
 </div>

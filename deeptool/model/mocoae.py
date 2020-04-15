@@ -32,7 +32,7 @@ class MoCoAE(AbsModel):
 
         # AE Loss
         self.ae_mode = args.moco_aemode
-        self.mse_loss = nn.MSELoss(reduction="mean")
+        self.mse_loss = nn.MSELoss(reduction="sum")
 
         # Encoder
         self.enc_q = Encoder(args, vae_mode=False).to(self.device)  # query encoder
@@ -61,6 +61,9 @@ class MoCoAE(AbsModel):
         # optimizers
         self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr)
         self.optimizerDec = optim.Adam(self.dec_q.parameters(), lr=args.lr)
+
+        # override prep
+        self.prep = self.prep_new
 
     @torch.no_grad()
     def register_queue(self, name: str):
@@ -105,8 +108,6 @@ class MoCoAE(AbsModel):
         """
         Classic regression part of a normal Autoencoder
         """
-        # to device
-        x = x.to(self.device)
         # encode
         z = self.enc_q(x)
         # decode
@@ -117,6 +118,9 @@ class MoCoAE(AbsModel):
         ae_loss.backward() if update else None
         return ae_loss
 
+    def prep_new(self, data):
+        return data[0][0]
+
     def forward(self, data, update=True):
         """
         Perform forward computaion and update
@@ -125,15 +129,15 @@ class MoCoAE(AbsModel):
         self.optimizerEnc.zero_grad()
         self.optimizerDec.zero_grad()
 
-        # 1. Send data to device
-        x = self.prep(data)
-
-        # ae part if on
-        ae_loss = self.ae_forward(x, update) if self.ae_mode else None
+        # 1. Get the augmented data
+        x_q, x_k = data[0][0], data[0][1]
 
         # 2. further we will apply additional augmentation to the picture!
-        x_q = aug(x).to(self.device)
-        x_k = aug(x).to(self.device)
+        x_q = x_q.to(self.device)
+        x_k = x_k.to(self.device)
+
+        # ae part if on
+        ae_loss = self.ae_forward(x_q, update) if self.ae_mode else None
 
         # 3. Encode
         q = self.enc_q(x_q)
@@ -234,16 +238,17 @@ def copy_q2k_params(Q_network: nn.Module, K_network: nn.Module):
 # Cell
 @torch.no_grad()
 def momentum_update(Q_network: nn.Module, K_network: nn.Module, m: float):
-    """
-    Momentum update of the key network based on the query network
-    """
+    """Momentum update of the key network based on the query network"""
     for param_q, param_k in zip(Q_network.parameters(), K_network.parameters()):
         param_k.data = param_k.data * m + param_q.data * (1.0 - m)
 
 # Cell
-from ..dataloader import TriplePrep
+import torch
+import torchvision
+from ..dataloader import RandomCrop, Rescale
 
 
+@torch.no_grad()
 def aug(x):
     """perform random data augmentation on an image batch"""
     # ToDo
