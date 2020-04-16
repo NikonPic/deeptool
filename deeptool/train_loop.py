@@ -137,7 +137,7 @@ def main_loop(args, tq_nb=True):
     batch_count = 0
     model.train()
 
-    for epoch in tq(range(args.n_epochs)):
+    for epoch in tq(range(args.n_epochs), desc="Epochs"):
 
         # remodify after pretraining training
         if epoch == args.n_pretrain and args.model_type in ("vqvae", "introvae"):
@@ -145,7 +145,7 @@ def main_loop(args, tq_nb=True):
             model.set_parameters(args)
 
         # For each batch in the dataloader
-        for data in tq(train_loader):
+        for data in tq(train_loader, leave=False, desc=f"Batches (x{args.batch_size})"):
             # perform training
             model(data)
 

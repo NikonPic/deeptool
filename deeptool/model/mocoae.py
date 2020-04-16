@@ -111,7 +111,7 @@ class MoCoAE(AbsModel):
         # encode
         z = self.enc_q(x)
         # decode
-        x_r = self.dec_q(z)
+        x_r = self.dec_q(z.detach())
         # loss
         ae_loss = self.mse_loss(x_r, x)
         # backprop
