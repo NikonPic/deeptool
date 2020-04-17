@@ -172,26 +172,16 @@ class MoCoAE(AbsModel):
             # update the Key Encoder with Momentum update
             momentum_update(self.enc_q, self.enc_k, self.m[0])
 
-        # append keys to the queue
-        self._dequeue_and_enqueue(k, mode="enc")
-
         # 4. Decode
-        x_qq = self.dec_q(q.detach())
-
-        with torch.no_grad():
-            x_kk = self.dec_k(k)
+        x_re = self.dec_q(k.detach())
 
         # 5. Encode again using the k-network to focus on decoder only!:
-        qq = self.enc_k(x_qq)
-        qq = nn.functional.normalize(qq, dim=1)
-
-        with torch.no_grad():
-            kk = self.enc_k(x_kk).detach()
-            kk = nn.functional.normalize(kk, dim=1)
+        kk = self.enc_k(x_re)
+        kk = nn.functional.normalize(kk, dim=1)
 
         # Get the InfoNCE loss:
         loss_dec = MomentumContrastiveLoss(
-            kk, qq, self.dec_queue, self.tau, device=self.device
+            kk, k, self.enc_queue, self.tau, device=self.device
         )
 
         # perform decoder update
@@ -201,14 +191,11 @@ class MoCoAE(AbsModel):
             # update the Query Decoder
             self.optimizerDec.step()
 
-            # update the Key Decoder with Momentum update
-            momentum_update(self.dec_q, self.dec_k, self.m[1])
-
         # append keys to the queue
-        self._dequeue_and_enqueue(kk, mode="dec")
+        self._dequeue_and_enqueue(k, mode="enc")
 
         if update:
-            return x_kk.detach()
+            return x_re.detach()
 
         else:
             tr_data = {
@@ -217,7 +204,7 @@ class MoCoAE(AbsModel):
             }
             if self.ae_mode:
                 tr_data["ae_loss"] = ae_loss.item()
-            return x_kk.detach(), tr_data
+            return x_re.detach(), tr_data
 
 # Cell
 @torch.no_grad()
