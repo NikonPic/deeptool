@@ -66,6 +66,9 @@ class MoCoAE(AbsModel):
         self.prep = self.prep_3D if args.dataset_type == "MRNet" else self.prep_2D
         self.take = self.take_3D if args.dataset_type == "MRNet" else self.take_2D
 
+        # dec loss
+        self.dec_loss = nn.BCELoss()
+
     @torch.no_grad()
     def register_queue(self, name: str):
         """
@@ -180,9 +183,10 @@ class MoCoAE(AbsModel):
         kk = nn.functional.normalize(kk, dim=1)
 
         # Get the InfoNCE loss:
-        loss_dec = MomentumContrastiveLoss(
-            kk, k, self.enc_queue, self.tau, device=self.device
-        )
+        #loss_dec = MomentumContrastiveLoss(
+        #    kk, k, self.enc_queue, self.tau, device=self.device
+        #)
+        loss_dec = self.dec_loss(kk, k)
 
         # perform decoder update
         if update:

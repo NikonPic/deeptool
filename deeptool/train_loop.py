@@ -6,7 +6,7 @@ __all__ = ['get_model', 'get_dataset', 'test_one_batch', 'batch_info', 'main_loo
 
 # general
 import torch
-from tqdm import tqdm, tqdm_notebook
+from tqdm import tqdm, tqdm_notebook, trange
 
 # import the relevant models
 from .model.dcgan import DCGAN
