@@ -169,12 +169,7 @@ class Tracker(object):
         torch.save(model.state_dict(), self.dir_name + "/_model")
 
         # Plot Results:
-        if (
-            self.model_type not in ("diagnosis")
-            and self.internal_count > 2
-            and self.dataset == "MRNet"
-        ):
-            self.internal_count = 0
+        if self.dataset == "MRNet":
 
             for channel in range(self.channels):
                 # init view list
@@ -207,6 +202,7 @@ class Tracker(object):
                         + "/rec_iteration_%d_class_%d_3d_view.png"
                         % (iteration, channel)
                     )
+                    plt.savefig(self.dir_name + "/current.jpg")
                     plt.close()
 
                 else:
@@ -251,9 +247,6 @@ class Tracker(object):
                 plt.savefig(self.dir_name + f"/rec_iteration_{iteration}.jpg")
                 plt.savefig(self.dir_name + "/current.jpg")
             plt.close()
-
-        # increase the counter
-        self.internal_count += 1
 
     def update_network(self, cl, model, score):
         """

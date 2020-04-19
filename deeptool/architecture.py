@@ -206,12 +206,12 @@ class ResNetBlock(nn.Module):
         if dim == 3:
             Conv = nn.Conv3d
             BatchNorm = nn.BatchNorm3d
-            self.evo = nn.BatchNorm3d
+            Evo = nn.BatchNorm3d
 
         else:
             Conv = nn.Conv2d
             BatchNorm = nn.BatchNorm2d
-            self.evo = EvoNorm2D if evo_on else nn.BatchNorm2d
+            Evo = EvoNorm2D if evo_on else nn.BatchNorm2d
 
         self.relu = nn.ReLU(inplace=True)
         self.activation = activation
@@ -222,8 +222,8 @@ class ResNetBlock(nn.Module):
         self.conv2 = Conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False)
         self.conv2.apply(init_w)
 
-        self.bn1 = self.evo(n_chan)
-        self.bn2 = BatchNorm(n_chan)
+        self.bn1 = Evo(n_chan)
+        self.bn2 = Evo(n_chan)
 
     def forward(self, x):
         """Calculate the forward pass"""

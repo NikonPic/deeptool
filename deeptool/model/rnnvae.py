@@ -236,8 +236,7 @@ class RNN_VAE(RNN_AE):
     """
 
     def __init__(self, device, args):
-        # super(RNN_AE, self).__init__(device, args) # maybe just RNN_VAE
-        RNN_AE.__init__(self, device, args)
+        super(RNN_VAE, self).__init__(device, args)
         # 2. rewrite FC- Encoder Part
         max_fea, min_size = self.max_fea, self.min_size
         self.fc_part_enc = nn.Sequential(
@@ -246,6 +245,7 @@ class RNN_VAE(RNN_AE):
             nn.Linear(max_fea * min_size, max_fea),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(max_fea, 2 * args.n_z),
+            nn.Sigmoid(),
         ).to(self.device)
         # get the kl facor
         self.gamma = args.gamma
@@ -302,8 +302,7 @@ class RNN_INTROVAE(RNN_VAE):
     """
 
     def __init__(self, device, args):
-        # super(RNN_AE, self).__init__(device, args)
-        RNN_VAE.__init__(self, device, args)
+        super(RNN_INTROVAE, self).__init__(device, args)
         # add extra parameters
         self.alpha = args.alpha
         self.beta = args.beta
@@ -441,7 +440,7 @@ class RNN_BIGAN(RNN_VAE):
         init the networks and the discriminator
         """
         # init the vae architecture
-        RNN_VAE.__init__(self, device, args)
+        super(RNN_BIGAN, self).__init__(device, args)
         # we ned a dicriminator!
         # switch to 2 dim for the init:
         # -----------
