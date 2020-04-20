@@ -32,35 +32,35 @@ class MoCoAE(AbsModel):
 
         # AE Loss
         self.ae_mode = args.moco_aemode
-        self.mse_loss = nn.MSELoss(reduction="mean")
+        self.mse_loss = nn.MSELoss()
 
         # Encoder
         self.enc_q = Encoder(args, vae_mode=False).to(self.device)  # query encoder
         self.enc_k = Encoder(args, vae_mode=False).to(self.device)  # key encoder
 
-        # Decoder
-        self.dec_q = Decoder(args).to(self.device)  # query decoder
-        self.dec_k = Decoder(args).to(self.device)  # key decoder
+        # AE -> as augmentation
+        self.ae_enc = Encoder(args, vae_mode=False).to(self.device)  # ae encoder
+        self.ae_dec = Decoder(args).to(self.device)  # ae decoder
 
         # set the params of the k-network to be equal to the q-network:
         copy_q2k_params(self.enc_q, self.enc_k)
-        copy_q2k_params(self.dec_q, self.dec_k)
 
         # Initialise the randomised Queues for Momentum Contrastive Learning
         self.register_queue("enc_queue")
-        self.register_queue("dec_queue")
 
         # Save the pointer position as well
         self.register_buffer(
             "ptr_enc", torch.zeros(1, dtype=torch.long).to(self.device)
         )
-        self.register_buffer(
-            "ptr_dec", torch.zeros(1, dtype=torch.long).to(self.device)
-        )
 
         # optimizers
         self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr)
-        self.optimizerDec = optim.Adam(self.dec_q.parameters(), lr=args.lr)
+
+        ae_params = (
+            list(self.ae_enc.parameters())
+            + list(self.ae_dec.parameters())
+        )
+        self.optimizerAE = optim.Adam(ae_params, lr=args.lr)
 
         # override prep
         self.prep = self.prep_3D if args.dataset_type == "MRNet" else self.prep_2D
@@ -79,7 +79,7 @@ class MoCoAE(AbsModel):
         setattr(self, name, nn.functional.normalize(getattr(self, name), dim=0))
 
     @torch.no_grad()
-    def _dequeue_and_enqueue(self, keys, mode="enc"):
+    def _dequeue_and_enqueue(self, keys):
         """
         Update the Queue and Pointer ->
         available in mode 'enc' and 'dec'
@@ -87,7 +87,7 @@ class MoCoAE(AbsModel):
         # gather keys before updating queue
         batch_size = keys.shape[0]
 
-        ptr = int(getattr(self, f"ptr_{mode}"))
+        ptr = int(getattr(self, "ptr_enc"))
         indixes = list(range(ptr, ptr + batch_size))
 
         if ptr + batch_size > self.K:
@@ -96,31 +96,22 @@ class MoCoAE(AbsModel):
             indixes = ind1 + ind2
 
         # replace the keys at ptr (dequeue and enqueue)
-        if mode == "enc":
-            self.enc_queue[:, indixes] = keys.T
-            ptr = (ptr + batch_size) % self.K
-            self.ptr_enc[0] = ptr
-
-        # mode is 'dec'
-        else:
-            self.dec_queue[:, indixes] = keys.T
-            ptr = (ptr + batch_size) % self.K
-            self.ptr_dec[0] = ptr
+        self.enc_queue[:, indixes] = keys.T
+        ptr = (ptr + batch_size) % self.K
+        self.ptr_enc[0] = ptr
 
     def ae_forward(self, x, update):
         """
         Classic regression part of a normal Autoencoder
         """
         # encode
-        z = self.enc_q(x)
+        z = self.ae_enc(x)
         z = nn.functional.normalize(z, dim=1)
         # decode
-        x_r = self.dec_q(z)
+        x_r = self.ae_dec(z)
         # loss
         ae_loss = self.mse_loss(x_r, x)
-        # backprop
-        ae_loss.backward() if update else None
-        return ae_loss
+        return x_r, ae_loss
 
     def prep_2D(self, data):
         return data[0][0]
@@ -140,17 +131,17 @@ class MoCoAE(AbsModel):
         """
         # Reset Gradients
         self.optimizerEnc.zero_grad()
-        self.optimizerDec.zero_grad()
+        self.optimizerAE.zero_grad()
 
         # 1. Get the augmented data
         x_q, x_k = self.take(data)
 
-        # 2. further we will apply additional augmentation to the picture!
+        # 2. Send pictures to device
         x_q = x_q.to(self.device)
         x_k = x_k.to(self.device)
 
         # ae part if on
-        ae_loss = self.ae_forward(x_q, update) if self.ae_mode else None
+        x_q, loss_ae = self.ae_forward(x_k, update)
 
         # 3. Encode
         q = self.enc_q(x_q)
@@ -161,54 +152,35 @@ class MoCoAE(AbsModel):
             k = nn.functional.normalize(k, dim=1)
 
         # Get the InfoNCE loss:
-        loss_enc = MomentumContrastiveLoss(
+        loss_InfoNCE = MomentumContrastiveLoss(
             k, q, self.enc_queue, self.tau, device=self.device
         )
 
+        loss = loss_ae + loss_InfoNCE
+
         # Perform encoder update
         if update:
-            loss_enc.backward()
+            loss.backward()
 
             # update the Query Encoder
             self.optimizerEnc.step()
+            self.optimizerAE.step()
 
             # update the Key Encoder with Momentum update
             momentum_update(self.enc_q, self.enc_k, self.m[0])
 
-        # 4. Decode
-        x_re = self.dec_q(k.detach())
-
-        # 5. Encode again using the k-network to focus on decoder only!:
-        kk = self.enc_k(x_re)
-        kk = nn.functional.normalize(kk, dim=1)
-
-        # Get the InfoNCE loss:
-        #loss_dec = MomentumContrastiveLoss(
-        #    kk, k, self.enc_queue, self.tau, device=self.device
-        #)
-        loss_dec = self.dec_loss(kk, k)
-
-        # perform decoder update
-        if update:
-            loss_dec.backward()
-
-            # update the Query Decoder
-            self.optimizerDec.step()
-
         # append keys to the queue
-        self._dequeue_and_enqueue(k, mode="enc")
+        self._dequeue_and_enqueue(k)
 
         if update:
-            return x_re.detach()
+            return x_q.detach()
 
         else:
             tr_data = {
-                "loss_enc": loss_enc.item(),
-                "loss_dec": loss_dec.item(),
+                "loss_ae": loss_ae.item(),
+                "loss_InfoNCE": loss_InfoNCE.item(),
             }
-            if self.ae_mode:
-                tr_data["ae_loss"] = ae_loss.item()
-            return x_re.detach(), tr_data
+            return x_q.detach(), tr_data
 
 # Cell
 @torch.no_grad()
