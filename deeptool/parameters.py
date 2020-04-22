@@ -485,6 +485,12 @@ def get_MoCoAE_args(parser, args=[]):
         default=False,
         help="Define whether the normale autoencoder loss should be considered during training",
     )
+    parser.add_argument(
+        "--moco_ganmode",
+        type=bool,
+        default=False,
+        help="Define whether the a Generative Adversarial approach should be taken during training",
+    )
     # ------------------------------------------------------------------------
     return parser
 
