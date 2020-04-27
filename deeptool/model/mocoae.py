@@ -251,7 +251,7 @@ class MoCoAE(AbsModel):
         # gan part if on
         d_loss, g_loss = 0, 0
         if self.gan_mode:
-            x_q, d_loss, g_loss = self.gan_forward(fac, x_q, k, update)
+            x_q, d_loss, g_loss = self.gan_forward(x_q, k, update)
 
         # Perform encoder update
         if update:
