@@ -464,7 +464,7 @@ def get_MoCoAE_args(parser, args=[]):
     parser.add_argument(
         "--moco_tau",
         type=float,
-        default=0.07,
+        default=1, # 0.07 in standard form
         help="Temperature parameter for the logit loss",
     )
     parser.add_argument(

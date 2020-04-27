@@ -38,11 +38,8 @@ class MoCoAE(AbsModel):
         self.enc_q = Encoder(args, vae_mode=False).to(self.device)  # query encoder
         self.enc_k = Encoder(args, vae_mode=False).to(self.device)  # key encoder
 
-        #balancing parameter between GAN/AE and MOCO loss:
-        self.balance = nn.Sequential(
-            nn.Linear(1, 1),
-            nn.Sigmoid(),
-        ).to(self.device)
+        #balancing parameter for MOCO
+        self.W = nn.Parameter(torch.randn([args.n_z, args.n_z], device=self.device))
 
         # set the params of the k-network to be equal to the q-network:
         copy_q2k_params(self.enc_q, self.enc_k)
@@ -57,7 +54,7 @@ class MoCoAE(AbsModel):
 
         # optimizers
         self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr)
-        self.optimizerBal = optim.Adam(self.balance.parameters(), lr=args.lr)
+        self.optimizerW = optim.Adam([self.W], lr=args.lr)
 
         # Autoencoder init?
         self.init_ae(args) if self.ae_mode else None
@@ -143,7 +140,7 @@ class MoCoAE(AbsModel):
         ptr = (ptr + batch_size) % self.K
         self.ptr_enc[0] = ptr
 
-    def ae_forward(self, fac, x, update):
+    def ae_forward(self, x, update):
         """
         Classic regression part of a normal Autoencoder
         """
@@ -152,18 +149,17 @@ class MoCoAE(AbsModel):
         ############################
         # Autoencoder Training
         ###########################
-        z = self.ae_enc(x)
+        z = self.enc_q(x)
         z = nn.functional.normalize(z, dim=1)
         x_r = self.ae_dec(z)
 
         # loss
         ae_loss = self.mse_loss(x_r, x)
-        ae_loss_fac = fac * ae_loss
-        ae_loss_fac.backward(retain_graph=True) if update else None
+        ae_loss.backward(retain_graph=True) if update else None
 
         return x_r, ae_loss.item()
 
-    def gan_forward(self, fac, x_q, k, update):
+    def gan_forward(self, x_q, k, update):
         """
         Gan part taking the original image and the key to determine between true / fake
         """
@@ -179,8 +175,7 @@ class MoCoAE(AbsModel):
         q_real = self.enc_q(x_q)
         output = self.gan_head(q_real).view(-1)
         d_loss_real = self.gan_loss(output, label)
-        d_loss_real_fac = fac * d_loss_real
-        d_loss_real_fac.backward() if update else None
+        d_loss_real.backward() if update else None
 
         # fake
         label.fill_(self.fake_label)
@@ -188,8 +183,7 @@ class MoCoAE(AbsModel):
         q_fake = self.enc_q(x_a.detach())
         output = self.gan_head(q_fake).view(-1)
         d_loss_fake = self.gan_loss(output, label)
-        d_loss_fake_fac = fac * d_loss_fake
-        d_loss_fake_fac.backward() if update else None
+        d_loss_fake.backward() if update else None
         d_loss = d_loss_fake.item() + d_loss_real.item()
 
         # update now before adding wrong gradients!
@@ -208,8 +202,7 @@ class MoCoAE(AbsModel):
         q_fake = self.enc_q(x_a)
         output = self.gan_head(q_fake).view(-1)
         g_loss = self.gan_loss(output, label)
-        g_loss_fac = fac * g_loss
-        g_loss_fac.backward() if update else None
+        g_loss.backward() if update else None
         g_loss = g_loss.item()
 
         if update:
@@ -222,12 +215,9 @@ class MoCoAE(AbsModel):
         """
         Perform forward computation and update
         """
-        one = torch.full((1,), 1, device=self.device)
-        fac = self.balance(one).detach() # factor between 0 and 1
-
         # Reset Gradients
         self.optimizerEnc.zero_grad()
-        self.optimizerBal.zero_grad()
+        self.optimizerW.zero_grad()
 
         # 1. Get the augmented data
         x_q, x_k = self.take(data)
@@ -239,7 +229,7 @@ class MoCoAE(AbsModel):
         # ae part if on
         loss_ae = 0
         if self.ae_mode:
-            x_q, loss_ae = self.ae_forward(fac, x_k, update)
+            x_q, loss_ae = self.ae_forward(x_k, update)
 
         # 3. Encode
         q = self.enc_q(x_q)
@@ -251,10 +241,9 @@ class MoCoAE(AbsModel):
 
         # Get the InfoNCE loss:
         loss_InfoNCE = MomentumContrastiveLoss(
-            k, q, self.enc_queue, self.tau, device=self.device
+            k, self.W, q, self.enc_queue, device=self.device, tau=self.tau
         )
-        loss_InfoNCE_fac = (1-fac) * loss_InfoNCE
-        loss_InfoNCE_fac.backward() if update else None
+        loss_InfoNCE.backward() if update else None
         loss_InfoNCE = loss_InfoNCE.item()
         # append keys to the queue
         self._dequeue_and_enqueue(k)
@@ -263,13 +252,6 @@ class MoCoAE(AbsModel):
         d_loss, g_loss = 0, 0
         if self.gan_mode:
             x_q, d_loss, g_loss = self.gan_forward(fac, x_q, k, update)
-
-        # balance loss
-        fac = self.balance(one)
-        loss_balance = fac * (loss_ae + d_loss + g_loss) + (1-fac) * loss_InfoNCE
-        loss_balance = loss_balance * loss_balance
-        loss_balance.backward() if update else None
-        loss_balance = loss_balance.item()
 
         # Perform encoder update
         if update:
@@ -280,8 +262,8 @@ class MoCoAE(AbsModel):
             # AE
             self.optimizerAE.step() if self.ae_mode else None
 
-            # balance
-            self.optimizerBal.step() if self.gan_mode or self.ae_mode else None
+            # W update
+            self.optimizerW.step() if self.gan_mode or self.ae_mode else None
 
             return x_q.detach()
 
@@ -289,8 +271,6 @@ class MoCoAE(AbsModel):
             tr_data = {
                 "loss_ae": loss_ae,
                 "loss_InfoNCE": loss_InfoNCE,
-                "fac": fac.item(),
-                "loss_balance": loss_balance,
                 "d_loss": d_loss,
                 "g_loss": g_loss,
             }
@@ -333,24 +313,23 @@ def momentum_update(Q_network: nn.Module, K_network: nn.Module, m: float):
 ce_loss = nn.CrossEntropyLoss()
 
 
-def MomentumContrastiveLoss(k, q, queue, tau, device):
+def MomentumContrastiveLoss(k, W, q, queue, device, tau=1):
     """
     Calculate the loss of the network depending on the current key(k), the query(q)
     and the overall queue(queue)
     We follow the suggestion of the paper, Algorithm 1:
     https://arxiv.org/pdf/1911.05722.pdf
     """
-    N, C = q.shape
-    K = k.shape[1]
-
     # positive logits: Nx1
-    l_pos = torch.einsum("nc,nc->n", [q, k]).unsqueeze(-1)
+    l_pos = torch.einsum("nc,cc,nc->n", [q, W, k]).unsqueeze(-1)
 
     # negative logits: NxK
-    l_neg = torch.einsum("nc,ck->nk", [q, queue.clone().detach()])
+    l_neg = torch.einsum("nc,cc,ck->nk", [q, W, queue.clone().detach()])
 
     # logits: Nx(1+K) with temperature
     logits = torch.cat([l_pos, l_neg], dim=1) / tau
+    # substract max for stability
+    logits.sub_(torch.max(logits, axis=1).values.unsqueeze(1))
 
     # positive key indicators
     labels = torch.zeros(logits.shape[0], dtype=torch.long).to(device)

@@ -36,6 +36,7 @@ class Tracker(object):
         # general defines:
         self.channels = len(args.perspectives)
         self.dim = args.dim
+
         self.crop_size = args.crop_size
         self.pic_size = args.pic_size
         self.model_type = args.model_type
@@ -202,7 +203,6 @@ class Tracker(object):
                         + "/rec_iteration_%d_class_%d_3d_view.png"
                         % (iteration, channel)
                     )
-                    plt.savefig(self.dir_name + "/current.jpg")
                     plt.close()
 
                 else:
@@ -228,6 +228,7 @@ class Tracker(object):
                         self.dir_name
                         + "/rec_iteration_%d_class_%d.jpg" % (iteration, channel)
                     )
+                    plt.savefig(self.dir_name + "/current.jpg")
                 plt.close()
 
         else:

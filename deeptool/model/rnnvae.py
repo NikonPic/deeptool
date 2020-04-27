@@ -124,6 +124,7 @@ class RNN_AE(AbsModel):
         self.true_dim = args.dim
 
         args.dim = 2
+
         self.conv_part_enc = DownUpConv(
             args,
             pic_size=args.pic_size,
