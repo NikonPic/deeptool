@@ -239,6 +239,11 @@ class MoCoAE(AbsModel):
             k = self.enc_k(x_k)
             k = nn.functional.normalize(k, dim=1)
 
+        # gan part if on
+        d_loss, g_loss = 0, 0
+        if self.gan_mode:
+            x_q, d_loss, g_loss = self.gan_forward(x_q.detach(), k.detach(), update)
+
         # Get the InfoNCE loss:
         loss_InfoNCE = MomentumContrastiveLoss(
             k, self.W, q, self.enc_queue, device=self.device, tau=self.tau
@@ -247,11 +252,6 @@ class MoCoAE(AbsModel):
         loss_InfoNCE = loss_InfoNCE.item()
         # append keys to the queue
         self._dequeue_and_enqueue(k)
-
-        # gan part if on
-        d_loss, g_loss = 0, 0
-        if self.gan_mode:
-            x_q, d_loss, g_loss = self.gan_forward(x_q, k, update)
 
         # Perform encoder update
         if update:
