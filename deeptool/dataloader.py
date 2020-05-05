@@ -536,7 +536,7 @@ def get_loader(args, root_dir):
     # Set random seed for reproducibility
     # MoCo v2's aug -> from: https://github.com/facebookresearch/moco/blob/master/main_moco.py
     augmentation = [
-        transforms.RandomResizedCrop(args.pic_size, scale=(0.2, 1.)),
+        transforms.transforms.Resize(args.pic_size),
         transforms.RandomApply([
             transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
         ], p=0.8),

@@ -44,6 +44,12 @@ description: "Tool for applying several deep learning methods on the MRNet datas
 </li>
 <li>VQVAE - VQVAE2</li>
 <li>INTROVAE</li>
+<li>BIGAN</li>
+</ul>
+<p>Own Creations:</p>
+<ul>
+<li>MoCoAE, MocoGAN</li>
+<li>Transition Networks for pseudo 3D analysis for DCGAN, INTROVAE, BIGAN </li>
 </ul>
 
 </div>
@@ -74,7 +80,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="1.-Import-the-library-and-some-functionality">1. Import the library and some functionality<a class="anchor-link" href="#1.-Import-the-library-and-some-functionality"> </a></h3>
+<h3 id="1.-Import-the-library">1. Import the library<a class="anchor-link" href="#1.-Import-the-library"> </a></h3>
 </div>
 </div>
 </div>
@@ -98,7 +104,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.-Adjust-the-arguments-for-training-for-your-needs">2. Adjust the arguments for training for your needs<a class="anchor-link" href="#2.-Adjust-the-arguments-for-training-for-your-needs"> </a></h3><p>Example: (check parameters for more info)</p>
+<h3 id="2.-Adjust-the-arguments-for-training-for-your-needs">2. Adjust the arguments for training for your needs<a class="anchor-link" href="#2.-Adjust-the-arguments-for-training-for-your-needs"> </a></h3><p>check parameters.py for more information about the effect of each parameter</p>
 
 </div>
 </div>
@@ -113,12 +119,11 @@ Then navigation to the downloaded folder is required and the package can be inst
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define Arguments (Example)</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">get_all_args</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Dimension of network reduced to 2</span>
-<span class="n">args</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">args</span><span class="o">.</span><span class="n">perspectives</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;coronal&quot;</span><span class="p">]</span>  <span class="c1"># View only the coronal planes</span>
+<span class="n">args</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># How many pictures are included per training update</span>
 <span class="n">args</span><span class="o">.</span><span class="n">n_res_2d</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># architecture contains resnet blocks</span>
 <span class="n">args</span><span class="o">.</span><span class="n">watch_batch</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># visualize every 100 batches</span>
 <span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;introvae&quot;</span>  <span class="c1"># train the introvae model</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="c1"># solve argument interactions</span>
 </pre></div>
 
     </div>

@@ -97,7 +97,7 @@ description: "Momentum Contrast for Autoencoder based Representation Learning"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="concat_all_gather" class="doc_header"><code>concat_all_gather</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L280" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concat_all_gather</code>(<strong><code>tensor</code></strong>)</p>
+<h4 id="concat_all_gather" class="doc_header"><code>concat_all_gather</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L285" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>concat_all_gather</code>(<strong><code>tensor</code></strong>)</p>
 </blockquote>
 <p>Performs all_gather operation on the provided tensors.
 <strong><em> Warning </em></strong>: torch.distributed.all_gather has no gradient.</p>
@@ -136,7 +136,7 @@ description: "Momentum Contrast for Autoencoder based Representation Learning"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="copy_q2k_params" class="doc_header"><code>copy_q2k_params</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L295" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>copy_q2k_params</code>(<strong><code>Q_network</code></strong>:<code>Module</code>, <strong><code>K_network</code></strong>:<code>Module</code>)</p>
+<h4 id="copy_q2k_params" class="doc_header"><code>copy_q2k_params</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L300" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>copy_q2k_params</code>(<strong><code>Q_network</code></strong>:<code>Module</code>, <strong><code>K_network</code></strong>:<code>Module</code>)</p>
 </blockquote>
 <p>Helper function to Copy parameters from Network Q to network K.
 Further deactive gradient computation on k</p>
@@ -169,7 +169,7 @@ Further deactive gradient computation on k</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="momentum_update" class="doc_header"><code>momentum_update</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L306" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>momentum_update</code>(<strong><code>Q_network</code></strong>:<code>Module</code>, <strong><code>K_network</code></strong>:<code>Module</code>, <strong><code>m</code></strong>:<code>float</code>)</p>
+<h4 id="momentum_update" class="doc_header"><code>momentum_update</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L311" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>momentum_update</code>(<strong><code>Q_network</code></strong>:<code>Module</code>, <strong><code>K_network</code></strong>:<code>Module</code>, <strong><code>m</code></strong>:<code>float</code>)</p>
 </blockquote>
 <p>Momentum update of the key network based on the query network</p>
 
@@ -208,7 +208,7 @@ Further deactive gradient computation on k</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="MomentumContrastiveLoss" class="doc_header"><code>MomentumContrastiveLoss</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L316" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MomentumContrastiveLoss</code>(<strong><code>k</code></strong>, <strong><code>W</code></strong>, <strong><code>q</code></strong>, <strong><code>queue</code></strong>, <strong><code>device</code></strong>, <strong><code>tau</code></strong>=<em><code>1</code></em>)</p>
+<h4 id="MomentumContrastiveLoss" class="doc_header"><code>MomentumContrastiveLoss</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/mocoae.py#L321" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>MomentumContrastiveLoss</code>(<strong><code>k</code></strong>, <strong><code>W</code></strong>, <strong><code>q</code></strong>, <strong><code>queue</code></strong>, <strong><code>device</code></strong>, <strong><code>tau</code></strong>=<em><code>1</code></em>)</p>
 </blockquote>
 <p>Calculate the loss of the network depending on the current key(k), the query(q)
 and the overall queue(queue)

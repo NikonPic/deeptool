@@ -68,34 +68,37 @@ class MoCoAE(AbsModel):
 
     def init_ae(self, args):
         """Init the Autoencoder specific parts"""
+        # Decoder
+        self.init_dec(args)
 
-        # AE -> as augmentation
+        # loss function
         self.mse_loss = nn.MSELoss()
-
-        self.ae_enc = Encoder(args, vae_mode=False).to(self.device)  # ae encoder
-        self.ae_dec = Decoder(args).to(self.device)  # ae decoder
-
-        ae_params = (
-            list(self.ae_enc.parameters())
-            + list(self.ae_dec.parameters())
-        )
-        self.optimizerAE = optim.Adam(ae_params, lr=args.lr)
 
     def init_gan(self, args):
         """Init the GAN specific parts"""
+        # Head of the Discriminator:
         self.gan_head = nn.Sequential(
             nn.Linear(args.n_z, args.n_z),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(args.n_z, 1),
             nn.Sigmoid(),
         ).to(self.device)
+        self.optimizerGan = optim.Adam(self.gan_head.parameters(), lr=args.lr)
 
-        self.gen = Decoder(args).to(self.device)  # generator
+        # Generator -> Decoder
+        self.init_dec(args)
+
+        # labels
         self.real_label = 1
         self.fake_label = 0
+
+        # loss function
         self.gan_loss = nn.BCELoss()
-        self.optimizerGen = optim.Adam(self.gen.parameters(), lr=args.lr)
-        self.optimizerGan = optim.Adam(self.gan_head.parameters(), lr=args.lr)
+
+    def init_dec(self, args):
+        """Init a general decoder"""
+        self.dec = Decoder(args).to(self.device)  # decoder
+        self.optimizerDec = optim.Adam(self.dec.parameters(), lr=args.lr)
 
     def prep_2D(self, data):
         return data[0][0]
@@ -144,20 +147,21 @@ class MoCoAE(AbsModel):
         """
         Classic regression part of a normal Autoencoder
         """
-        self.optimizerAE.zero_grad()
+        self.optimizerEnc.zero_grad()
 
-        ############################
-        # Autoencoder Training
-        ###########################
         z = self.enc_q(x)
         z = nn.functional.normalize(z, dim=1)
-        x_r = self.ae_dec(z)
+        x_r = self.dec(z)
 
         # loss
-        ae_loss = self.mse_loss(x_r, x)
-        ae_loss.backward(retain_graph=True) if update else None
+        if self.ae_mode:
+            ae_loss = self.mse_loss(x_r, x)
+            ae_loss.backward(retain_graph=True) if update else None
+            ae_loss = ae_loss.item()
+        else:
+            ae_loss = 0
 
-        return x_r, ae_loss.item()
+        return x_r, ae_loss
 
     def gan_forward(self, x_q, k, update):
         """
@@ -171,7 +175,7 @@ class MoCoAE(AbsModel):
         ###########################
 
         # true
-        label = torch.full((b_size,), self.real_label, device=self.device)
+        label = torch.full((b_size,), self.real_label, device=self.device, dtype=torch.float32)
         q_real = self.enc_q(x_q)
         output = self.gan_head(q_real).view(-1)
         d_loss_real = self.gan_loss(output, label)
@@ -179,7 +183,7 @@ class MoCoAE(AbsModel):
 
         # fake
         label.fill_(self.fake_label)
-        x_a = self.gen(k.detach())
+        x_a = self.dec(k.detach())
         q_fake = self.enc_q(x_a.detach())
         output = self.gan_head(q_fake).view(-1)
         d_loss_fake = self.gan_loss(output, label)
@@ -194,19 +198,16 @@ class MoCoAE(AbsModel):
         ############################
         # (2) Generator Training
         ###########################
-        self.optimizerGen.zero_grad()
+        self.optimizerDec.zero_grad()
 
         # fake
         label.fill_(self.real_label)
-        x_a = self.gen(k.detach())
-        q_fake = self.enc_q(x_a)
+        x_a = self.dec(k.detach())
+        q_fake = self.enc_q(x_q)
         output = self.gan_head(q_fake).view(-1)
         g_loss = self.gan_loss(output, label)
         g_loss.backward() if update else None
         g_loss = g_loss.item()
-
-        if update:
-            self.optimizerGen.step()
 
         return x_a, d_loss, g_loss
 
@@ -218,6 +219,7 @@ class MoCoAE(AbsModel):
         # Reset Gradients
         self.optimizerEnc.zero_grad()
         self.optimizerW.zero_grad()
+        self.optimizerDec.zero_grad() if self.gan_mode or self.ae_mode else None
 
         # 1. Get the augmented data
         x_q, x_k = self.take(data)
@@ -226,23 +228,19 @@ class MoCoAE(AbsModel):
         x_q = x_q.to(self.device)
         x_k = x_k.to(self.device)
 
-        # ae part if on
-        loss_ae = 0
-        if self.ae_mode:
-            x_q, loss_ae = self.ae_forward(x_k, update)
-
-        # 3. Encode
-        q = self.enc_q(x_q)
-        q = nn.functional.normalize(q, dim=1)
-
+        # 3. Encode with Momentum Encoder
         with torch.no_grad():
             k = self.enc_k(x_k)
             k = nn.functional.normalize(k, dim=1)
 
-        # gan part if on
-        d_loss, g_loss = 0, 0
-        if self.gan_mode:
-            x_q, d_loss, g_loss = self.gan_forward(x_q.detach(), k.detach(), update)
+        # Optinonal: AE part if on
+        loss_ae = 0
+        if self.ae_mode or self.gan_mode:
+            x_q, loss_ae = self.ae_forward(x_k, update)
+
+        # 3. Encode the 'augmented picture'
+        q = self.enc_q(x_q)
+        q = nn.functional.normalize(q, dim=1)
 
         # Get the InfoNCE loss:
         loss_InfoNCE = MomentumContrastiveLoss(
@@ -250,21 +248,28 @@ class MoCoAE(AbsModel):
         )
         loss_InfoNCE.backward() if update else None
         loss_InfoNCE = loss_InfoNCE.item()
+
         # append keys to the queue
         self._dequeue_and_enqueue(k)
 
         # Perform encoder update
         if update:
-            # MOCO
-            self.optimizerEnc.step() if not self.gan_mode else None
+            # Encoder
+            self.optimizerEnc.step()
             momentum_update(self.enc_q, self.enc_k, self.m[0])
 
-            # AE
-            self.optimizerAE.step() if self.ae_mode else None
+            # Decoder
+            self.optimizerDec.step() if self.gan_mode or self.ae_mode else None
 
-            # W update
+            # W
             self.optimizerW.step() if self.gan_mode or self.ae_mode else None
 
+        # Optional: GAN part if on
+        d_loss, g_loss = 0, 0
+        if self.gan_mode:
+            x_q, d_loss, g_loss = self.gan_forward(x_q.detach(), q.detach(), update)
+
+        if update:
             return x_q.detach()
 
         else:
@@ -299,8 +304,8 @@ def copy_q2k_params(Q_network: nn.Module, K_network: nn.Module):
     Further deactive gradient computation on k
     """
     for param_q, param_k in zip(Q_network.parameters(), K_network.parameters()):
-        param_k.data.copy_(param_q.data)  # initialize
-        param_k.requires_grad = False  # not updated by gradient
+        param_k.data.copy_(param_q.data) # initialize
+        param_k.requires_grad = False # not updated by gradient
 
 # Cell
 @torch.no_grad()
@@ -328,6 +333,7 @@ def MomentumContrastiveLoss(k, W, q, queue, device, tau=1):
 
     # logits: Nx(1+K) with temperature
     logits = torch.cat([l_pos, l_neg], dim=1) / tau
+
     # substract max for stability
     logits.sub_(torch.max(logits, axis=1).values.unsqueeze(1))
 
