@@ -329,104 +329,92 @@ class RNN_INTROVAE(RNN_VAE):
         self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
     def forward(self, batch, update=True):
-
-        # prepare
-        self.optimizerEnc.zero_grad()
-        self.optimizerDec.zero_grad()
-
+        """
+        Get the different relevant outputs for Intro VAE training
+        update=True to allow updating, update=False to keep networs constant
+        return x_re (reconstructed)
+        """
         batch = self.mod_batch(batch)
-        img = self.prep(batch).to(self.device)
+        x = self.prep(batch).to(self.device)
 
-        # (1st) Pass Original
-        # --------------------------------------
-        # encode
-        z = self.encode(img)
-        z, mu, log_sig2 = self.vae_sampling(z)
+        #=========== Update E ================
+        self.optimizerEnc.zero_grad()
 
-        # decode
+        # real
+        z = self.encode(x)
+        z, z_mu, z_log_sig2 = self.vae_sampling(z)
         x_re = self.decode(z)
 
-        # Losses
-        ae_loss = self.beta * self.mse_loss(img, x_re)
-        kl_loss = self.gamma * self.kl_loss(mu, log_sig2)
+        # fake
+        noise = torch.randn_like(z, device=self.device)
+        fake = self.decode(noise)
 
-        # (2nd) Pass Reconstruct Original (Enc)
-        # --------------------------------------
-        # encode
-        z_re_1 = self.encode(x_re.detach())
-        z_re_1, mu_re_1, log_sig2_re_1 = self.vae_sampling(z_re_1)
+        # encode again
+        z_re = self.encode(x_re.detach())
+        _, z_mu_re, z_log_sig2_re = self.vae_sampling(z_re)
 
-        # Losses
-        kl_loss_re_e = self.kl_loss(mu_re_1, log_sig2_re_1)
+        z_fake = self.encode(fake.detach())
+        _, z_mu_fake, z_log_sig2_fake = self.vae_sampling(z_fake)
 
-        # (3rd) Pass Generate Fake imgs (Enc)
-        # --------------------------------------
-        # generate fake samples
-        z_p = torch.randn_like(z, device=self.device)
+        # get losses
+        loss_rec = self.mse_loss(x, x_re)
+        loss_e_real_kl = self.kl_loss(z_mu, z_log_sig2)
+        loss_e_rec_kl = self.kl_loss(z_mu_re, z_log_sig2_re)
+        loss_e_fake_kl = self.kl_loss(z_mu_fake, z_log_sig2_fake)
 
-        # decode
-        x_p = self.decode(z_p)
-
-        # encode (xp stopped!)
-        z_p_re_1 = self.encode(x_p.detach())
-        z_p_re_1, mu_p_re_1, log_sig2_re_1 = self.vae_sampling(z_p_re_1)
-
-        # Losses
-        kl_loss_p_e = self.kl_loss(mu_p_re_1, log_sig2_re_1)
-
-        # -------
-        l_adv_e = (
-            self.alpha
-            * 0.5
-            * (
-                torch.clamp(self.m - kl_loss_re_e, min=0)
-                + torch.clamp(self.m - kl_loss_p_e, min=0)
-            )
-        )
-        L_e = ae_loss + kl_loss + l_adv_e
+        # combine losses
+        loss_margin_e = loss_e_real_kl + (F.relu(self.m - loss_e_rec_kl) + F.relu(self.m - loss_e_fake_kl)) * self.alpha
+        loss_e = loss_rec * self.beta + loss_margin_e * self.gamma
 
         if update:
-            L_e.backward(retain_graph=True)
+            loss_e.backward()
             self.optimizerEnc.step()
-        # ------
 
-        # (4th) Pass Reconstruct Original (Dec)
-        # --------------------------------------
-        # encode (x_re free)
-        z_re_2 = self.encode(x_re)
-        z_re_2, mu_re_2, log_sig2_re_2 = self.vae_sampling(z_re_2)
+        #========= Update G ==================
+        self.optimizerDec.zero_grad()
 
-        # Losses
-        kl_loss_re_d = self.kl_loss(mu_re_2, log_sig2_re_2)
+        # real
+        z = self.encode(x)
+        z, z_mu, z_log_sig2 = self.vae_sampling(z)
+        x_re = self.decode(z)
 
-        # (5th) Pass Generate Fake imgs (Dec)
-        # --------------------------------------
-        # encode (xp free)
-        z_p_re_2 = self.encode(x_p)
-        z_p_re_2, mu_p_re_2, log_sig2_re_2 = self.vae_sampling(z_p_re_2)
+        # fake
+        noise = torch.randn_like(z, device=self.device)
+        fake = self.decode(noise)
 
-        # Losses
-        kl_loss_p_d = self.kl_loss(mu_p_re_1, log_sig2_re_1)
+        # encode again
+        z_re = self.encode(x_re)
+        _, z_mu_re, z_log_sig2_re = self.vae_sampling(z_re)
 
-        L_d = self.alpha * 0.5 * (kl_loss_re_d + kl_loss_p_d)
+        z_fake = self.encode(fake)
+        _, z_mu_fake, z_log_sig2_fake = self.vae_sampling(z_fake)
 
-        # ------
+        # get losses
+        loss_rec = self.mse_loss(x, x_re)
+        loss_g_real_kl = self.kl_loss(z_mu, z_log_sig2)
+        loss_g_rec_kl = self.kl_loss(z_mu_re, z_log_sig2_re)
+        loss_g_fake_kl = self.kl_loss(z_mu_fake, z_log_sig2_fake)
+
+        # combine losses
+        loss_margin_g = loss_g_real_kl * (loss_g_rec_kl + loss_g_fake_kl) * self.alpha
+        loss_g = loss_rec * self.beta + loss_margin_g * self.gamma
+
         if update:
-            L_d.backward()
+            loss_g.backward()
             self.optimizerDec.step()
-            return x_re
-        # ------
 
         else:
+            # setup dictionary for Tracking
             tr_data = {}
-            tr_data["L_encoder"] = L_e.item()
-            tr_data["L_decoder"] = L_d.item() + ae_loss.item() + kl_loss.item()
-            tr_data["ae_loss"] = ae_loss.item()
-            tr_data["vae_loss"] = kl_loss.item()
-            tr_data["l_adv_e"] = l_adv_e.item()
-            tr_data["l_adv_d"] = L_d.item()
+            tr_data["loss_rec"] = loss_rec.item()
+            tr_data["loss_e_real_kl"] = loss_e_real_kl.item()
+            tr_data["loss_margin_e"] = loss_margin_e.item()
+            tr_data["loss_margin_g"] = loss_margin_g.item()
+            tr_data["loss_e"] = loss_e.item()
+            tr_data["loss_g"] = loss_g.item()
 
-        return x_re, tr_data
+            # Return output and tracking data
+            return x_re, tr_data
 
 # Cell
 

@@ -135,13 +135,13 @@ class DCGAN(AbsModel):
         self.discriminator.zero_grad()
         b_size = real_gpu.size(0)
         output = self.discriminator(real_gpu).view(-1)
-        errD_real = -torch.mean(output)
+        errd_real = -torch.mean(output)
 
         # 1.2 Train with all-fake batch
         noise = self.sample_noise(b_size, update)
         fake = self.generator(noise)
         output = self.discriminator(fake.detach()).view(-1)
-        errD_fake = torch.mean(output)
+        errd_fake = torch.mean(output)
 
         # 1.3 assign Gradient penalty
         gradient_penalty = (
@@ -149,31 +149,31 @@ class DCGAN(AbsModel):
         )
 
         # sum the losses up
-        errD = errD_fake + errD_real + gradient_penalty
+        errd = errd_fake + errd_real + gradient_penalty
 
         # Update Discriminator
         if update:
-            errD.backward()
+            errd.backward()
             self.optimizerDis.step()
 
         # (2) Update G network: maximize D(G(z))
         self.generator.zero_grad()
         output = self.discriminator(fake).view(-1)
-        errG = -torch.mean(output)
+        errg = -torch.mean(output)
 
         # Update Generator
         if update:
-            errG.backward()
+            errg.backward()
             self.optimizerGen.step()
             return fake.detach()
 
         else:
             # Track all relevant losses
             tr_data = {}
-            tr_data["errD"] = errD.item()
-            tr_data["errG"] = errG.item()
-            tr_data["D_x"] = errD_real.item()
-            tr_data["D_G_z1"] = errD_fake.item()
+            tr_data["errD"] = errd.item()
+            tr_data["errG"] = errg.item()
+            tr_data["D_x"] = errd_real.item()
+            tr_data["D_G_z1"] = errd_fake.item()
             tr_data["D_G_z2"] = output.mean().item()
             # Return losses and fake data
             return fake.detach(), tr_data
@@ -190,43 +190,43 @@ class DCGAN(AbsModel):
         # 1.1 Train with all-real batch
         self.discriminator.zero_grad()
         b_size = real_gpu.size(0)
-        label = torch.full((b_size,), self.real_label, device=self.device)
+        label = torch.full((b_size,), self.real_label, device=self.device, dtype=torch.float32)
         output = self.discriminator(real_gpu).view(-1)
-        errD_real = self.loss(output, label)
-        errD_real.backward() if update else None
-        D_x = output.mean().item()
+        errd_real = self.loss(output, label)
+        errd_real.backward() if update else None
+        d_x = output.mean().item()
 
         # 1.2 Train with all-fake batch
         noise = self.sample_noise(b_size, update)
         fake = self.generator(noise)
         output = self.discriminator(fake.detach()).view(-1)
         label.fill_(self.fake_label)
-        errD_fake = self.loss(output, label)
-        errD_fake.backward() if update else None
+        errd_fake = self.loss(output, label)
+        errd_fake.backward() if update else None
         self.optimizerDis.step() if update else None
 
-        D_G_z1 = output.mean().item()
-        errD = errD_fake.item() + errD_real.item()
+        d_g_z1 = output.mean().item()
+        errd = errd_fake.item() + errd_real.item()
 
         # (2) Update G network: maximize 1 - log(D(G(z)))
         self.generator.zero_grad()
         label.fill_(self.real_label)
         output = self.discriminator(fake).view(-1)
-        errG = self.loss(output, label)
+        errg = self.loss(output, label)
 
         # Update Generator
         if update:
-            errG.backward()
+            errg.backward()
             self.optimizerGen.step()
             return fake.detach()
 
         else:
             # Track all relevant losses
             tr_data = {}
-            tr_data["errD"] = errD
-            tr_data["errG"] = errG.item()
-            tr_data["D_x"] = D_x
-            tr_data["D_G_z1"] = D_G_z1
+            tr_data["errD"] = errd
+            tr_data["errG"] = errg.item()
+            tr_data["D_x"] = d_x
+            tr_data["D_G_z1"] = d_g_z1
             tr_data["D_G_z2"] = output.mean().item()
             # Return losses and fake data
             return fake.detach(), tr_data

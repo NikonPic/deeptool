@@ -192,7 +192,7 @@ description: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Transition" class="doc_header"><code>class</code> <code>Transition</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L34" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Transition</code>(<strong><code>args</code></strong>) :: <code>Module</code></p>
+<h3 id="Transition" class="doc_header"><code>class</code> <code>Transition</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L34" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Transition</code>(<strong><code>args</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Transition Network with Recurrence / 1D Convolutions / Identity Function</p>
 
@@ -230,7 +230,7 @@ description: "Structure for an Approach maintained a pseudo space realtion"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L114" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
+<h3 id="RNN_AE" class="doc_header"><code>class</code> <code>RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L114" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
 </blockquote>
 <p>This class contains the general architecture and functionality to deal with all Models in this library
 contains:
@@ -396,7 +396,7 @@ Transition: cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L234" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
+<h3 id="RNN_VAE" class="doc_header"><code>class</code> <code>RNN_VAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L234" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNN_VAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_AE"><code>RNN_AE</code></a></p>
 </blockquote>
 <p>inherit from RNN_AE and add the variational part</p>
 
@@ -472,7 +472,7 @@ Transition: cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L300" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
+<h3 id="RNN_INTROVAE" class="doc_header"><code>class</code> <code>RNN_INTROVAE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L300" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNN_INTROVAE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>inherit from RNN_VAE and add the GAN part</p>
 
@@ -551,7 +551,7 @@ Transition: cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L434" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
+<h3 id="RNN_BIGAN" class="doc_header"><code>class</code> <code>RNN_BIGAN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L422" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>RNN_BIGAN</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>) :: <a href="/deeptool/rnn_vae#RNN_VAE"><code>RNN_VAE</code></a></p>
 </blockquote>
 <p>apply the Bidirectional-GAN part, inherit from the normal autoencoder</p>
 
@@ -583,7 +583,7 @@ Transition: cnn
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L677" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
+<h4 id="Creator_RNN_AE" class="doc_header"><code>Creator_RNN_AE</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/rnnvae.py#L665" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>Creator_RNN_AE</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>)</p>
 </blockquote>
 <p>return an instance of the class depending on the mode set in args</p>
 

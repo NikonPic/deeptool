@@ -204,26 +204,30 @@ class ResNetBlock(nn.Module):
         super(ResNetBlock, self).__init__()
 
         if dim == 3:
-            Conv = nn.Conv3d
-            BatchNorm = nn.BatchNorm3d
-            Evo = nn.BatchNorm3d
+            conv = nn.Conv3d
+            batchnorm = nn.BatchNorm3d
+            evo = nn.BatchNorm3d
 
         else:
-            Conv = nn.Conv2d
-            BatchNorm = nn.BatchNorm2d
-            Evo = EvoNorm2D if evo_on else nn.BatchNorm2d
+            conv = nn.Conv2d
+            batchnorm = nn.BatchNorm2d
+            evo = EvoNorm2D if evo_on else nn.BatchNorm2d
 
         self.relu = nn.ReLU(inplace=True)
         self.activation = activation
 
-        self.conv1 = Conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False)
+        self.conv1 = conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False)
         self.conv1.apply(init_w)
 
-        self.conv2 = Conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False)
+        self.conv2 = conv(n_chan, n_chan, convsize, stride=1, padding=1, bias=False)
         self.conv2.apply(init_w)
 
-        self.bn1 = Evo(n_chan)
-        self.bn2 = Evo(n_chan)
+        if evo_on:
+            self.bn1 = evo(n_chan)
+            self.bn2 = evo(n_chan)
+        else:
+            self.bn1 = batchnorm(n_chan)
+            self.bn2 = batchnorm(n_chan)
 
     def forward(self, x):
         """Calculate the forward pass"""
@@ -265,28 +269,28 @@ class ConvBn(nn.Module):
         super(ConvBn, self).__init__()
 
         if dim == 3:
-            Conv = nn.Conv3d
-            BatchNorm = nn.BatchNorm3d
-            Dropout = nn.Dropout3d
+            conv = nn.Conv3d
+            batchnorm = nn.BatchNorm3d
+            dropout = nn.Dropout3d
         else:
-            Conv = nn.Conv2d
-            BatchNorm = EvoNorm2D if evo_on else nn.BatchNorm2d
-            Dropout = nn.Dropout2d
+            conv = nn.Conv2d
+            batchnorm = EvoNorm2D if evo_on else nn.BatchNorm2d
+            dropout = nn.Dropout2d
+
             # Check convsize and stride
-            if type(convsize) == tuple:
-                if len(convsize) > 2:
-                    convsize = convsize[1:]
-            if type(stride) == tuple:
-                if len(stride) > 2:
-                    stride = stride[1:]
+            if type(convsize) == tuple and len(convsize) > 2:
+                convsize = convsize[1:]
+
+            if type(stride) == tuple and len(stride) > 2:
+                stride = stride[1:]
 
         self.main_part = nn.Sequential(
-            Conv(
+            conv(
                 in_chan, out_chan, convsize, stride=stride, padding=padding, bias=False
             ),
-            BatchNorm(out_chan),
+            batchnorm(out_chan),
             activation,
-            Dropout(p=p_drop),
+            dropout(p=p_drop),
         )
         self.main_part.apply(init_w)
 
@@ -317,24 +321,23 @@ class ConvTpBn(nn.Module):
         """setup the general architecture"""
         super(ConvTpBn, self).__init__()
         if dim == 3:
-            ConvTranspose = nn.ConvTranspose3d
-            BatchNorm = nn.BatchNorm3d
+            convtranspose = nn.ConvTranspose3d
+            batchnorm = nn.BatchNorm3d
         else:
-            ConvTranspose = nn.ConvTranspose2d
-            BatchNorm = EvoNorm2D if evo_on else nn.BatchNorm2d
+            convtranspose = nn.ConvTranspose2d
+            batchnorm = EvoNorm2D if evo_on else nn.BatchNorm2d
+
             # Check convsize and stride
-            if type(convsize) == tuple:
-                if len(convsize) > 2:
-                    convsize = convsize[1:]
-            if type(stride) == tuple:
-                if len(stride) > 2:
-                    stride = stride[1:]
+            if type(convsize) == tuple and len(convsize) > 2:
+                convsize = convsize[1:]
+            if type(stride) == tuple and len(stride) > 2:
+                stride = stride[1:]
 
         self.main_part = nn.Sequential(
-            ConvTranspose(
+            convtranspose(
                 in_chan, out_chan, convsize, stride=stride, padding=padding, bias=False
             ),
-            BatchNorm(out_chan),
+            batchnorm(out_chan),
             activation,
         )
         self.main_part.apply(init_w)

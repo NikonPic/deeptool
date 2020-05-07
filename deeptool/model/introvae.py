@@ -9,6 +9,8 @@ from torch import nn, optim
 from ..architecture import Encoder, Decoder
 from ..abs_model import AbsModel
 
+import torch.nn.functional as F
+
 # Cell
 
 
@@ -83,104 +85,80 @@ class IntroVAE(AbsModel):
         """
         Get the different relevant outputs for Intro VAE training
         update=True to allow updating, update=False to keep networs constant
-        return x_re (reconstructed) and x_p (sampled)
+        return x_re (reconstructed)
         """
-        # 1. Send data to device
+        # get the data
         x = self.prep(data).to(self.device)
 
-        # 2. Go trough the networks
-        # Reset Gradients
+        #=========== Update E ================
         self.optimizerEnc.zero_grad()
-        self.optimizerDec.zero_grad()
 
-        # Encode
+        # real
         z_mu, z_log_sig2 = self.encoder(x)
-        # Apply reparametrisation and obtain z_enc
         z_enc = self.reparametrisation(z_mu, z_log_sig2)
-        # Decode to reconstruct x
         x_re = self.decoder(z_enc)
-        # Encode again to obtain z_re, while stopping gradient of x_re
-        z_re_mu, z_re_log_sig2 = self.encoder(x_re.detach())
 
-        # Take random z-vector
-        z_p = torch.randn_like(z_enc, device=self.device)
-        # Reconstruct random vector
-        x_p = self.decoder(z_p)
-        # Encode again to obtain z_pp, while stopping gradient of x_p
-        z_pp_mu, z_pp_log_sig2 = self.encoder(x_p.detach())
+        # fake
+        noise = torch.randn_like(z_enc, device=self.device)
+        fake = self.decoder(noise)
 
-        # 3. Determine the losses
+        # encode again
+        z_mu_re, z_log_sig2_re = self.encoder(x_re.detach())
+        z_mu_fake, z_log_sig2_fake = self.encoder(fake.detach())
 
-        # Autoencoder loss -> AE
-        l_rec = self.beta * self.ae_loss(x, x_re)
+        # get losses
+        loss_rec = self.ae_loss(x, x_re)
+        loss_e_real_kl = self.kl_loss(z_mu, z_log_sig2)
+        loss_e_rec_kl = self.kl_loss(z_mu_re, z_log_sig2_re)
+        loss_e_fake_kl = self.kl_loss(z_mu_fake, z_log_sig2_fake)
 
-        # Regression loss -> VAE
-        l_kl_z = self.gamma * self.kl_loss(z_mu, z_log_sig2)
+        # combine losses
+        loss_margin_e = loss_e_real_kl + (F.relu(self.m - loss_e_rec_kl) + F.relu(self.m - loss_e_fake_kl)) * self.alpha
+        loss_e = loss_rec * self.beta + loss_margin_e * self.gamma
 
-        # Adversarial Part: define regressions
-        l_kl_z_re = self.kl_loss(z_re_mu, z_re_log_sig2)
-        l_kl_z_pp = self.kl_loss(z_pp_mu, z_pp_log_sig2)
-
-        # Adversarial part for Encoder -> GAN
-        l_adv_enc = (
-            self.alpha
-            * 0.5
-            * (
-                torch.clamp(self.m - l_kl_z_re, min=0)
-                + torch.clamp(self.m - l_kl_z_pp, min=0)
-            )
-        )
-
-        # Set loss of Enc
-        L_enc = l_rec + l_kl_z + l_adv_enc
-
-        # Update if necessary
         if update:
-            # 4. Update Encoder
-            # ---------------------
-            # Backpropagate Enc loss while saving the losses
-            L_enc.backward(retain_graph=True)
-            # Update Enc
+            loss_e.backward()
             self.optimizerEnc.step()
 
-        # Encode again to obtain z_re, without stopping gradient of x_re
-        z_re_mu, z_re_log_sig2 = self.encoder(x_re)
-        # Encode again to obtain z_pp, without stopping gradient of x_p
-        z_pp_mu, z_pp_log_sig2 = self.encoder(x_p)
+        #========= Update G ==================
+        self.optimizerDec.zero_grad()
 
-        # recalculate losses
-        l_kl_z_re = self.kl_loss(z_re_mu, z_re_log_sig2)
-        l_kl_z_pp = self.kl_loss(z_pp_mu, z_pp_log_sig2)
+        # real
+        z_mu, z_log_sig2 = self.encoder(x)
+        z_enc = self.reparametrisation(z_mu, z_log_sig2)
+        x_re = self.decoder(z_enc)
 
-        # Adversarial part for Decoder -> GAN
-        l_adv_dec = self.alpha * 0.5 * (l_kl_z_re + l_kl_z_pp)
+        # fake
+        noise = torch.randn_like(z_enc, device=self.device)
+        fake = self.decoder(noise)
 
-        # Set loss of Dec
-        L_dec = 0
-        L_dec += l_adv_dec  # L_ae exists from backprop of previous branch already
+        # encode again
+        z_mu_re, z_log_sig2_re = self.encoder(x_re)
+        z_mu_fake, z_log_sig2_fake = self.encoder(fake)
 
-        # Update if necessary
+        # get losses
+        loss_rec = self.ae_loss(x, x_re)
+        loss_g_real_kl = self.kl_loss(z_mu, z_log_sig2)
+        loss_g_rec_kl = self.kl_loss(z_mu_re, z_log_sig2_re)
+        loss_g_fake_kl = self.kl_loss(z_mu_fake, z_log_sig2_fake)
+
+        # combine losses
+        loss_margin_g = loss_g_real_kl * (loss_g_rec_kl + loss_g_fake_kl) * self.alpha
+        loss_g = loss_rec * self.beta + loss_margin_g * self.gamma
+
         if update:
-            # 5. Update Decoder
-            # ---------------------
-            L_dec.backward()
-            # Update Dec
+            loss_g.backward()
             self.optimizerDec.step()
-            # Return the Output
-            return x_re
 
         else:
-            # Track the current losses
-            L_dec += l_rec + l_kl_z  # Add to watch true loss
-
             # setup dictionary for Tracking
             tr_data = {}
-            tr_data["l_rec"] = l_rec.item()
-            tr_data["l_kl_zec"] = l_kl_z.item()
-            tr_data["l_adv_enc"] = l_adv_enc.item()
-            tr_data["l_adv_dec"] = l_adv_dec.item()
-            tr_data["L_enc"] = L_enc.item()
-            tr_data["L_dec"] = L_dec.item()
+            tr_data["loss_rec"] = loss_rec.item()
+            tr_data["loss_e_real_kl"] = loss_e_real_kl.item()
+            tr_data["loss_margin_e"] = loss_margin_e.item()
+            tr_data["loss_margin_g"] = loss_margin_g.item()
+            tr_data["loss_e"] = loss_e.item()
+            tr_data["loss_g"] = loss_g.item()
 
             # Return output and tracking data
             return x_re, tr_data

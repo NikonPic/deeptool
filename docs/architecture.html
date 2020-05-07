@@ -323,7 +323,7 @@ based on: <a href="https://arxiv.org/abs/1512.03385">https://arxiv.org/abs/1512.
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConvBn" class="doc_header"><code>class</code> <code>ConvBn</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L246" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConvBn</code>(<strong><code>in_chan</code></strong>, <strong><code>out_chan</code></strong>, <strong><code>convsize</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>activation</code></strong>=<em><code>LeakyReLU(negative_slope=0.2, inplace=True)</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>dim</code></strong>=<em><code>3</code></em>, <strong><code>p_drop</code></strong>=<em><code>0</code></em>, <strong><code>evo_on</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ConvBn" class="doc_header"><code>class</code> <code>ConvBn</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L250" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConvBn</code>(<strong><code>in_chan</code></strong>, <strong><code>out_chan</code></strong>, <strong><code>convsize</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>activation</code></strong>=<em><code>LeakyReLU(negative_slope=0.2, inplace=True)</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>dim</code></strong>=<em><code>3</code></em>, <strong><code>p_drop</code></strong>=<em><code>0</code></em>, <strong><code>evo_on</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>An individually designalble Block for 3 Dimensional Convoluions with Batchnorm and Dropout</p>
 
@@ -390,7 +390,7 @@ based on: <a href="https://arxiv.org/abs/1512.03385">https://arxiv.org/abs/1512.
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ConvTpBn" class="doc_header"><code>class</code> <code>ConvTpBn</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L300" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConvTpBn</code>(<strong><code>in_chan</code></strong>, <strong><code>out_chan</code></strong>, <strong><code>convsize</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>activation</code></strong>=<em><code>ReLU(inplace=True)</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>dim</code></strong>=<em><code>3</code></em>, <strong><code>evo_on</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="ConvTpBn" class="doc_header"><code>class</code> <code>ConvTpBn</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L304" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ConvTpBn</code>(<strong><code>in_chan</code></strong>, <strong><code>out_chan</code></strong>, <strong><code>convsize</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>activation</code></strong>=<em><code>ReLU(inplace=True)</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>dim</code></strong>=<em><code>3</code></em>, <strong><code>evo_on</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>An individually designalble Block for 3 Dimensional Transposed Convoluions with Batchnorm</p>
 
@@ -455,7 +455,7 @@ based on: <a href="https://arxiv.org/abs/1512.03385">https://arxiv.org/abs/1512.
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LinearSigmoid" class="doc_header"><code>class</code> <code>LinearSigmoid</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L349" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LinearSigmoid</code>(<strong><code>hidden_dim</code></strong>, <strong><code>y_dim</code></strong>, <strong><code>bias</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="LinearSigmoid" class="doc_header"><code>class</code> <code>LinearSigmoid</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L352" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LinearSigmoid</code>(<strong><code>hidden_dim</code></strong>, <strong><code>y_dim</code></strong>, <strong><code>bias</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Helper class to provide a simple ending with linear layer and Sigmoid</p>
 
@@ -493,7 +493,7 @@ based on: <a href="https://arxiv.org/abs/1512.03385">https://arxiv.org/abs/1512.
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="DownUpConv" class="doc_header"><code>class</code> <code>DownUpConv</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L373" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DownUpConv</code>(<strong><code>args</code></strong>, <strong><code>n_fea_in</code></strong>, <strong><code>n_fea_next</code></strong>, <strong><code>pic_size</code></strong>, <strong><code>depth</code></strong>, <strong><code>move</code></strong>=<em><code>'down'</code></em>, <strong><code>p_drop</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
+<h2 id="DownUpConv" class="doc_header"><code>class</code> <code>DownUpConv</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L376" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DownUpConv</code>(<strong><code>args</code></strong>, <strong><code>n_fea_in</code></strong>, <strong><code>n_fea_next</code></strong>, <strong><code>pic_size</code></strong>, <strong><code>depth</code></strong>, <strong><code>move</code></strong>=<em><code>'down'</code></em>, <strong><code>p_drop</code></strong>=<em><code>0</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>A helper Type, which contains the generic conv network
 for 3d up- or downsclaing depending on "move"</p>
@@ -532,7 +532,7 @@ for 3d up- or downsclaing depending on "move"</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Encoder" class="doc_header"><code>class</code> <code>Encoder</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L552" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Encoder</code>(<strong><code>args</code></strong>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>vae_mode</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="Encoder" class="doc_header"><code>class</code> <code>Encoder</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L555" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Encoder</code>(<strong><code>args</code></strong>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>vae_mode</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Encoder with 3dimensional conv setup</p>
 
@@ -564,7 +564,7 @@ for 3d up- or downsclaing depending on "move"</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Decoder" class="doc_header"><code>class</code> <code>Decoder</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L617" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Decoder</code>(<strong><code>args</code></strong>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>) :: <code>Module</code></p>
+<h2 id="Decoder" class="doc_header"><code>class</code> <code>Decoder</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L620" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Decoder</code>(<strong><code>args</code></strong>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Decoder class (also a Generator)</p>
 
@@ -596,7 +596,7 @@ for 3d up- or downsclaing depending on "move"</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Discriminator" class="doc_header"><code>class</code> <code>Discriminator</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L666" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Discriminator</code>(<strong><code>args</code></strong>, <strong><code>diag_dim</code></strong>=<em><code>1</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>wgan</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="Discriminator" class="doc_header"><code>class</code> <code>Discriminator</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/architecture.py#L669" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Discriminator</code>(<strong><code>args</code></strong>, <strong><code>diag_dim</code></strong>=<em><code>1</code></em>, <strong><code>init_w</code></strong>=<em><code>'weights_init'</code></em>, <strong><code>wgan</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Discriminator class, only for true/fake differences
 Classifier for Determinig between several classes</p>

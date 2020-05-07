@@ -1,5 +1,5 @@
 # deeptool
-> Tool for applying several deep learning methods on the MRNet dataset.
+> Tool for applying several deep learning methods on the MRNet and KneeXray dataset.
 
 
 

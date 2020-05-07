@@ -6,6 +6,7 @@ __all__ = ['DisBiGan', 'BiGAN']
 
 import torch
 from torch import nn, optim
+from torch import autograd
 from ..architecture import Encoder, Decoder, DownUpConv, weights_init
 from ..abs_model import AbsModel
 
@@ -104,13 +105,16 @@ class DisBiGan(nn.Module):
         x, z = inp
         x = self.conv_part(x)
         x = x.view((-1, self.hidden_dim))
-        # get the value for sxz
+        # concat x and z
         s_xz = torch.cat([x, z], dim=1)
-        s_xz = self.fc_part_sxz(x)
+
+        # get the value for sxz
+        s_xz = self.fc_part_sxz(s_xz)
         # get the value for sx
         s_x = self.fc_part_sx(x)
         # get the value for sz
         s_z = self.fc_part_sx(z)
+
         return s_xz, s_x, s_z
 
 # Cell
@@ -225,14 +229,14 @@ class BiGAN(AbsModel):
 
         # fill the labels
         b_size = real_x.size(0)
-        label = torch.full((b_size,), self.real_label, device=self.device)
+        label = torch.full((b_size,), self.real_label, device=self.device, dtype=torch.float32)
 
         # True set
         output = self.discriminator(real).view(-1)
         label.fill_(self.real_label)
-        errD_real = self.loss(output, label)
-        errD_real.backward() if update else None
-        D_x = output.mean().item()
+        errd_real = self.loss(output, label)
+        errd_real.backward() if update else None
+        d_x = output.mean().item()
 
         # 1.2 Train with all-fake batch
         fake_z = self.sample_noise(b_size, update)
@@ -242,13 +246,10 @@ class BiGAN(AbsModel):
         # Fake set
         output = self.discriminator(fake).view(-1)
         label.fill_(self.fake_label)
-        errD_fake = self.loss(output, label)
-        errD_fake.backward() if update else None
+        errd_fake = self.loss(output, label)
+        errd_fake.backward() if update else None
 
-        D_G_z1 = output.mean().item()
-
-        # final discriminatro loss
-        errD = errD_fake.item() + errD_real.item()
+        d_g_z1 = output.mean().item()
 
         # Update Discriminator
         if update:
@@ -263,15 +264,15 @@ class BiGAN(AbsModel):
         real = (real_x, real_z)
         output = self.discriminator(real).view(-1)
         label.fill_(self.fake_label)
-        errE = self.loss(output, label)
-        errE.backward() if update else None
+        erre = self.loss(output, label)
+        erre.backward() if update else None
 
         # Fake set
         fake = (fake_x, fake_z)
         output = self.discriminator(fake).view(-1)
         label.fill_(self.real_label)
-        errD = self.loss(output, label)
-        errD.backward() if update else None
+        errd = self.loss(output, label)
+        errd.backward() if update else None
 
         # Update Generator
         if update:
@@ -282,10 +283,10 @@ class BiGAN(AbsModel):
         else:
             # Track all relevant losses
             tr_data = {}
-            tr_data["errD"] = errD
-            tr_data["errG"] = errD.item()
-            tr_data["D_x"] = D_x
-            tr_data["D_G_z1"] = D_G_z1
+            tr_data["errD"] = errd
+            tr_data["errG"] = errd.item()
+            tr_data["D_x"] = d_x
+            tr_data["D_G_z1"] = d_g_z1
             tr_data["D_G_z2"] = output.mean().item()
 
             # generate the autoencoder output:

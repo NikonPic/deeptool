@@ -65,7 +65,76 @@ description: "Define the Dataset and Testset"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MRNetDataset" class="doc_header"><code>class</code> <code>MRNetDataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L30" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MRNetDataset</code>(<strong><code>args</code></strong>, <strong><code>transform</code></strong>=<em><code>None</code></em>, <strong><code>mode</code></strong>=<em><code>'train'</code></em>) :: <code>Dataset</code></p>
+<h4 id="read_dir" class="doc_header"><code>read_dir</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L29" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_dir</code>(<strong><code>naming</code></strong>, <strong><code>dir_files</code></strong>)</p>
+</blockquote>
+<p>Read the directory and determine all files within
+typically include all files from naming
+Args:
+    dir_files: filepath for the folders with the categories
+Return:
+    filenames: dict of filenames with their corresponding category(axial...)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="read_labels" class="doc_header"><code>read_labels</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L58" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>read_labels</code>(<strong><code>datadir</code></strong>)</p>
+</blockquote>
+<p>Read the csv files and store as a single tensor</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="MRNetDataset" class="doc_header"><code>class</code> <code>MRNetDataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L70" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MRNetDataset</code>(<strong><code>args</code></strong>, <strong><code>transform</code></strong>=<em><code>None</code></em>, <strong><code>mode</code></strong>=<em><code>'train'</code></em>) :: <code>Dataset</code></p>
 </blockquote>
 <p>Magnetic Resonance Imaging Dataset of 1129 knee joints in training data and 119 for validation.
 The Dataset contains information about:
@@ -107,7 +176,7 @@ The Dataset contains information about:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="RandomCrop" class="doc_header"><code>class</code> <code>RandomCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L198" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RandomCrop</code>(<strong><code>args</code></strong>)</p>
+<h2 id="RandomCrop" class="doc_header"><code>class</code> <code>RandomCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L200" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>RandomCrop</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Randomly crop to only some slices of the image</p>
 
@@ -139,7 +208,7 @@ The Dataset contains information about:
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TriplePrep" class="doc_header"><code>class</code> <code>TriplePrep</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L219" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TriplePrep</code>(<strong><code>args</code></strong>)</p>
+<h2 id="TriplePrep" class="doc_header"><code>class</code> <code>TriplePrep</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L221" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TriplePrep</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Randomly crop to only some slices of the image
 Further pad the picture to the 224 size!</p>
@@ -172,7 +241,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="MiddleCrop" class="doc_header"><code>class</code> <code>MiddleCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L266" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MiddleCrop</code>(<strong><code>args</code></strong>)</p>
+<h2 id="MiddleCrop" class="doc_header"><code>class</code> <code>MiddleCrop</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L268" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>MiddleCrop</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Crop to only some slices of the image from the middle</p>
 
@@ -204,7 +273,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Rescale" class="doc_header"><code>class</code> <code>Rescale</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L287" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Rescale</code>(<strong><code>args</code></strong>, <strong><code>dtype</code></strong>=<em><code>'float32'</code></em>)</p>
+<h2 id="Rescale" class="doc_header"><code>class</code> <code>Rescale</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L289" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Rescale</code>(<strong><code>args</code></strong>, <strong><code>dtype</code></strong>=<em><code>'float32'</code></em>)</p>
 </blockquote>
 <p>Rescale a whole MR set to a new size</p>
 
@@ -236,7 +305,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L335" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>type</code></strong>=<em><code>'FloatTensor'</code></em>)</p>
+<h2 id="ToTensor" class="doc_header"><code>class</code> <code>ToTensor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L337" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ToTensor</code>(<strong><code>type</code></strong>=<em><code>'FloatTensor'</code></em>)</p>
 </blockquote>
 <p>Convert ndarrays in sample to Tensors.</p>
 
@@ -268,7 +337,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L348" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>usegpu</code></strong>=<em><code>True</code></em>)</p>
+<h2 id="Normalize" class="doc_header"><code>class</code> <code>Normalize</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L350" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Normalize</code>(<strong><code>usegpu</code></strong>=<em><code>True</code></em>)</p>
 </blockquote>
 <p>Normalize the array</p>
 
@@ -306,7 +375,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_mrnet_datasets" class="doc_header"><code>load_mrnet_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_mrnet_datasets</code>(<strong><code>args</code></strong>)</p>
+<h4 id="load_mrnet_datasets" class="doc_header"><code>load_mrnet_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L379" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_mrnet_datasets</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Retruns the training and validation dataset with the corresponding loader</p>
 
@@ -338,7 +407,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="test_dataset" class="doc_header"><code>test_dataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L426" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_dataset</code>(<strong><code>args</code></strong>, <strong><code>valid_loader</code></strong>)</p>
+<h4 id="test_dataset" class="doc_header"><code>test_dataset</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>test_dataset</code>(<strong><code>args</code></strong>, <strong><code>valid_loader</code></strong>)</p>
 </blockquote>
 <p>return the required model depending on the arguments:</p>
 
@@ -370,7 +439,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_test_batch" class="doc_header"><code>load_test_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L445" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_test_batch</code>(<strong><code>args</code></strong>)</p>
+<h4 id="load_test_batch" class="doc_header"><code>load_test_batch</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L447" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_test_batch</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>This function creates a "pseudo" batch for simple testing</p>
 
@@ -487,7 +556,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>torch.Size([1, 31, 224, 224])</pre>
+<pre>torch.Size([1, 2, 224, 224])</pre>
 </div>
 
 </div>
@@ -522,7 +591,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="GaussianBlur" class="doc_header"><code>class</code> <code>GaussianBlur</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L486" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GaussianBlur</code>(<strong><code>sigma</code></strong>=<em><code>[0.1, 2.0]</code></em>)</p>
+<h2 id="GaussianBlur" class="doc_header"><code>class</code> <code>GaussianBlur</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L488" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>GaussianBlur</code>(<strong><code>sigma</code></strong>=<em><code>[0.1, 2.0]</code></em>)</p>
 </blockquote>
 <p>Gaussian blur augmentation in SimCLR <a href="https://arxiv.org/abs/2002.05709">https://arxiv.org/abs/2002.05709</a></p>
 
@@ -554,7 +623,7 @@ Further pad the picture to the 224 size!</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="TwoCropsTransform" class="doc_header"><code>class</code> <code>TwoCropsTransform</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L499" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwoCropsTransform</code>(<strong><code>base_transform</code></strong>)</p>
+<h2 id="TwoCropsTransform" class="doc_header"><code>class</code> <code>TwoCropsTransform</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L501" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TwoCropsTransform</code>(<strong><code>base_transform</code></strong>)</p>
 </blockquote>
 <p>Take two random crops of one image as the query and key.
 from: <a href="https://arxiv.org/abs/1805.01978">https://arxiv.org/abs/1805.01978</a>
@@ -588,7 +657,7 @@ from: <a href="https://arxiv.org/abs/1805.01978">https://arxiv.org/abs/1805.0197
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="load_kneexray_datasets" class="doc_header"><code>load_kneexray_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L520" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_kneexray_datasets</code>(<strong><code>args</code></strong>)</p>
+<h4 id="load_kneexray_datasets" class="doc_header"><code>load_kneexray_datasets</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L522" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>load_kneexray_datasets</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>Load the kneexray dataset</p>
 
@@ -613,7 +682,7 @@ from: <a href="https://arxiv.org/abs/1805.01978">https://arxiv.org/abs/1805.0197
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_loader" class="doc_header"><code>get_loader</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L535" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_loader</code>(<strong><code>args</code></strong>, <strong><code>root_dir</code></strong>)</p>
+<h4 id="get_loader" class="doc_header"><code>get_loader</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/dataloader.py#L537" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_loader</code>(<strong><code>args</code></strong>, <strong><code>root_dir</code></strong>)</p>
 </blockquote>
 
 </div>
