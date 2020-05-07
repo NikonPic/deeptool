@@ -14,7 +14,7 @@ from .model.diagnosis import TripleMRNet
 from .model.vqvae import VQVAE2
 from .model.introvae import IntroVAE
 from .model.bigan import BiGAN
-from .model.rnnvae import Creator_RNN_AE
+from .model.rnnvae import creator_rnn_ae
 from .model.mocoae import MoCoAE
 
 # import the dataset
@@ -43,7 +43,7 @@ def get_model(device, args):
         "diagnosis": TripleMRNet,
         "vqvae": VQVAE2,
         "introvae": IntroVAE,
-        "rnnvae": Creator_RNN_AE,
+        "rnnvae": creator_rnn_ae,
         "bigan": BiGAN,
         "mocoae": MoCoAE,
     }

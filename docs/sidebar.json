@@ -11,16 +11,20 @@
     "Abstract Model": "/abstract_model"
   },
   "Models": {
-    "Supervised": {
-      "Diagnosis": "/diagnosis"
+    "": {
+      "Supervised": {
+        "Diagnosis": "/diagnosis"
+      }
     },
-    "Self-Supervised": {
-      "Intro VAE": "/introvae",
-      "VQVAE (2)": "/vqvae",
-      "DCGAN": "/dcgan",
-      "BiGAN": "/bigan",
-      "MoCoAE": "/mocoae",
-      "RNN VAE": "/rnn_vae"
+    "empty1": {
+      "Self-Supervised": {
+        "Intro VAE": "/introvae",
+        "VQVAE (2)": "/vqvae",
+        "DCGAN": "/dcgan",
+        "BiGAN": "/bigan",
+        "MoCoAE": "/mocoae",
+        "RNN VAE": "/rnn_vae"
+      }
     }
   }
 }
