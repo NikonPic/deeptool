@@ -1,18 +1,26 @@
 {
-  "deeptool": {
-    "Overview": "/",
+  "Getting started": {
+    "Overview": "/"
+  },
+  "General": {
     "Dataloader": "/dataloader",
     "Architecture": "/architecture",
     "Utils": "/utils",
     "Parameters": "/parameters",
     "Training Loop": "/train_loop",
-    "Abstract Model": "/abstract_model",
-    "Diagnosis": "/diagnosis",
-    "DCGAN": "/dcgan",
-    "Intro VAE": "/introvae",
-    "VQVAE (2)": "/vqvae",
-    "BiGAN": "/bigan",
-    "MoCoAE": "/mocoae",
-    "RNN VAE": "/rnn_vae"
+    "Abstract Model": "/abstract_model"
+  },
+  "Models": {
+    "Supervised": {
+      "Diagnosis": "/diagnosis"
+    },
+    "Self-Supervised": {
+      "Intro VAE": "/introvae",
+      "VQVAE (2)": "/vqvae",
+      "DCGAN": "/dcgan",
+      "BiGAN": "/bigan",
+      "MoCoAE": "/mocoae",
+      "RNN VAE": "/rnn_vae"
+    }
   }
 }

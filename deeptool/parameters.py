@@ -258,10 +258,10 @@ def get_introvae_args(parser, args=[]):
     # IntroVAE:
     # ------------------------------------------------------------------------
     parser.add_argument(
-        "--alpha", type=float, default=0.25, help="Factor for adversarial leaning"
+        "--alpha", type=float, default=1, help="Factor for adversarial leaning"
     )
     parser.add_argument(
-        "--beta", type=float, default=0.05, help="Factor for autoencoder leaning"
+        "--beta", type=float, default=0.01, help="Factor for autoencoder leaning"
     )
     parser.add_argument(
         "--gamma",
@@ -270,7 +270,7 @@ def get_introvae_args(parser, args=[]):
         help="Factor for variational autoencoder leaning",
     )
     parser.add_argument(
-        "--m", type=float, default=90, help="Positive margin for valid learning"
+        "--m", type=float, default=500, help="Positive margin for valid learning"
     )
     parser.add_argument(
         "--n_pretrain",

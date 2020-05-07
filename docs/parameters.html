@@ -608,10 +608,10 @@ description: "Define all General Parameters for training!"
     <span class="c1"># IntroVAE:</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--alpha&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor for adversarial leaning&quot;</span>
+        <span class="s2">&quot;--alpha&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor for adversarial leaning&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--beta&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor for autoencoder leaning&quot;</span>
+        <span class="s2">&quot;--beta&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor for autoencoder leaning&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--gamma&quot;</span><span class="p">,</span>
@@ -620,7 +620,7 @@ description: "Define all General Parameters for training!"
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Factor for variational autoencoder leaning&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--m&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Positive margin for valid learning&quot;</span>
+        <span class="s2">&quot;--m&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Positive margin for valid learning&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s2">&quot;--n_pretrain&quot;</span><span class="p">,</span>
