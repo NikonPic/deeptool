@@ -33,34 +33,27 @@ entries:
     output: web
     title: General
   - folderitems:
-      subfolders:
-      - output: web
-        subfolderitems:
-        - output: web,pdf
-          title: Diagnosis
-          url: /diagnosis
-        title: Supervised
-      - output: web
-        subfolderitems:
-        - output: web,pdf
-          title: Intro VAE
-          url: /introvae
-        - output: web,pdf
-          title: VQVAE (2)
-          url: /vqvae
-        - output: web,pdf
-          title: DCGAN
-          url: /dcgan
-        - output: web,pdf
-          title: BiGAN
-          url: /bigan
-        - output: web,pdf
-          title: MoCoAE
-          url: /mocoae
-        - output: web,pdf
-          title: RNN VAE
-          url: /rnn_vae
-        title: Self-Supervised
+    - output: web,pdf
+      title: Diagnosis
+      url: /diagnosis
+    - output: web,pdf
+      title: Intro VAE
+      url: /introvae
+    - output: web,pdf
+      title: VQVAE (2)
+      url: /vqvae
+    - output: web,pdf
+      title: DCGAN
+      url: /dcgan
+    - output: web,pdf
+      title: BiGAN
+      url: /bigan
+    - output: web,pdf
+      title: MoCoAE
+      url: /mocoae
+    - output: web,pdf
+      title: RNN VAE
+      url: /rnn_vae
     output: web
     title: Models
   output: web
