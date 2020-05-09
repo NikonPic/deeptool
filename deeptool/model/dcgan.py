@@ -68,10 +68,10 @@ class DCGAN(AbsModel):
 
         # Optimizers
         self.optimizerGen = optim.Adam(
-            self.generator.parameters(), lr=0.0002, betas=(0.5, 0.999)
+            self.generator.parameters(), lr=args.lr, betas=(args.beta1, args.beta2)
         )
         self.optimizerDis = optim.Adam(
-            self.discriminator.parameters(), lr=0.0002, betas=(0.5, 0.999)
+            self.discriminator.parameters(), lr=args.lr, betas=(args.beta1, args.beta2)
         )
 
     def calc_gradient_penalty(self, real_data, fake_data):

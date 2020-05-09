@@ -225,6 +225,12 @@ def get_opt_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument("--lr", type=float, default=0.0002, help="learning rate")
     parser.add_argument(
+        "--beta1", type=float, default=0.5, help="Beta1 hyperparameter for Adam optimizer"
+    )
+    parser.add_argument(
+        "--beta2", type=float, default=0.999, help="Beta2 hyperparameter for Adam optimizer"
+    )
+    parser.add_argument(
         "--n_epochs", type=int, default=500, help="number of training epochs"
     )
     # ------------------------------------------------------------------------

@@ -35,7 +35,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 
 ### 1. Import the library
 
-```python
+```
 from deeptool.train_loop import get_model, test_one_batch, main_loop
 from deeptool.parameters import get_all_args, compat_args
 ```
@@ -43,7 +43,7 @@ from deeptool.parameters import get_all_args, compat_args
 ### 2. Adjust the arguments for training for your needs
 check parameters.py for more information about the effect of each parameter
 
-```python
+```
 # Define Arguments (Example)
 args = get_all_args()
 args.dim = 2  # Dimension of network reduced to 2

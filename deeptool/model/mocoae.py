@@ -53,8 +53,8 @@ class MoCoAE(AbsModel):
         )
 
         # optimizers
-        self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr)
-        self.optimizerW = optim.Adam([self.W], lr=args.lr)
+        self.optimizerEnc = optim.Adam(self.enc_q.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizerW = optim.Adam([self.W], lr=args.lr, betas=(args.beta1, args.beta2))
 
         # Autoencoder init?
         self.init_ae(args) if self.ae_mode else None
