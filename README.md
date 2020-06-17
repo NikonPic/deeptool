@@ -59,3 +59,9 @@ args = compat_args(args) # solve argument interactions
 ```python
 main_loop(args) # run the training
 ```
+
+### 4. Experience Results
+
+Watch the model improve on the task, as displayed below...
+
+<img src="nbs\img\movie.gif" alt="Drawing" style="width: 500px;">
