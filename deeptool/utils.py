@@ -12,7 +12,9 @@ import torch
 import os
 from tqdm import tqdm
 from sklearn import metrics
+from sklearn.metrics import accuracy_score, auc, confusion_matrix
 from statistics import mean
+import itertools
 
 # For Visualization
 import matplotlib.pyplot as plt
@@ -367,9 +369,6 @@ class Tracker(object):
 
 # Cell
 
-from sklearn.metrics import accuracy_score, auc, confusion_matrix
-from fastai.metrics import error_rate, accuracy, roc_curve, AUROC
-
 def plot_roc_curve(fpr, tpr, auc, name, lw=2, show=False):
     plt.figure()
     plt.plot(fpr, tpr, color='darkorange',
@@ -395,9 +394,6 @@ def plot_confusion_matrix(
     http://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html
 
     """
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import itertools
 
     accuracy = np.trace(cm) / float(np.sum(cm))
     misclass = 1 - accuracy
