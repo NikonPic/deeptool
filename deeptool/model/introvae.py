@@ -46,8 +46,8 @@ class IntroVAE(AbsModel):
         self.bce_loss = nn.BCELoss(reduction="sum")
 
         # optimizers
-        self.optimizerEnc = optim.Adam(self.encoder.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
-        self.optimizerDec = optim.Adam(self.decoder.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizerEnc = optim.Adam(self.encoder.parameters(), lr=args.lr)
+        self.optimizerDec = optim.Adam(self.decoder.parameters(), lr=args.lr)
 
     def reparametrisation(self, mu, log_sig2):
         """Apply the reparametrisation trick for VAE."""

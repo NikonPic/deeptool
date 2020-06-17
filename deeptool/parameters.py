@@ -225,12 +225,6 @@ def get_opt_args(parser, args=[]):
     # ------------------------------------------------------------------------
     parser.add_argument("--lr", type=float, default=0.0002, help="learning rate")
     parser.add_argument(
-        "--beta1", type=float, default=0.5, help="Beta1 hyperparameter for Adam optimizer"
-    )
-    parser.add_argument(
-        "--beta2", type=float, default=0.999, help="Beta2 hyperparameter for Adam optimizer"
-    )
-    parser.add_argument(
         "--n_epochs", type=int, default=500, help="number of training epochs"
     )
     # ------------------------------------------------------------------------
@@ -404,7 +398,7 @@ def get_mrnet_args(parser, args=[]):
     parser.add_argument(
         "--mrnet_label_smoothing",
         type=float,
-        default=0.1,
+        default=0.0,
         help="Smooth labels for potential better generalisation",
     )
     parser.add_argument(
@@ -422,7 +416,7 @@ def get_mrnet_args(parser, args=[]):
     parser.add_argument(
         "--mrnet_rnn_gap",
         type=bool,
-        default=True,
+        default=False,
         help="Use an GRU Unit instead of adaptive average gap",
     )
     parser.add_argument(
@@ -508,6 +502,13 @@ def compat_args(args):
     make arguments compatible with each others by applying all necessary logic
     - so far only crop_size and dim can be uncompatible!
     """
+    if args.model_type == 'diagnosis':
+        # always use max pic size, all perspectives and limit to MRNet
+        args.pic_size = 256
+        args.perspectives = ["axial", "coronal", "sagittal"]
+        args.dataset_type = "MRNet"
+        args.batch_size = 1
+
     if args.dim == 2:
         # change to 1
         args.crop_size = 1

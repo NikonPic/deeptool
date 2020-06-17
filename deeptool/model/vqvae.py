@@ -251,7 +251,7 @@ class VQVAE2(AbsModel):
         self.EncQuantDec = EncQuantDec(args).to(self.device)
         self.criterion = nn.MSELoss()
         self.vq_beta = args.vq_beta
-        self.optimizer = optim.Adam(self.EncQuantDec.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizer = optim.Adam(self.EncQuantDec.parameters(), lr=args.lr)
 
         # define forward function
         self.forward = self.forward_normal

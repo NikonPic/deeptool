@@ -175,7 +175,7 @@ class RNNAE(AbsModel):
         self.mse_loss = nn.MSELoss(reduction="sum")
 
         # the optimizer
-        self.optimizer = optim.Adam(self.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizer = optim.Adam(self.parameters(), lr=args.lr)
 
         # reset the dimension
         args.dim = self.true_dim
@@ -251,7 +251,7 @@ class RNNVAE(RNNAE):
         self.gamma = args.gamma
 
         # reset the optimizer
-        self.optimizer = optim.Adam(self.parameters(), lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizer = optim.Adam(self.parameters(), lr=args.lr)
 
     def vae_sampling(self, x):
         mu, log_sig2 = x.chunk(2, dim=1)
@@ -325,7 +325,7 @@ class RNNINTROVAE(RNNVAE):
             + list(self.fc_part_dec.parameters())
             + list(self.transition.parameters())
         )
-        self.optimizerDec = optim.Adam(dec_params, lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
     def forward(self, batch, update=True):
         """
@@ -499,7 +499,7 @@ class RNNBIGAN(RNNVAE):
             + list(self.fc_part_dec.parameters())
             + list(self.transition.parameters())
         )
-        self.optimizerDec = optim.Adam(dec_params, lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizerDec = optim.Adam(dec_params, lr=args.lr)
 
         dis_params = (
             list(self.conv_part_dis.parameters())
@@ -507,7 +507,7 @@ class RNNBIGAN(RNNVAE):
             + list(self.fc_part_dis_z.parameters())
             + list(self.fc_part_dis_xz.parameters())
         )
-        self.optimizerDis = optim.Adam(dis_params, lr=args.lr, betas=(args.beta1, args.beta2))
+        self.optimizerDis = optim.Adam(dis_params, lr=args.lr)
 
         # parameters
         self.lam = args.lam

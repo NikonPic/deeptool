@@ -153,13 +153,13 @@ class BiGAN(AbsModel):
 
         # the optimizers
         self.optimizerDec = optim.Adam(
-            self.decoder.parameters(), lr=args.lr, betas=(args.beta1, args.beta2)
+            self.decoder.parameters(), lr=args.lr, betas=(0.5, 0.999)
         )
         self.optimizerEnc = optim.Adam(
-            self.encoder.parameters(), lr=args.lr, betas=(args.beta1, args.beta2)
+            self.encoder.parameters(), lr=args.lr, betas=(0.5, 0.999)
         )
         self.optimizerDis = optim.Adam(
-            self.discriminator.parameters(), lr=args.lr, betas=(args.beta1, args.beta2)
+            self.discriminator.parameters(), lr=args.lr, betas=(0.5, 0.999)
         )
 
         # Fixed noise to visualize progression
