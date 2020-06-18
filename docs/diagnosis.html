@@ -140,7 +140,7 @@ or from the matplotlib source distribution
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="2.-The-Complete-Network-with-Backbone-and-Classifier">2. The Complete Network with Backbone and Classifier<a class="anchor-link" href="#2.-The-Complete-Network-with-Backbone-and-Classifier"> </a></h2>
+<h2 id="2.-The-Complete-Network-with-Backbone-and-Pooling">2. The Complete Network with Backbone and Pooling<a class="anchor-link" href="#2.-The-Complete-Network-with-Backbone-and-Pooling"> </a></h2>
 </div>
 </div>
 </div>
@@ -162,7 +162,46 @@ or from the matplotlib source distribution
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L76" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
+<h3 id="Compressor" class="doc_header"><code>class</code> <code>Compressor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L75" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Compressor</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
+</blockquote>
+<p>This class compresses the data from all slices to be only a vector.
+Contains the backbone and the pooling</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="3.-The-TripleNet-with-Losses-and-bringing-it-all-together">3. The TripleNet with Losses and bringing it all together<a class="anchor-link" href="#3.-The-TripleNet-with-Losses-and-bringing-it-all-together"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h3 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L203" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
 </blockquote>
 <p>adapted from <a href="https://github.com/yashbhalgat/MRNet-Competition">https://github.com/yashbhalgat/MRNet-Competition</a>
 with the knowledge of: <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699">https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699</a></p>

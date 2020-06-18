@@ -425,6 +425,12 @@ def get_mrnet_args(parser, args=[]):
         default=True,
         help="Use only a single Backbone and Gap",
     )
+    parser.add_argument(
+        "--mrnet_moco",
+        type=bool,
+        default=True,
+        help = "Contrastive enhanced learning"
+    )
     # ------------------------------------------------------------------------
     return parser
 

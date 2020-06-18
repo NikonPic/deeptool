@@ -947,6 +947,12 @@ description: "Define all General Parameters for training!"
         <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use only a single Backbone and Gap&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--mrnet_moco&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">help</span> <span class="o">=</span> <span class="s2">&quot;Contrastive enhanced learning&quot;</span>
+    <span class="p">)</span>
     <span class="c1"># ------------------------------------------------------------------------</span>
     <span class="k">return</span> <span class="n">parser</span>
 </pre></div>
@@ -1036,7 +1042,7 @@ description: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_rnn_vae_args" class="doc_header"><code>get_rnn_vae_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L434" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_rnn_vae_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_rnn_vae_args" class="doc_header"><code>get_rnn_vae_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L440" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_rnn_vae_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the Recurrent Varaitional Autoencoder parameters</p>
 
@@ -1121,7 +1127,7 @@ description: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_mocoae_args" class="doc_header"><code>get_mocoae_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L458" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_mocoae_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_mocoae_args" class="doc_header"><code>get_mocoae_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L464" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_mocoae_args</code>(<strong><code>parser</code></strong>, <strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>parameters determing the VQVAE parameters</p>
 
@@ -1159,7 +1165,7 @@ description: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L500" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
+<h4 id="compat_args" class="doc_header"><code>compat_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L506" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compat_args</code>(<strong><code>args</code></strong>)</p>
 </blockquote>
 <p>make arguments compatible with each others by applying all necessary logic</p>
 <ul>
@@ -1194,7 +1200,7 @@ description: "Define all General Parameters for training!"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L528" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
+<h4 id="get_all_args" class="doc_header"><code>get_all_args</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/parameters.py#L534" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_all_args</code>(<strong><code>args</code></strong>=<em><code>[]</code></em>)</p>
 </blockquote>
 <p>return all predefined arguments using the combined parameter getters</p>
 
@@ -1235,23 +1241,12 @@ description: "Define all General Parameters for training!"
 
 <div class="output_area">
 
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
-<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-2-7cf6086545fc&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>args <span class="ansi-yellow-intense-fg ansi-bold">=</span> get_all_args<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-fg">      2</span> args
 
-<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-1-230e8c34fa6d&gt;</span> in <span class="ansi-cyan-fg">get_all_args</span><span class="ansi-blue-intense-fg ansi-bold">(args)</span>
-<span class="ansi-green-fg">      7</span>     &#34;&#34;&#34;
-<span class="ansi-green-fg">      8</span>     <span class="ansi-red-intense-fg ansi-bold"># setup</span>
-<span class="ansi-green-intense-fg ansi-bold">----&gt; 9</span><span class="ansi-yellow-intense-fg ansi-bold">     </span>parser <span class="ansi-yellow-intense-fg ansi-bold">=</span> argparse<span class="ansi-yellow-intense-fg ansi-bold">.</span>ArgumentParser<span class="ansi-yellow-intense-fg ansi-bold">(</span>description<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-blue-intense-fg ansi-bold">&#34;Parameters for training&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-fg">     10</span> 
-<span class="ansi-green-fg">     11</span>     <span class="ansi-red-intense-fg ansi-bold"># dataset args</span>
 
-<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;argparse&#39; is not defined</pre>
+<div class="output_text output_subarea output_execute_result">
+<pre>Namespace(alpha=1, batch_size=1, beta=0.01, bi_ae_scale=0.9, bi_extension=False, classes=[&#39;abn&#39;, &#39;acl&#39;, &#39;men&#39;], crop_percent=0.7, crop_size=16, dataset_type=&#39;MRNet&#39;, dim=3, evo_on=False, gamma=1, lam=10, load_model=False, lr=0.0002, m=500, min_size=4, moco_K=16384, moco_aemode=False, moco_ganmode=False, moco_m=[0.999, 0.99], moco_tau=1, model_path=&#39;./data/src/_model&#39;, model_type=&#39;diagnosis&#39;, mrnet_backbone=&#39;alexnet&#39;, mrnet_batch_update=32, mrnet_hidden_dim=256, mrnet_label_smoothing=0.0, mrnet_moco=True, mrnet_rnn_gap=False, mrnet_singlestream=True, n_epochs=500, n_fea_down=16, n_fea_up=16, n_gpu=1, n_pretrain=5, n_res2d=0, n_res3d=0, n_z=100, num_worker=0, p_drop=0.1, perspectives=[&#39;axial&#39;, &#39;coronal&#39;, &#39;sagittal&#39;], pic_size=256, rand_crop=True, rnn_transition=&#39;cnn&#39;, rnn_type=&#39;ae&#39;, root_dir_kneexray=&#39;C:/Users/Niko/Documents/data/KneeXrayData/ClsKLData/kneeKL224&#39;, root_dir_mrnet=&#39;C:/Users/Niko/Documents/data/MRNet-v1.0/MRNet-v1.0&#39;, rot_max=30, scale2d=2, scale3d=2, track=True, vq_beta=0.25, vq_class=1.0, vq_classify=False, vq_gamma=0.99, vq_gan=False, vq_layers=[8, 16], vq_n_embed=512, watch_batch=1130, wgan=False)</pre>
 </div>
+
 </div>
 
 </div>
