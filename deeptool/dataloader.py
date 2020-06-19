@@ -276,17 +276,19 @@ class RandomRotate(object):
 
     def __call__(self, mr_scan):
         rand_deg = np.random.randint(-self.max_angle, self.max_angle)
+        mr_scan = mr_scan.numpy()
 
         for slice_numb, img in enumerate(mr_scan):
             # to PIL image
-            img = img.numpy()
             img = Image.fromarray(img)
-
             # rotate the whole Image
             img = Func.rotate(img, rand_deg)
-            # back to numpy:
-            img = np.asarray(img)
-            mr_scan[slice_numb, :, :] = torch.FloatTensor(img)
+            # back to numpy
+            np.asarray(img)
+            # insert to mrscan
+            mr_scan[slice_numb, :, :] = img
+
+        mr_scan = torch.FloatTensor(mr_scan)
 
         return mr_scan
 

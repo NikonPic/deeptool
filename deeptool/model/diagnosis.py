@@ -71,7 +71,7 @@ class ClassifyRNN(nn.Module):
 
 # Cell
 
-class Compressor(AbsModel):
+class Compressor(nn.Module):
     """
     This class compresses the data from all slices to be only a vector.
     Contains the backbone and the pooling
@@ -86,7 +86,7 @@ class Compressor(AbsModel):
         training=True,
         document=True,
     ):
-        super(Compressor, self).__init__(args)
+        super(Compressor, self).__init__()
 
         # general defines
         self.device = device

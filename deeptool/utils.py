@@ -83,6 +83,8 @@ class Tracker(object):
         try:
             os.mkdir(self.dir_name)
             os.mkdir(self.image_path)
+            print("success")
+
         except:
             print(
                 "\nFoler: "
