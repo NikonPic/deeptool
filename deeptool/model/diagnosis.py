@@ -41,7 +41,6 @@ class Classify(nn.Module):
 
 # Cell
 
-
 class ClassifyRNN(nn.Module):
     """
     The Classifier on top of the triplenet network
@@ -198,7 +197,7 @@ class Compressor(AbsModel):
         return w
 
 # Cell
-
+from .mocoae import momentumContrastiveLoss, momentum_update, copy_q2k_params, concat_all_gather
 
 class TripleMRNet(AbsModel):
     """
@@ -253,6 +252,8 @@ class TripleMRNet(AbsModel):
         # the Momentum Contrastive bool
         self.moco = args.mrnet_moco
 
+        self.forward= self.forward_moco if self.moco else self.forward_normal
+
         # add classifier
         self.add_classifier()
 
@@ -261,6 +262,14 @@ class TripleMRNet(AbsModel):
 
         # define optimizer
         self.optimizer = optim.Adam(self.parameters(), lr=args.lr)
+
+        # init all parts relevant for moco
+        self.init_moco(args, backbone, training) if self.moco else None
+
+    def init_moco(self, args, backbone, training):
+        """initialise all parts connected to MomentumContrastiveLearning"""
+        # add a second compressor if moco is active
+        self.m_compressor = Compressor(self.device, args, None, backbone, training, document).to(self.device)
 
     def add_classifier(self):
         """
@@ -304,20 +313,36 @@ class TripleMRNet(AbsModel):
         self.tracker.get_accuracy(self, valid_loader, iteration)
 
     @torch.no_grad()
+    def get_vol(self, data, name):
+        """
+        helper func to load values
+        """
+        vol = data['img'][name]
+
+        # two volumes if moco is active
+        if self.moco:
+            vol0 = vol[0][0, :, :, :].to(self.device)
+            vol0 = torch.stack((vol0,) * 3, axis=1)
+
+            vol1 = vol[1][0, :, :, :].to(self.device)
+            vol1 = torch.stack((vol1,) * 3, axis=1)
+            return vol0, vol1
+
+        else:
+            vol = vol[0, :, :, :].to(self.device)
+            vol = torch.stack((vol,) * 3, axis=1)
+            return vol
+
+    @torch.no_grad()
     def get_input_image(self, data):
         """
         take the input from the stack and give the single volumes
         """
         # get the three volumes from the dictionary
         # data["img"]["axial"] -> shape = batch x depth x pic x pic
-        vol_axial = data["img"][self.naming[0]][0, :, :, :].to(self.device)
-        vol_axial = torch.stack((vol_axial,) * 3, axis=1)
-
-        vol_sagit = data["img"][self.naming[1]][0, :, :, :].to(self.device)
-        vol_sagit = torch.stack((vol_sagit,) * 3, axis=1)
-
-        vol_coron = data["img"][self.naming[2]][0, :, :, :].to(self.device)
-        vol_coron = torch.stack((vol_coron,) * 3, axis=1)
+        vol_axial = self.get_vol(data, self.naming[0])
+        vol_sagit = self.get_vol(data, self.naming[1])
+        vol_coron = self.get_vol(data, self.naming[2])
 
         label = torch.zeros(vol_axial.shape[0], self.y_len)  # init
         for i, cl in enumerate(self.y_labels):
@@ -326,9 +351,21 @@ class TripleMRNet(AbsModel):
 
         return vol_axial, vol_sagit, vol_coron, label
 
-    def forward(self, data, update=True):
+    def forward_moco(self, data, update=True):
         """
-        perform the forward pass and update
+        perform forward pass in moco mode
+        """
+        # get the required input
+        vol_axial, vol_sagit, vol_coron, label = self.get_input_image(data)
+
+        # compress to the (256) vector
+        w = self.compressor(vol_axial[0], vol_sagit[0], vol_coron[0])
+
+
+
+    def forward_normal(self, data, update=True):
+        """
+        perform the forward pass and update in normal mode
         """
         # get the required input
         vol_axial, vol_sagit, vol_coron, label = self.get_input_image(data)

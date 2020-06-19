@@ -218,7 +218,6 @@ class RandomCrop(object):
 
 # Cell
 
-
 class TriplePrep(object):
     """
     Randomly crop to only some slices of the image
@@ -294,7 +293,6 @@ class RandomRotate(object):
 
 # Cell
 
-
 class MiddleCrop(object):
     """Crop to only some slices of the image from the middle"""
 
@@ -314,7 +312,6 @@ class MiddleCrop(object):
         return mr_scan[cr : cr + self.crop_size]
 
 # Cell
-
 
 class Rescale(object):
     """Rescale a whole MR set to a new size"""
@@ -554,7 +551,7 @@ class TwoCropsTransform:
 
     def __init__(self, base_transform, adv_transform):
         self.base_transform = base_transform
-        self.adv_transfrom = adv_transform
+        self.adv_transform = adv_transform
 
     def __call__(self, x):
         q = self.base_transform(x)

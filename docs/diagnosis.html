@@ -24,25 +24,6 @@ description: "Structure for performing Diagnosis for 3D Datasets"
     
 <div class="cell border-box-sizing code_cell rendered">
 
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-Bad key &#34;text.kerning_factor&#34; on line 4 in
-C:\Users\Niko\anaconda3\lib\site-packages\matplotlib\mpl-data\stylelib\_classic_test_patch.mplstyle.
-You probably need to get an updated matplotlibrc file from
-https://github.com/matplotlib/matplotlib/blob/v3.1.3/matplotlibrc.template
-or from the matplotlib source distribution
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
     {% endraw %}
 
@@ -124,7 +105,7 @@ or from the matplotlib source distribution
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="ClassifyRNN" class="doc_header"><code>class</code> <code>ClassifyRNN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L45" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>ClassifyRNN</code>(<strong><code>device</code></strong>, <strong><code>input_size</code></strong>, <strong><code>hidden_size</code></strong>, <strong><code>n_layers</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
+<h3 id="ClassifyRNN" class="doc_header"><code>class</code> <code>ClassifyRNN</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L44" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>ClassifyRNN</code>(<strong><code>device</code></strong>, <strong><code>input_size</code></strong>, <strong><code>hidden_size</code></strong>, <strong><code>n_layers</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>The Classifier on top of the triplenet network</p>
 
@@ -162,7 +143,7 @@ or from the matplotlib source distribution
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="Compressor" class="doc_header"><code>class</code> <code>Compressor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L75" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Compressor</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
+<h3 id="Compressor" class="doc_header"><code>class</code> <code>Compressor</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L74" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>Compressor</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
 </blockquote>
 <p>This class compresses the data from all slices to be only a vector.
 Contains the backbone and the pooling</p>
@@ -201,7 +182,7 @@ Contains the backbone and the pooling</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h3 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="https://github.com/NikonPic/deeptool/tree/master/deeptool/model/diagnosis.py#L203" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
+<h3 id="TripleMRNet" class="doc_header"><code>class</code> <code>TripleMRNet</code><a href="" class="source_link" style="float:right">[source]</a></h3><blockquote><p><code>TripleMRNet</code>(<strong><code>device</code></strong>, <strong><code>args</code></strong>, <strong><code>train_data</code></strong>=<em><code>None</code></em>, <strong><code>backbone</code></strong>=<em><code>'resnet18'</code></em>, <strong><code>training</code></strong>=<em><code>True</code></em>, <strong><code>document</code></strong>=<em><code>True</code></em>) :: <a href="/deeptool/abstract_model#AbsModel"><code>AbsModel</code></a></p>
 </blockquote>
 <p>adapted from <a href="https://github.com/yashbhalgat/MRNet-Competition">https://github.com/yashbhalgat/MRNet-Competition</a>
 with the knowledge of: <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699">https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002699</a></p>
