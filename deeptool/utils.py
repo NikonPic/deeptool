@@ -85,6 +85,7 @@ class Tracker(object):
             os.mkdir(self.image_path)
             print("success")
 
+
         except:
             print(
                 "\nFoler: "
@@ -96,6 +97,9 @@ class Tracker(object):
         # Save set of hyperparameters
         with open(self.dir_name + "/_params.json", "w") as f:
             json.dump(args._get_kwargs(), f, ensure_ascii=False, indent=4)
+
+        # finally summary writer
+        self.writer = SummaryWriter()
 
     def view_3d(self, x, scale=0.7, alpha=1.0, bg_val=-1):
         """
@@ -313,9 +317,10 @@ class Tracker(object):
                 preds[cl].append(pred[i])
                 labels[cl].append(label[i])
 
-        # get the accuracies
+        # collect all accs
         acc = {}
         for cl in self.classes:
+            # get the accuracy
             fpr, tpr, _ = metrics.roc_curve(labels[cl], preds[cl])
             loc_acc = metrics.auc(fpr, tpr)
             pred_label = [1 if pre > 0.5 else 0 for pre in preds[cl]]

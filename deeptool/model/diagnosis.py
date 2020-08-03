@@ -146,6 +146,13 @@ class Compressor(nn.Module):
             for param in local_net.parameters():
                 param.requires_grad = False
 
+        elif self.backbone == "resnet34":
+            resnet = models.resnet34(pretrained=training)
+            modules = list(resnet.children())[:-1]
+            local_net = nn.Sequential(*modules)
+            for param in local_net.parameters():
+                param.requires_grad = False
+
         elif self.backbone == "alexnet":
             local_net = models.alexnet(pretrained=training)
             local_net = local_net.features
@@ -278,8 +285,8 @@ class TripleMRNet(AbsModel):
         if self.rnn_gap:
             self.classifier = Classify(3 * self.hidden_dim, self.hidden_dim, self.y_len).to(self.device)
         else:
-            # only for the avergae case
-            if self.backbone in ("resnet18", "vgg", "squeeze"):
+            # only for the average case
+            if self.backbone in ("resnet18", "vgg", "squeeze", "resnet34"):
                 self.classifier = Classify(3 * 512, self.hidden_dim, self.y_len).to(
                     self.device
                 )
@@ -329,8 +336,8 @@ class TripleMRNet(AbsModel):
             return vol0, vol1
 
         else:
+            # no stacking necessary
             vol = vol[0, :, :, :].to(self.device)
-            vol = torch.stack((vol,) * 3, axis=1)
             return vol
 
     @torch.no_grad()

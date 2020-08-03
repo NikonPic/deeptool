@@ -43,7 +43,7 @@ def get_dataset_args(parser, args=[]):
     parser.add_argument(
         "--crop_percent",
         type=float,
-        default=0.7,
+        default=0.95,
         help="if we use triplenet take percentage of av. layers",
     )
     parser.add_argument(
@@ -428,7 +428,7 @@ def get_mrnet_args(parser, args=[]):
     parser.add_argument(
         "--mrnet_moco",
         type=bool,
-        default=True,
+        default=False,
         help = "Contrastive enhanced learning"
     )
     # ------------------------------------------------------------------------

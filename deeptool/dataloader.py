@@ -259,10 +259,21 @@ class TriplePrep(object):
         mr_scan = mr_scan[
             cr_start : cr_start + cr_layers, pad_w_b:-pad_w_e, pad_h_b:-pad_h_e
         ]
-        # randonly flip the picture
+        # randomly flip the picture
         mr_scan = self.h_flip(mr_scan, depth)
 
-        return mr_scan
+        # rescale on 3 dims:
+        sh = mr_scan.shape
+        mr_scan_3_chan = torch.zeros([sh[0], 3, sh[1], sh[2]])
+
+        # fill
+        mr_scan_3_chan[:, 0, :, :] = mr_scan
+        mr_scan_3_chan[:, 1, :, :] = mr_scan
+        mr_scan_3_chan[:, 2, :, :] = mr_scan
+        # return modified array
+        return mr_scan_3_chan
+
+        #return mr_scan
 
 # Cell
 from PIL import Image
@@ -276,18 +287,24 @@ class RandomRotate(object):
 
     def __call__(self, mr_scan):
         rand_deg = np.random.randint(-self.max_angle, self.max_angle)
+
+        # handle rotation as a numpy array
         mr_scan = mr_scan.numpy()
+        sh = mr_scan.shape
 
         for slice_numb, img in enumerate(mr_scan):
+            img = img.reshape([sh[2], sh[3], sh[1]])
             # to PIL image
-            img = Image.fromarray(img)
+            img = Image.fromarray(img, 'RGB')
             # rotate the whole Image
             img = Func.rotate(img, rand_deg)
             # back to numpy
-            np.asarray(img)
-            # insert to mrscan
+            img = np.asarray(img)
+            img = img.reshape([sh[1], sh[2], sh[3]])
+            # into mr_scan
             mr_scan[slice_numb, :, :] = img
 
+        # back to the tensor format
         mr_scan = torch.FloatTensor(mr_scan)
 
         return mr_scan
@@ -389,6 +406,9 @@ class Normalize(object):
             self.min = np.min
             self.max = np.max
 
+        self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+
     def __call__(self, mr_scan):
         """apply normalization on scan"""
         # preselect min and max
@@ -397,8 +417,11 @@ class Normalize(object):
 
         # standardize
         mr_scan = (mr_scan - min_mr) / (max_mr - min_mr) * MAX_PIXEL_VAL
-        # normalize
-        mr_scan = (mr_scan - MEAN) / STDDEV
+
+        # normalize each slice
+        for i, slice in enumerate(mr_scan):
+            norm_slice = self.normalize(slice)
+            mr_scan[i, :, :, :] = norm_slice
 
         return mr_scan
 
