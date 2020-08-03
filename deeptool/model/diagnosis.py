@@ -338,6 +338,7 @@ class TripleMRNet(AbsModel):
         else:
             # no stacking necessary
             vol = vol[0, :, :, :].to(self.device)
+            vol = torch.stack((vol,) * 3, axis=1)
             return vol
 
     @torch.no_grad()

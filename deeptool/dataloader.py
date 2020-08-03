@@ -263,17 +263,17 @@ class TriplePrep(object):
         mr_scan = self.h_flip(mr_scan, depth)
 
         # rescale on 3 dims:
-        sh = mr_scan.shape
-        mr_scan_3_chan = torch.zeros([sh[0], 3, sh[1], sh[2]])
+        #sh = mr_scan.shape
+        #mr_scan_3_chan = torch.zeros([sh[0], 3, sh[1], sh[2]])
 
         # fill
-        mr_scan_3_chan[:, 0, :, :] = mr_scan
-        mr_scan_3_chan[:, 1, :, :] = mr_scan
-        mr_scan_3_chan[:, 2, :, :] = mr_scan
+        #mr_scan_3_chan[:, 0, :, :] = mr_scan
+        #mr_scan_3_chan[:, 1, :, :] = mr_scan
+        #mr_scan_3_chan[:, 2, :, :] = mr_scan
         # return modified array
-        return mr_scan_3_chan
+        #return mr_scan_3_chan
 
-        #return mr_scan
+        return mr_scan
 
 # Cell
 from PIL import Image
@@ -293,14 +293,14 @@ class RandomRotate(object):
         sh = mr_scan.shape
 
         for slice_numb, img in enumerate(mr_scan):
-            img = img.reshape([sh[2], sh[3], sh[1]])
+            #img = img.reshape([sh[2], sh[3], sh[1]])
             # to PIL image
-            img = Image.fromarray(img, 'RGB')
+            img = Image.fromarray(img)
             # rotate the whole Image
             img = Func.rotate(img, rand_deg)
             # back to numpy
             img = np.asarray(img)
-            img = img.reshape([sh[1], sh[2], sh[3]])
+            #img = img.reshape([sh[1], sh[2], sh[3]])
             # into mr_scan
             mr_scan[slice_numb, :, :] = img
 
@@ -406,9 +406,6 @@ class Normalize(object):
             self.min = np.min
             self.max = np.max
 
-        self.normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-
     def __call__(self, mr_scan):
         """apply normalization on scan"""
         # preselect min and max
@@ -418,10 +415,8 @@ class Normalize(object):
         # standardize
         mr_scan = (mr_scan - min_mr) / (max_mr - min_mr) * MAX_PIXEL_VAL
 
-        # normalize each slice
-        for i, slice in enumerate(mr_scan):
-            norm_slice = self.normalize(slice)
-            mr_scan[i, :, :, :] = norm_slice
+        # normalize
+        mr_scan = (mr_scan - MEAN) / STDDEV
 
         return mr_scan
 
