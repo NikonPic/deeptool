@@ -36,7 +36,7 @@ class Tracker(object):
     The Data tracker class serves as a uniform datatracker for all Modules
     """
 
-    def __init__(self, args, log_view=True):
+    def __init__(self, args):
         """
         Setup the Folders for tracking
         """
@@ -48,7 +48,7 @@ class Tracker(object):
         self.crop_size = args.crop_size
         self.pic_size = args.pic_size
         self.model_type = args.model_type
-        self.log_view = log_view
+        self.log_view = args.log_view
         # Affine transform matrix.
         self.T = np.array([[1, -1], [0, 1]])
         # The results to track as empty dict:

@@ -7,6 +7,7 @@ sidebar: home_sidebar
 
 summary: "Model for Training 2 and 3 dim GANs"
 description: "Model for Training 2 and 3 dim GANs"
+nb_path: "nbs\20_dcgan.ipynb"
 ---
 <!--
 
@@ -82,8 +83,7 @@ oriented on: <a href="https://pytorch.org/tutorials/beginner/dcgan_faces_tutoria
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3 dim test</span>
-<span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;dcgan&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;dcgan&quot;</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -117,8 +117,7 @@ oriented on: <a href="https://pytorch.org/tutorials/beginner/dcgan_faces_tutoria
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2 dim test</span>
-<span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 </pre></div>

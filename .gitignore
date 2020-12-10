@@ -141,3 +141,5 @@ checklink/cookies.txt
 
 # data created during training
 nbs/runs
+
+data

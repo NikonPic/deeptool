@@ -139,7 +139,7 @@ def get_model_args(parser, args=[]):
         "--model_type",
         type=str,
         default="diagnosis",
-        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis", "mocoae", "rnnvae"',
+        help='Model: "introvae", "dcgan", "bigan", "vqvae", "diagnosis", "mocoae", "rnnvae", "simsiamae"',
     )
     parser.add_argument(
         "--load_model",
@@ -152,6 +152,12 @@ def get_model_args(parser, args=[]):
         type=str,
         default="./data/src/_model",
         help="Path to the model parameters",
+    )
+    parser.add_argument(
+        "--log_view",
+        type=bool,
+        default=True,
+        help="Display losses in log view",
     )
     # ------------------------------------------------------------------------
     return parser

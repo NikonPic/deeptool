@@ -7,6 +7,7 @@ sidebar: home_sidebar
 
 summary: "Tool for applying several deep learning methods on the MRNet and KneeXray dataset."
 description: "Tool for applying several deep learning methods on the MRNet and KneeXray dataset."
+nb_path: "nbs\99_index.ipynb"
 ---
 <!--
 
@@ -116,8 +117,7 @@ Then navigation to the downloaded folder is required and the package can be inst
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Define Arguments (Example)</span>
-<span class="n">args</span> <span class="o">=</span> <span class="n">get_all_args</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">get_all_args</span><span class="p">()</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Dimension of network reduced to 2</span>
 <span class="n">args</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># How many pictures are included per training update</span>
 <span class="n">args</span><span class="o">.</span><span class="n">n_res_2d</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># architecture contains resnet blocks</span>

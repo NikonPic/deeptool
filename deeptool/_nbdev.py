@@ -80,6 +80,8 @@ index = {"MAX_PIXEL_VAL": "00_dataloader.ipynb",
          "momentum_update": "24_mocoae.ipynb",
          "momentumContrastiveLoss": "24_mocoae.ipynb",
          "ce_loss": "24_mocoae.ipynb",
+         "Predictor": "25_simsiamae.ipynb",
+         "SimSiamAE": "25_simsiamae.ipynb",
          "mod_batch_2d": "33_rnn_vae.ipynb",
          "mod_batch_3d": "33_rnn_vae.ipynb",
          "Transition": "33_rnn_vae.ipynb",
@@ -101,6 +103,7 @@ modules = ["dataloader.py",
            "model/vqvae.py",
            "model/bigan.py",
            "model/mocoae.py",
+           "model/simsiamae.py",
            "model/rnnvae.py"]
 
 doc_url = "https://NikonPic.github.io/deeptool/"

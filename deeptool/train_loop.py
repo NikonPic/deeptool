@@ -16,6 +16,7 @@ from .model.introvae import IntroVAE
 from .model.bigan import BiGAN
 from .model.rnnvae import creator_rnn_ae
 from .model.mocoae import MoCoAE
+from .model.simsiamae import SimSiamAE
 
 # import the dataset
 from .dataloader import (
@@ -46,6 +47,7 @@ def get_model(device, args):
         "rnnvae": creator_rnn_ae,
         "bigan": BiGAN,
         "mocoae": MoCoAE,
+        "simsiamae": SimSiamAE,
     }
     # Get the model_creator
     model_creator = switcher.get(args.model_type, lambda: "Invalid Model Type")

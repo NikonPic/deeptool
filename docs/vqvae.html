@@ -7,6 +7,7 @@ sidebar: home_sidebar
 
 summary: "Application of the Vector Quantization"
 description: "Application of the Vector Quantization"
+nb_path: "nbs\22_vqvae.ipynb"
 ---
 <!--
 
@@ -93,8 +94,7 @@ If Required:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2D Conv</span>
-<span class="n">q_pre_2d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">q_pre_2d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">q_pos_2d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">quant</span> <span class="o">=</span> <span class="n">Quantize</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
@@ -150,8 +150,7 @@ Consider using one of the following signatures instead:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3D Conv</span>
-<span class="n">q_pre_3d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">q_pre_3d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">q_pos_3d</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
 <span class="n">inp3d</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
@@ -235,8 +234,7 @@ adapted from <a href="https://github.com/rosinality/vq-vae-2-pytorch">https://gi
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 3 dim test</span>
-<span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;vqvae&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">model_type</span> <span class="o">=</span> <span class="s2">&quot;vqvae&quot;</span>
 <span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
@@ -270,8 +268,7 @@ adapted from <a href="https://github.com/rosinality/vq-vae-2-pytorch">https://gi
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># 2 dim test</span>
-<span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">args</span> <span class="o">=</span> <span class="n">compat_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 <span class="n">test_one_batch</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 </pre></div>

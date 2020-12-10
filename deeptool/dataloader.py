@@ -614,7 +614,7 @@ def get_loader(args, root_dir):
         transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
     ]
     tfs = transforms.Compose(augmentation)
-    tfs = TwoCropsTransform(tfs, tfs) if args.model_type == "mocoae" else tfs
+    tfs = TwoCropsTransform(tfs, tfs) if args.model_type in ["mocoae", "simsiamae"] else tfs
     dataset = dset.ImageFolder(root=root_dir, transform=tfs)
     # Create the dataloader
     dataloader = DataLoader(
