@@ -1,6 +1,7 @@
 # deeptool
 > Tool for applying several deep learning methods on the MRNet and KneeXray dataset.
 
+![Code Grade](https://www.code-inspector.com/project/17113/score/svg) ![Code Grade](https://www.code-inspector.com/project/17113/status/svg)
 
 
 <img src="nbs\img\deeptool.png" alt="Drawing" style="width: 500px;">
