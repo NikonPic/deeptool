@@ -54,6 +54,9 @@ entries:
     - output: web,pdf
       title: RNN VAE
       url: /rnn_vae
+    - output: web,pdf
+      title: SimSiamAE
+      url: /simsiamae
     output: web
     title: Models
   output: web

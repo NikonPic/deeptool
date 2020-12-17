@@ -17,6 +17,7 @@
     "DCGAN": "/dcgan",
     "BiGAN": "/bigan",
     "MoCoAE": "/mocoae",
-    "RNN VAE": "/rnn_vae"
+    "RNN VAE": "/rnn_vae",
+    "SimSiamAE": "/simsiamae"
   }
 }
