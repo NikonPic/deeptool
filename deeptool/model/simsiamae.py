@@ -11,28 +11,32 @@ from ..abs_model import AbsModel
 import numpy as np
 
 # Cell
-
-
 class Predictor(nn.Module):
-    """
-    The Predictor on top of the encoder network
-    """
-
-    def __init__(self, in_dim, mid_dim, out_dim, p_drop=0.5):
-        """init the classifier"""
+    def __init__(self, in_dim=2048, hidden_dim=512, out_dim=2048): # bottleneck structure
         super(Predictor, self).__init__()
-        # reduction block
-        self.reduce = nn.Sequential(
-            nn.Linear(in_dim, mid_dim), nn.Dropout(p=p_drop), nn.ReLU(inplace=True),
+        ''' page 3 baseline setting
+        Prediction MLP. The prediction MLP (h) has BN applied
+        to its hidden fc layers. Its output fc does not have BN
+        (ablation in Sec. 4.4) or ReLU. This MLP has 2 layers.
+        The dimension of h’s input and output (z and p) is d = 2048,
+        and h’s hidden layer’s dimension is 512, making h a
+        bottleneck structure (ablation in supplement).
+        '''
+        self.layer1 = nn.Sequential(
+            nn.Linear(in_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True)
         )
-        # final block
-        self.fin_block = nn.Sequential(nn.Linear(mid_dim, out_dim))
+        self.layer2 = nn.Linear(hidden_dim, out_dim)
+        """
+        Adding BN to the output of the prediction MLP h does not work
+        well (Table 3d). We find that this is not about collapsing.
+        The training is unstable and the loss oscillates.
+        """
 
     def forward(self, x):
-        """perform forward calculation"""
-        # reduce
-        x = self.reduce(x)
-        x = self.fin_block(x)
+        x = self.layer1(x)
+        x = self.layer2(x)
         return x
 
 # Cell
@@ -55,7 +59,7 @@ class SimSiamAE(AbsModel):
         self.enc = Encoder(args, vae_mode=False).to(self.device)  # encoder
 
         # Predictor
-        self.pred = Predictor(self.n_z, 2 * self.n_z, self.n_z, p_drop=0.2).to(self.device)
+        self.pred = Predictor(self.n_z, int(0.25 * self.n_z), self.n_z).to(self.device)
 
         # optimizers
         self.optimizerEnc = optim.SGD(self.enc.parameters(), lr=args.lr)
@@ -116,6 +120,63 @@ class SimSiamAE(AbsModel):
         return -(p * z).sum(dim=-1).mean()
 
     def forward(self, data, update=True):
+        # Reset Gradients
+        self.optimizerEnc.zero_grad()
+        self.optimizerPred.zero_grad()
+        self.optimizerDec.zero_grad()
+
+        # 1. Get the augmented data
+        x1, x2 = self.take(data)
+
+        # 2. Send pictures to device
+        x1 = x1.to(self.device)
+        x2 = x2.to(self.device)
+
+        # 3. Encode
+        z1 = self.enc(x1)
+        z2 = self.enc(x2)
+
+        # 4. Predictor
+        p1 = self.pred(z1)
+        p2 = self.pred(z2)
+
+        # 5. Decode
+        x3 = self.dec(z1)
+
+        # 6. Encode again
+        z3 = self.enc(x3.detach())
+
+        # 7. Predict again
+        p3 = self.pred(z3)
+
+        # 8. define losses
+        l_all = 0
+        l_ae = self.mse_loss(x1, x3) * 2
+        l_d1 = self.D(p1, z2) / 2 + self.D(p2, z1) / 2
+        l_d2 = self.D(p1, z3) / 2 + self.D(p3, z1) / 2
+        l_all += (l_d1 + l_d2 + l_ae)
+
+        # 9. Perform update
+        if update:
+            l_all.backward()
+
+            # Apply gradient step
+            self.optimizerEnc.step()
+            self.optimizerPred.step()
+            self.optimizerDec.step()
+            return x3.detach()
+
+        else:
+            tr_data = {
+                "loss_ae": l_ae,
+                "loss_D1": l_d1,
+                "loss_D2": l_d2,
+                "l_all": l_all,
+            }
+            return x3.detach(), tr_data
+
+
+    def forward_old(self, data, update=True):
         """
         Perform forward computation and update
         """
@@ -153,11 +214,9 @@ class SimSiamAE(AbsModel):
         if update:
             l_all.backward()
 
-            # Encoder and Precitor
+            # Optimizers
             self.optimizerEnc.step()
             self.optimizerPred.step()
-
-            # Decoder
             self.optimizerDec.step() if self.ae_mode else None
             return xr.detach()
 

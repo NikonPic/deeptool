@@ -585,8 +585,16 @@ class Encoder(nn.Module):
         # Finish with fully connected layers
         self.fc_part = nn.Sequential(
             # State size batch x (cur_fea*4*4*4)
-            nn.Linear(self.hidden_dim, self.n_z, bias=False),
+            nn.Linear(self.hidden_dim,  4 * self.n_z),
+            #nn.BatchNorm1d(4 * self.n_z),
             nn.ReLU(inplace=True),
+            #
+            nn.Linear(4 * self.n_z, 4 * self.n_z),
+            #nn.BatchNorm1d(4 * self.n_z),
+            nn.ReLU(inplace=True),
+            #
+            nn.Linear(4 * self.n_z, self.n_z),
+            #nn.BatchNorm1d(self.n_z)
             # Output size batch x n_z
         )
         # Initialise (conv part is already)
@@ -644,11 +652,20 @@ class Decoder(nn.Module):
         self.hidden_dim = self.max_fea * args.min_size ** (args.dim)
         self.view_arr = [-1, self.max_fea]
         self.view_arr.extend([args.min_size for _ in range(args.dim)])
+        self.n_z = args.n_z
 
         self.fc_part = nn.Sequential(
-            # Input is batch x n_z
-            nn.Linear(args.n_z, self.hidden_dim, bias=False),
-            # nn.Tanh(),
+            #
+            nn.Linear(self.n_z, 4 * self.n_z),
+            #nn.BatchNorm1d(4 * self.n_z),
+            #
+            nn.Linear(4 * self.n_z, 4 * self.n_z),
+            #nn.BatchNorm1d(4 * self.n_z),
+            nn.ReLU(inplace=True),
+            #
+            nn.Linear(4 * self.n_z, self.hidden_dim),
+            #nn.BatchNorm1d(self.hidden_dim),
+            nn.ReLU(inplace=True),
         )
         # Initialise (conv part is already)
         self.fc_part.apply(init_w)
